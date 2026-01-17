@@ -39,6 +39,8 @@ interface NavigationElement {
   order: number;
   requiredPermission?: string;
   visible?: boolean;
+  badge?: string | number;
+  badgeColorPalette?: string;
   children?: NavigationElement[];
 }
 ```
@@ -236,6 +238,69 @@ export function NavigationConfig() {
   return null;
 }
 ```
+
+## Route Icons and Badges
+
+Define icons and badges directly on your navigation items:
+
+```tsx
+import { LuHome, LuUsers, LuSettings, LuListTodo } from 'lucide-react';
+
+const routes = [
+  {
+    id: 'home',
+    name: 'Home',
+    path: '/',
+    icon: <LuHome />,
+    order: 1,
+  },
+  {
+    id: 'tasks',
+    name: 'Tasks',
+    path: '/tasks',
+    icon: <LuListTodo />,
+    badge: 5,                    // Shows "5" badge
+    badgeColorPalette: 'red',   // Badge color (default: 'gray')
+    order: 2,
+  },
+  {
+    id: 'messages',
+    name: 'Messages',
+    path: '/messages',
+    badge: '50+',               // Can be string or number
+    badgeColorPalette: 'blue',
+    order: 3,
+  },
+  {
+    id: 'admin',
+    name: 'Admin',
+    path: '/admin',
+    icon: <LuSettings />,
+    order: 100,
+    children: [
+      {
+        id: 'admin-users',
+        name: 'Users',
+        path: '/admin/users',
+        icon: <LuUsers />,
+        badge: 'New',
+        order: 1,
+      },
+    ],
+  },
+];
+```
+
+### Badge Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `badge` | `string \| number` | Badge text or count to display |
+| `badgeColorPalette` | `string` | Chakra color palette (e.g., 'red', 'blue', 'green'). Default: 'gray' |
+
+## Navigation Search
+
+The sidebar includes built-in search functionality to filter menu items. Users can quickly find navigation items by typing in the search box.
 
 ## Related
 

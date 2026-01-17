@@ -11,43 +11,49 @@ The `@abpjs/theme-basic` package provides three layout components for different 
 The main layout for authenticated application pages with navigation, header, and footer:
 
 ```tsx
-import { LayoutApplication, LayoutProvider } from '@abpjs/theme-basic';
+import { ThemeBasicProvider, LayoutApplication } from '@abpjs/theme-basic';
+import { Routes, Route, Outlet } from 'react-router-dom';
 
-function DashboardPage() {
+function App() {
   return (
-    <LayoutProvider>
-      <LayoutApplication>
-        <h1>Dashboard</h1>
-        <p>Welcome to the dashboard!</p>
-      </LayoutApplication>
-    </LayoutProvider>
+    <ThemeBasicProvider>
+      <Routes>
+        <Route element={<LayoutApplication><Outlet /></LayoutApplication>}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
+      </Routes>
+    </ThemeBasicProvider>
   );
 }
 ```
 
 ### Features
 
-- Sidebar navigation
+- Sidebar navigation with search
 - Header with user menu
 - Footer
-- Responsive design
-- Collapsible sidebar
+- Responsive design (collapsible on mobile)
+- RTL support
 
 ## LayoutAccount
 
 A centered layout for authentication pages (login, register):
 
 ```tsx
-import { LayoutAccount, LayoutProvider } from '@abpjs/theme-basic';
-import { LoginForm } from '@abpjs/account';
+import { ThemeBasicProvider, LayoutAccount } from '@abpjs/theme-basic';
+import { Routes, Route, Outlet } from 'react-router-dom';
 
-function LoginPage() {
+function App() {
   return (
-    <LayoutProvider>
-      <LayoutAccount>
-        <LoginForm onSuccess={() => {}} />
-      </LayoutAccount>
-    </LayoutProvider>
+    <ThemeBasicProvider>
+      <Routes>
+        <Route element={<LayoutAccount><Outlet /></LayoutAccount>}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
+      </Routes>
+    </ThemeBasicProvider>
   );
 }
 ```
@@ -57,24 +63,25 @@ function LoginPage() {
 - Centered content
 - Clean design
 - Logo display
-- No navigation (for unauthenticated users)
+- Language selector
 
 ## LayoutEmpty
 
 A minimal layout for printing or embedded views:
 
 ```tsx
-import { LayoutEmpty, LayoutProvider } from '@abpjs/theme-basic';
+import { ThemeBasicProvider, LayoutEmpty } from '@abpjs/theme-basic';
+import { Routes, Route, Outlet } from 'react-router-dom';
 
-function PrintablePage() {
+function App() {
   return (
-    <LayoutProvider>
-      <LayoutEmpty>
-        <div className="print-content">
-          {/* Content to print */}
-        </div>
-      </LayoutEmpty>
-    </LayoutProvider>
+    <ThemeBasicProvider>
+      <Routes>
+        <Route element={<LayoutEmpty><Outlet /></LayoutEmpty>}>
+          <Route path="/print/:id" element={<PrintPage />} />
+        </Route>
+      </Routes>
+    </ThemeBasicProvider>
   );
 }
 ```
@@ -84,56 +91,85 @@ function PrintablePage() {
 - No header/footer
 - No navigation
 - Full-width content
+- Ideal for printing or embedded views
 
-## Dynamic Layout Selection
+## Complete Example with Multiple Layouts
 
-Switch layouts based on the current route:
+Use different layouts for different sections of your application:
 
 ```tsx
-import { LayoutApplication, LayoutAccount, LayoutEmpty, LAYOUTS } from '@abpjs/theme-basic';
-import { Routes, Route } from 'react-router-dom';
+import {
+  ThemeBasicProvider,
+  LayoutApplication,
+  LayoutAccount,
+  LayoutEmpty,
+} from '@abpjs/theme-basic';
+import { CoreProvider } from '@abpjs/core';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
 function App() {
   return (
-    <Routes>
-      {/* Account layout for auth pages */}
-      <Route path="/login" element={
-        <LayoutAccount>
-          <LoginPage />
-        </LayoutAccount>
-      } />
+    <CoreProvider environment={environment}>
+      <ThemeBasicProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Application layout for main pages */}
+            <Route element={<LayoutApplication><Outlet /></LayoutApplication>}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/users" element={<UsersPage />} />
+            </Route>
 
-      {/* Application layout for main app */}
-      <Route path="/dashboard" element={
-        <LayoutApplication>
-          <DashboardPage />
-        </LayoutApplication>
-      } />
+            {/* Account layout for auth pages */}
+            <Route element={<LayoutAccount><Outlet /></LayoutAccount>}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Route>
 
-      {/* Empty layout for print pages */}
-      <Route path="/print/:id" element={
-        <LayoutEmpty>
-          <PrintPage />
-        </LayoutEmpty>
-      } />
-    </Routes>
+            {/* Empty layout for minimal pages */}
+            <Route element={<LayoutEmpty><Outlet /></LayoutEmpty>}>
+              <Route path="/print/:id" element={<PrintPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ThemeBasicProvider>
+    </CoreProvider>
   );
 }
 ```
 
-## Using LayoutProvider
+## Using LAYOUTS Constant
 
-Wrap your app with `LayoutProvider` to enable layout features:
+The package exports a `LAYOUTS` constant for dynamic layout selection:
 
 ```tsx
-import { LayoutProvider } from '@abpjs/theme-basic';
+import { LAYOUTS } from '@abpjs/theme-basic';
+import { useLocation } from 'react-router-dom';
 
-function App() {
-  return (
-    <LayoutProvider>
-      {/* Your routes and layouts */}
-    </LayoutProvider>
-  );
+// LAYOUTS structure:
+// [
+//   { key: 'application', component: LayoutApplication },
+//   { key: 'account', component: LayoutAccount },
+//   { key: 'empty', component: LayoutEmpty },
+// ]
+
+function DynamicLayoutWrapper({ children }) {
+  const { pathname } = useLocation();
+
+  const getLayoutKey = () => {
+    if (pathname.startsWith('/account') || pathname.startsWith('/login')) {
+      return 'account';
+    }
+    if (pathname.startsWith('/print')) {
+      return 'empty';
+    }
+    return 'application';
+  };
+
+  const layout = LAYOUTS.find(l => l.key === getLayoutKey());
+  const LayoutComponent = layout?.component;
+
+  return LayoutComponent ? <LayoutComponent>{children}</LayoutComponent> : children;
 }
 ```
 
@@ -145,12 +181,50 @@ Access and modify layout state:
 import { useLayoutContext } from '@abpjs/theme-basic';
 
 function SidebarToggle() {
-  const { sidebarCollapsed, setSidebarCollapsed } = useLayoutContext();
+  const { isSidebarOpen, toggleSidebar } = useLayoutContext();
 
   return (
-    <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
-      {sidebarCollapsed ? 'Expand' : 'Collapse'}
+    <button onClick={toggleSidebar}>
+      {isSidebarOpen ? 'Close' : 'Open'} Sidebar
     </button>
+  );
+}
+```
+
+## useLayoutService Hook
+
+Access layout service for programmatic control:
+
+```tsx
+import { useLayoutService } from '@abpjs/theme-basic';
+
+function LayoutController() {
+  const layoutService = useLayoutService();
+
+  const handleCollapse = () => {
+    layoutService.collapseSidebar();
+  };
+
+  return <button onClick={handleCollapse}>Collapse</button>;
+}
+```
+
+## Custom Layout Components
+
+Create your own layouts extending the base:
+
+```tsx
+import { Box, Flex } from '@chakra-ui/react';
+
+function CustomLayout({ children }) {
+  return (
+    <Flex direction="column" minH="100vh">
+      <CustomHeader />
+      <Box flex="1" p={4}>
+        {children}
+      </Box>
+      <CustomFooter />
+    </Flex>
   );
 }
 ```

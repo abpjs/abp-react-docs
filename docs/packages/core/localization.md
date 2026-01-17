@@ -113,6 +113,59 @@ function LanguageSwitcher() {
 }
 ```
 
+## RTL (Right-to-Left) Support
+
+The `useDirection` hook provides RTL support for Arabic, Hebrew, Persian, Urdu, and other RTL languages:
+
+```tsx
+import { useDirection } from '@abpjs/core';
+
+function MyComponent() {
+  const { direction, isRtl, startSide, endSide } = useDirection();
+
+  return (
+    <div dir={direction}>
+      {/* direction: 'rtl' or 'ltr' */}
+      {/* isRtl: boolean */}
+      {/* startSide: 'left' (LTR) or 'right' (RTL) */}
+      {/* endSide: 'right' (LTR) or 'left' (RTL) */}
+      <p>Content flows in {direction} direction</p>
+    </div>
+  );
+}
+```
+
+### useDirection Returns
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `direction` | `'ltr' \| 'rtl'` | Current text direction |
+| `isRtl` | `boolean` | Whether current language is RTL |
+| `startSide` | `'left' \| 'right'` | Start side based on direction |
+| `endSide` | `'left' \| 'right'` | End side based on direction |
+
+### Using with Chakra UI Components
+
+```tsx
+import { useDirection } from '@abpjs/core';
+import { Menu } from '@chakra-ui/react';
+
+function DirectionalMenu() {
+  const { endSide } = useDirection();
+
+  return (
+    <Menu.Root positioning={{ placement: `${endSide}-start` }}>
+      {/* Menu opens on the correct side based on language direction */}
+      <Menu.Trigger>Open Menu</Menu.Trigger>
+      <Menu.Content>
+        <Menu.Item value="item1">Item 1</Menu.Item>
+        <Menu.Item value="item2">Item 2</Menu.Item>
+      </Menu.Content>
+    </Menu.Root>
+  );
+}
+```
+
 ## Related
 
 - [Configuration](/docs/packages/core/configuration) - Application configuration

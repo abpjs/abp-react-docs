@@ -27,10 +27,13 @@ Chakra UI v3 no longer requires `@chakra-ui/icons`, `@emotion/styled`, or `frame
 
 - **Multiple Layouts** - Application, Account, and Empty layouts
 - **Dynamic Layout Selection** - Switch layouts based on route
-- **Navigation System** - Built-in navigation with permission support
+- **Navigation System** - Built-in navigation with permission support and search
 - **User Profile** - Profile and password change components (modal-based)
-- **Responsive Design** - Mobile-friendly layouts
-- **Chakra UI v3** - Beautiful, accessible components
+- **Responsive Design** - Mobile-friendly layouts with sidebar and drawer navigation
+- **RTL Support** - Full right-to-left support for Arabic, Hebrew, Persian, and other RTL languages
+- **Route Icons & Badges** - Add icons and notification badges to navigation items
+- **Logo Customization** - Customize logo via props without modifying source code
+- **Chakra UI v3** - Beautiful, accessible components with modern patterns
 - **Color Mode** - Built-in light/dark theme support (opt-in)
 
 ## Main Exports
@@ -102,6 +105,42 @@ function App() {
 | `toastPosition` | `string` | `'bottom-right'` | Toast position |
 | `enableColorMode` | `boolean` | `false` | Enable dark/light mode |
 | `defaultColorMode` | `'light' \| 'dark' \| 'system'` | `'light'` | Default color mode |
+| `logo` | `ReactNode` | - | Custom logo component |
+| `logoIcon` | `ReactNode` | - | Custom logo icon (for collapsed states) |
+| `appName` | `string` | - | Application name for logo text |
+| `logoLink` | `string` | `'/'` | Link destination when clicking logo |
+
+## Logo Customization
+
+Customize the application logo via ThemeBasicProvider props:
+
+```tsx
+import { ThemeBasicProvider } from '@abpjs/theme-basic';
+
+function App() {
+  return (
+    <ThemeBasicProvider
+      logo={<img src="/my-logo.svg" alt="My App" />}
+      logoIcon={<img src="/my-icon.svg" alt="Icon" />}
+      appName="My Application"
+      logoLink="/"
+    >
+      {/* Your app */}
+    </ThemeBasicProvider>
+  );
+}
+```
+
+## RTL Support
+
+The layout automatically supports RTL languages. When a user switches to Arabic, Hebrew, Persian, or other RTL languages:
+
+- Sidebar moves to the right side
+- Text alignment flips
+- Icons and navigation elements reposition correctly
+- Menus open in the appropriate direction
+
+No additional configuration needed - RTL is detected automatically from the selected language.
 
 ## NPM Package
 

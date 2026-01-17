@@ -31,9 +31,11 @@ npm install @abpjs/core
 |------|-------------|
 | `useAuth()` | Authentication state and methods (login, logout, isAuthenticated) |
 | `useConfig()` | Access ABP application configuration |
+| `useDirection()` | RTL/LTR direction based on current language |
 | `useLocalization()` | Translation functions (`t()` and `instant()`) |
 | `usePermission()` | Permission checking utilities |
 | `useProfile()` | User profile management |
+| `useRestService()` | HTTP client for API calls |
 | `useSession()` | Session state management |
 
 ### Services
