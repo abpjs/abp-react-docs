@@ -42,16 +42,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -67,10 +58,6 @@ const config: Config = {
     },
     navbar: {
       title: 'ABP React',
-      logo: {
-        alt: 'ABP React Logo',
-        src: 'img/logo.svg',
-      },
       items: [
         {
           type: 'docSidebar',
@@ -78,7 +65,6 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/abpjs/abp-react',
           label: 'GitHub',
@@ -94,7 +80,7 @@ const config: Config = {
           items: [
             {
               label: 'Getting Started',
-              to: '/docs/intro',
+              to: '/docs/',
             },
           ],
         },
@@ -111,12 +97,12 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
               label: 'GitHub',
               href: 'https://github.com/abpjs/abp-react',
+            },
+            {
+              label: 'npm',
+              href: 'https://www.npmjs.com/org/abpjs',
             },
           ],
         },

@@ -4,6 +4,9 @@
  * work well for content-centric websites.
  */
 
+/* Import Google Font for brand styling */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&display=swap');
+
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-primary: #2e8555;
@@ -27,4 +30,12 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Custom navbar brand styling */
+.navbar__title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
 }

@@ -1,47 +1,69 @@
 ---
 sidebar_position: 1
+slug: /
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+**ABP React** is a collection of React packages that provide UI components and services for building applications with the [ABP Framework](https://abp.io/). It offers a modern, TypeScript-first approach with pre-built modules for authentication, identity management, permissions, multi-tenancy, and more.
 
-## Getting Started
+## Why ABP React?
 
-Get started by **creating a new site**.
+- **Ready-to-use Components** - Pre-built login forms, user management tables, permission modals, and more
+- **ABP Integration** - Seamlessly connects to ABP backend APIs with built-in services
+- **TypeScript First** - Full type safety across all packages
+- **Modern Stack** - Built with React 19, Redux Toolkit, and Chakra UI
+- **Modular Design** - Install only what you need
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## Packages
 
-### What you'll need
+ABP React consists of 7 packages:
 
-- [Node.js](https://nodejs.org/en/download/) version 20.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+| Package | Description |
+|---------|-------------|
+| [@abpjs/core](/docs/packages/core/overview) | Core infrastructure: authentication, configuration, localization, permissions, REST services |
+| [@abpjs/account](/docs/packages/account/overview) | Login, registration, and tenant switching components |
+| [@abpjs/identity](/docs/packages/identity/overview) | User and role management components |
+| [@abpjs/permission-management](/docs/packages/permission-management/overview) | Permission management modal and services |
+| [@abpjs/tenant-management](/docs/packages/tenant-management/overview) | Multi-tenant management components |
+| [@abpjs/theme-basic](/docs/packages/theme-basic/overview) | Layout components (Application, Account, Empty layouts) |
+| [@abpjs/theme-shared](/docs/packages/theme-shared/overview) | Shared UI: toasts, confirmations, error handling |
 
-## Generate a new site
+## Quick Example
 
-Generate a new Docusaurus site using the **classic template**.
+```tsx
+import { useAuth, useLocalization } from '@abpjs/core';
+import { LoginForm } from '@abpjs/account';
 
-The classic template will automatically be added to your project after you run the command:
+function App() {
+  const { isAuthenticated, logout } = useAuth();
+  const { t } = useLocalization();
 
-```bash
-npm init docusaurus@latest my-website classic
+  if (!isAuthenticated) {
+    return <LoginForm onSuccess={() => console.log('Logged in!')} />;
+  }
+
+  return (
+    <div>
+      <h1>{t('Welcome')}</h1>
+      <button onClick={logout}>Logout</button>
+    </div>
+  );
+}
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+## Requirements
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+- **Node.js** 18.0 or higher
+- **React** 18.0 or higher
+- **ABP Framework** backend (v7.x or v8.x recommended)
 
-## Start your site
+## Current Version
 
-Run the development server:
+This documentation covers **ABP React v0.7.6**.
 
-```bash
-cd my-website
-npm run start
-```
+## Next Steps
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- [Installation](/docs/getting-started/installation) - Install ABP React packages
+- [Project Setup](/docs/getting-started/project-setup) - Configure your project
+- [Quick Start](/docs/getting-started/quick-start) - Build your first page

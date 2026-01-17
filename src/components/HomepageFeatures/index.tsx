@@ -11,32 +11,32 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Easy Authentication',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Built-in OAuth2/OIDC support with ready-to-use login, registration,
+        and multi-tenant switching components.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'ABP Framework Integration',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Seamlessly connect to your ABP backend with pre-built services for
+        identity, permissions, tenant management, and localization.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Modular Architecture',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Pick only the packages you need. Each module is independent and
+        built with React, TypeScript, and Chakra UI.
       </>
     ),
   },
