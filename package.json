@@ -1,6 +1,14 @@
 {
-  "name": "abp-react-docs",
-  "version": "0.0.0",
+  "name": "@abpjs/abp-react-docs",
+  "version": "0.0.1",
+  "description": "Official documentation for ABP React - a React framework for building applications with ABP Framework",
+  "author": "abpjs.io",
+  "license": "MIT",
+  "homepage": "https://abpjs.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abpjs/abp-react-docs"
+  },
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
