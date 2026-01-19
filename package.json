@@ -9,7 +9,6 @@
     "type": "git",
     "url": "https://github.com/abpjs/abp-react-docs"
   },
-  "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
