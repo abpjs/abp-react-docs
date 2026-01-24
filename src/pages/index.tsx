@@ -99,7 +99,7 @@ function HeroSection(): ReactNode {
         <div className={styles.quickStart}>
           <div className={styles.quickStartLabel}>Quick Start</div>
           <code className={styles.quickStartCode}>
-            npx @anthropic-ai/create-abp-react@latest
+            npx create-abp-react my-app
           </code>
         </div>
       </div>
