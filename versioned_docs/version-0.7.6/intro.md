@@ -73,7 +73,7 @@ function App() {
 
 ## Current Version
 
-This documentation covers **ABP React v0.8.0**.
+This documentation covers **ABP React v0.7.6**.
 
 ## Next Steps
 

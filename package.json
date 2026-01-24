@@ -1,6 +1,6 @@
 {
   "name": "@abpjs/abp-react-docs",
-  "version": "0.7.6",
+  "version": "0.8.0",
   "description": "Official documentation for ABP React - a React framework for building applications with ABP Framework",
   "author": "abpjs.io",
   "license": "MIT",
