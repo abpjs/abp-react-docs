@@ -43,10 +43,10 @@ const features: FeatureItem[] = [
       'Full multi-tenant support out of the box. Switch tenants, manage tenant-specific settings, and more.',
   },
   {
-    icon: '🔧',
-    title: 'TypeScript First',
+    icon: '🎛️',
+    title: 'Feature Management',
     description:
-      'Written in TypeScript with full type definitions. Enjoy autocomplete and type safety throughout.',
+      'Control tenant features with the built-in Feature Management module. Enable, disable, or configure features per tenant.',
   },
 ];
 
