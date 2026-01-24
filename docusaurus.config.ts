@@ -66,6 +66,10 @@ const config: Config = {
           label: 'Docs',
         },
         {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
+        {
           href: 'https://github.com/abpjs/abp-react',
           label: 'GitHub',
           position: 'right',
