@@ -58,6 +58,10 @@ const config: Config = {
     },
     navbar: {
       title: 'ABP React',
+      logo: {
+        alt: 'ABP React Logo',
+        src: 'img/logo.png',
+      },
       items: [
         {
           type: 'docSidebar',
@@ -67,6 +71,11 @@ const config: Config = {
         },
         {
           type: 'docsVersionDropdown',
+          position: 'right',
+        },
+        {
+          href: 'https://abpjs.io',
+          label: 'abpjs.io',
           position: 'right',
         },
         {
@@ -100,6 +109,10 @@ const config: Config = {
         {
           title: 'More',
           items: [
+            {
+              label: 'abpjs.io',
+              href: 'https://abpjs.io',
+            },
             {
               label: 'GitHub',
               href: 'https://github.com/abpjs/abp-react',

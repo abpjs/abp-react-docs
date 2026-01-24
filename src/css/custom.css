@@ -4,32 +4,63 @@
  * work well for content-centric websites.
  */
 
-/* Import Google Font for brand styling */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&display=swap');
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700&display=swap');
 
-/* You can override the default Infima variables here. */
+/* Custom CSS Variables for ABP React */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  /* Brand colors */
+  --abp-purple-100: #f3e8ff;
+  --abp-purple-200: #e9d5ff;
+  --abp-purple-300: #d8b4fe;
+  --abp-purple-400: #c084fc;
+  --abp-purple-500: #a855f7;
+  --abp-purple-600: #9333ea;
+  --abp-purple-700: #7c3aed;
+  --abp-purple-800: #6b21a8;
+  --abp-purple-900: #581c87;
+
+  --abp-blue-400: #60a5fa;
+  --abp-blue-500: #3b82f6;
+  --abp-blue-600: #2563eb;
+
+  /* Gradients */
+  --abp-gradient-primary: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  --abp-gradient-glow: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+
+  /* Shadows */
+  --abp-shadow-glow: 0 0 60px rgba(139, 92, 246, 0.4);
+  --abp-shadow-button: 0 4px 20px rgba(139, 92, 246, 0.3);
+
+  /* Infima overrides */
+  --ifm-color-primary: #8b5cf6;
+  --ifm-color-primary-dark: #7c3aed;
+  --ifm-color-primary-darker: #6d28d9;
+  --ifm-color-primary-darkest: #5b21b6;
+  --ifm-color-primary-light: #a78bfa;
+  --ifm-color-primary-lighter: #c4b5fd;
+  --ifm-color-primary-lightest: #ddd6fe;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(139, 92, 246, 0.15);
+
+  /* Font family */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* Dark mode is default for homepage feel */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #a78bfa;
+  --ifm-color-primary-dark: #8b5cf6;
+  --ifm-color-primary-darker: #7c3aed;
+  --ifm-color-primary-darkest: #6d28d9;
+  --ifm-color-primary-light: #c4b5fd;
+  --ifm-color-primary-lighter: #ddd6fe;
+  --ifm-color-primary-lightest: #ede9fe;
+  --ifm-background-color: #0a0a0f;
+  --ifm-navbar-background-color: rgba(10, 10, 15, 0.8);
+  --ifm-footer-background-color: #050508;
+  --docusaurus-highlighted-code-line-bg: rgba(139, 92, 246, 0.2);
 }
 
 /* Custom navbar brand styling */
@@ -38,4 +69,77 @@
   font-weight: 700;
   font-size: 1.35rem;
   letter-spacing: -0.02em;
+}
+
+/* Navbar styling for dark theme */
+[data-theme='dark'] .navbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Navbar links */
+[data-theme='dark'] .navbar__link {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+[data-theme='dark'] .navbar__link:hover {
+  color: #a78bfa;
+}
+
+/* Footer styling */
+[data-theme='dark'] .footer {
+  background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Global button styling enhancements */
+.button--primary {
+  background: var(--abp-gradient-primary);
+  border: none;
+  box-shadow: var(--abp-shadow-button);
+  transition: all 0.3s ease;
+}
+
+.button--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(139, 92, 246, 0.4);
+}
+
+/* Code blocks */
+[data-theme='dark'] pre {
+  background: rgba(15, 15, 25, 0.8) !important;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+/* Selection color */
+::selection {
+  background: rgba(139, 92, 246, 0.3);
+  color: #fff;
+}
+
+/* Scrollbar styling for dark theme */
+[data-theme='dark'] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
 }
