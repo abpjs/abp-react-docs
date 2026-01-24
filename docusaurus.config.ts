@@ -74,7 +74,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://abpjs.io',
+          href: 'https://www.abpjs.io',
           label: 'abpjs.io',
           position: 'right',
         },
@@ -111,7 +111,7 @@ const config: Config = {
           items: [
             {
               label: 'abpjs.io',
-              href: 'https://abpjs.io',
+              href: 'https://www.abpjs.io',
             },
             {
               label: 'GitHub',

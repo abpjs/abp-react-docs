@@ -4,7 +4,7 @@
   "description": "Official documentation for ABP React - a React framework for building applications with ABP Framework",
   "author": "abpjs.io",
   "license": "MIT",
-  "homepage": "https://abpjs.io",
+  "homepage": "https://www.abpjs.io",
   "repository": {
     "type": "git",
     "url": "https://github.com/abpjs/abp-react-docs"
