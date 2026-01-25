@@ -69,11 +69,34 @@ function CustomRoleList() {
 | Property | Type | Description |
 |----------|------|-------------|
 | `roles` | `RoleItem[]` | List of roles |
+| `totalCount` | `number` | Total number of roles |
 | `loading` | `boolean` | Loading state |
+| `fetchRoles` | `(params?: ABP.PageQueryParams) => Promise<void>` | Fetch roles with optional pagination (v0.9.0) |
 | `createRole` | `(input: RoleSaveRequest) => Promise<void>` | Create a role |
 | `updateRole` | `(id: string, input: RoleSaveRequest) => Promise<void>` | Update a role |
 | `deleteRole` | `(id: string) => Promise<void>` | Delete a role |
 | `refresh` | `() => void` | Refresh the role list |
+
+### Pagination Example (v0.9.0)
+
+```tsx
+import { useRoles } from '@abpjs/identity';
+
+function PaginatedRoles() {
+  const { roles, totalCount, fetchRoles } = useRoles();
+
+  useEffect(() => {
+    fetchRoles({
+      skipCount: 0,
+      maxResultCount: 10,
+      sorting: 'name',
+      filter: 'admin',
+    });
+  }, []);
+
+  return <div>Showing {roles.length} of {totalCount} roles</div>;
+}
+```
 
 ### RoleItem Type
 
