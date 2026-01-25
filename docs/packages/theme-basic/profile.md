@@ -4,6 +4,16 @@ sidebar_position: 4
 
 # Profile
 
+:::warning Deprecated in v0.9.0
+The `Profile` and `ChangePassword` components have moved to `@abpjs/theme-shared`. Import from there instead:
+
+```tsx
+import { Profile, ChangePassword } from '@abpjs/theme-shared';
+```
+
+See [@abpjs/theme-shared Profile documentation](/docs/packages/theme-shared/profile) for the latest docs.
+:::
+
 The `@abpjs/theme-basic` package provides modal-based components for user profile management.
 
 ## Profile Component

@@ -4,63 +4,34 @@ sidebar_position: 99
 
 # Release Notes
 
+## v0.9.0
+
+**January 2026**
+
+### Breaking Changes
+
+- **`throwErr` renamed to `skipHandleError`** - Update `Rest.Config` usage
+
+### New Features
+
+- **`eLayoutType.setting`** - New layout type for settings pages
+- **Application configuration** - `Config.Application` interface, `selectApplicationInfo` selector
+- **Tenant session management** - `setTenant` action, `selectTenant` selector
+- **`selectRoute` selector** - Find routes by path or name recursively
+- **`LocalizationService.currentLang`** - Property to get current language
+- **`ProfileService.changePassword`** - New `skipHandleError` parameter
+
+---
+
 ## v0.8.0
 
 **January 2026**
 
 ### New Features
 
-#### Ellipsis Component
-
-Truncate long text with ellipsis and automatic tooltip.
-
-```tsx
-import { Ellipsis } from '@abpjs/core';
-
-<Ellipsis width="200px">
-  This is a very long text that will be truncated
-</Ellipsis>
-```
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode` | - | Content to truncate |
-| `width` | `string` | `'180px'` | Maximum width |
-| `title` | `string` | auto | Tooltip text |
-| `enabled` | `boolean` | `true` | Enable/disable |
-| `className` | `string` | - | CSS class |
-| `style` | `CSSProperties` | - | Inline styles |
-
-**Hook version:**
-
-```tsx
-import { useEllipsis } from '@abpjs/core';
-
-const { ref, style, title, className } = useEllipsis({ width: '200px' });
-```
-
-#### useLoader Hook
-
-Automatically tracks HTTP request loading state.
-
-```tsx
-import { useLoader } from '@abpjs/core';
-
-function MyComponent() {
-  const { loading, loadingCount } = useLoader();
-
-  if (loading) return <Spinner />;
-  return <Content />;
-}
-```
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `loading` | `boolean` | `true` if any request is active |
-| `loadingCount` | `number` | Number of active requests |
-| `requests` | `string[]` | Active request identifiers |
+- **Ellipsis component** - Truncate text with ellipsis and tooltip
+- **useEllipsis hook** - Hook version for custom implementations
+- **useLoader hook** - Track HTTP request loading state
 
 ### Bug Fixes
 
