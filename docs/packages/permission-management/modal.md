@@ -178,6 +178,34 @@ function CustomPermissionUI() {
 }
 ```
 
+### isGrantedByRole (v0.9.0)
+
+Check if a permission is granted by a role provider. Useful for showing visual indicators when a permission comes from an assigned role rather than being directly granted:
+
+```tsx
+import { usePermissionManagement } from '@abpjs/permission-management';
+
+function PermissionList() {
+  const { getSelectedGroupPermissions, isGrantedByRole } = usePermissionManagement();
+
+  const permissions = getSelectedGroupPermissions();
+
+  return (
+    <ul>
+      {permissions.map((permission) => (
+        <li key={permission.name}>
+          <input type="checkbox" checked={permission.isGranted} />
+          {permission.displayName}
+          {isGrantedByRole(permission.grantedProviders) && (
+            <span className="badge">From Role</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
 ## Related
 
 - [Permissions](/docs/packages/core/permissions) - Permission checking
