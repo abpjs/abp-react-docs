@@ -6,6 +6,10 @@ sidebar_position: 3
 
 The `@abpjs/account` package provides user registration components.
 
+:::info New in v0.9.0
+`RegisterForm` now makes actual API calls for registration and automatically logs in the user after successful registration.
+:::
+
 ## RegisterForm Component
 
 The `RegisterForm` component provides a complete registration interface:

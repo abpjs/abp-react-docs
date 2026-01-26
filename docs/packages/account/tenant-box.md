@@ -6,6 +6,10 @@ sidebar_position: 4
 
 The `TenantBox` component allows users to switch between tenants in a multi-tenant application.
 
+:::info New in v0.9.0
+`TenantBox` now validates tenant names via the API and properly updates the Redux session state using `selectTenant` and `sessionActions.setTenant`.
+:::
+
 ## TenantBox Component
 
 ```tsx
