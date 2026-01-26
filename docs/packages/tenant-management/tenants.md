@@ -6,6 +6,11 @@ sidebar_position: 2
 
 The `@abpjs/tenant-management` package provides components and hooks for tenant management.
 
+:::info New in v0.9.0
+- `fetchTenants` now accepts optional `ABP.PageQueryParams` for pagination/filtering
+- New constants: `TENANT_MANAGEMENT_ROUTES`, `TENANT_MANAGEMENT_ROUTE_PATHS`, `TENANT_MANAGEMENT_POLICIES`
+:::
+
 ## useTenantManagement Hook
 
 The `useTenantManagement` hook provides full tenant management capabilities:
