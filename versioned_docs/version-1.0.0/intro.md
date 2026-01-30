@@ -30,17 +30,19 @@ That's it! You now have a fully configured ABP React project with all dependenci
 
 ## Packages
 
-ABP React consists of 7 packages:
+ABP React consists of 9 packages:
 
 | Package | Description |
 |---------|-------------|
-| [@abpjs/core](/docs/packages/core/overview) | Core infrastructure: authentication, configuration, localization, permissions, REST services |
-| [@abpjs/account](/docs/packages/account/overview) | Login, registration, and tenant switching components |
-| [@abpjs/identity](/docs/packages/identity/overview) | User and role management components |
-| [@abpjs/permission-management](/docs/packages/permission-management/overview) | Permission management modal and services |
-| [@abpjs/tenant-management](/docs/packages/tenant-management/overview) | Multi-tenant management components |
-| [@abpjs/theme-basic](/docs/packages/theme-basic/overview) | Layout components (Application, Account, Empty layouts) |
-| [@abpjs/theme-shared](/docs/packages/theme-shared/overview) | Shared UI: toasts, confirmations, theming |
+| [@abpjs/core](./packages/core/overview) | Core infrastructure: authentication, configuration, localization, permissions, REST services |
+| [@abpjs/account](./packages/account/overview) | Login, registration, and tenant switching components |
+| [@abpjs/identity](./packages/identity/overview) | User and role management components |
+| [@abpjs/feature-management](./packages/feature-management/overview) | Feature management modal and services |
+| [@abpjs/permission-management](./packages/permission-management/overview) | Permission management modal and services |
+| [@abpjs/setting-management](./packages/setting-management/overview) | Settings UI with email and identity settings |
+| [@abpjs/tenant-management](./packages/tenant-management/overview) | Multi-tenant management components |
+| [@abpjs/theme-basic](./packages/theme-basic/overview) | Layout components (Application, Account, Empty layouts) |
+| [@abpjs/theme-shared](./packages/theme-shared/overview) | Shared UI: toasts, confirmations, theming |
 
 ## Quick Example
 
@@ -73,7 +75,7 @@ function App() {
 
 ## Current Version
 
-This documentation covers **ABP React v0.8.0**.
+This documentation covers **ABP React v1.0.0**.
 
 ## Next Steps
 
