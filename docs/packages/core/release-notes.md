@@ -4,6 +4,33 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.0.0
+
+**January 2026**
+
+### Breaking Changes
+
+- **`eLayoutType.setting` deprecated** - Use custom layout instead
+
+### New Features
+
+- **`LazyLoadService.load` accepts arrays** - Load multiple scripts/styles at once
+- **`selectSettings` selector** - Get all settings with optional keyword filter
+- **`selectLocalizationString` selector** - Localization with interpolation support
+- **`addAbpRoutes` / `getAbpRoutes`** - Dynamic route registration API
+- **`ABP.Dictionary<T>` type** - Generic key-value dictionary
+- **`SortOrder` type** - `'asc' | 'desc'` for sorting
+- **`Config.LocalizationWithDefault`** - Localization key with fallback value
+
+### Deprecations
+
+- **`eLayoutType.setting`** - Deprecated, use custom layout
+- **`ApplicationConfiguration.Setting`** - Use `ApplicationConfiguration.Value`
+- **`ApplicationConfiguration.Features`** - Use `ApplicationConfiguration.Value`
+- **`selectCopy`** - Use `selectLocalizationString` instead (to be removed in v2)
+
+---
+
 ## v0.9.0
 
 **January 2026**

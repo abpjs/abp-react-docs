@@ -166,6 +166,66 @@ function DirectionalMenu() {
 }
 ```
 
+## selectLocalizationString (v1.0.0)
+
+For Redux-based localization with interpolation:
+
+```tsx
+import { selectLocalizationString } from '@abpjs/core';
+import { useSelector } from 'react-redux';
+
+function Component() {
+  // Simple usage
+  const greeting = useSelector(selectLocalizationString('HelloWorld'));
+
+  // With default value
+  const message = useSelector(
+    selectLocalizationString({ key: 'WelcomeMessage', defaultValue: 'Welcome!' })
+  );
+
+  // With interpolation (positional parameters)
+  const userGreeting = useSelector(
+    selectLocalizationString('Hello, {0}!', 'John')
+  );
+
+  // Multiple parameters
+  const itemsFound = useSelector(
+    selectLocalizationString('Found {0} items in {1}', '5', 'Books')
+  );
+
+  return <div>{greeting}</div>;
+}
+```
+
+### Syntax
+
+```typescript
+selectLocalizationString(
+  key: string | Config.LocalizationWithDefault,
+  ...interpolateParams: string[]
+)
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | `string \| Config.LocalizationWithDefault` | Localization key or object with key and defaultValue |
+| `interpolateParams` | `string[]` | Values to interpolate into placeholders |
+
+### Key Formats
+
+```tsx
+// Resource-prefixed key
+selectLocalizationString('AbpIdentity::UserName')
+
+// Default resource (uses defaultResourceName from config)
+selectLocalizationString('Welcome')
+
+// With default value
+selectLocalizationString({ key: 'CustomKey', defaultValue: 'Fallback' })
+```
+
 ## Related
 
-- [Configuration](/docs/packages/core/configuration) - Application configuration
+- [Configuration](./configuration) - Application configuration

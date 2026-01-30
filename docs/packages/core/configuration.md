@@ -107,7 +107,35 @@ function SettingsExample() {
 }
 ```
 
+### selectSettings (v1.0.0)
+
+Use the `selectSettings` selector for filtered settings access:
+
+```tsx
+import { selectSettings } from '@abpjs/core';
+import { useSelector } from 'react-redux';
+
+function SettingsPanel() {
+  // Get all settings
+  const allSettings = useSelector(selectSettings());
+
+  // Get settings filtered by keyword
+  const localizationSettings = useSelector(selectSettings('Abp.Localization'));
+
+  return (
+    <div>
+      <h3>Localization Settings</h3>
+      <ul>
+        {Object.entries(localizationSettings).map(([key, value]) => (
+          <li key={key}>{key}: {value}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
 ## Related
 
-- [Localization](/docs/packages/core/localization) - Multi-language support
-- [Session](/docs/packages/core/session) - Session state
+- [Localization](./localization) - Multi-language support
+- [Session](./session) - Session state
