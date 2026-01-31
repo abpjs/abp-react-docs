@@ -4,6 +4,21 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.1.0
+
+**January 2026**
+
+### New Components
+
+- **`AuthWrapper`** - Wrapper component for authentication forms providing consistent layout
+- **`ManageProfile`** - Tabbed profile management interface with personal settings and password change
+- **`ChangePasswordForm`** - Password change form with validation
+- **`PersonalSettingsForm`** - User profile information editing form
+
+See [Manage Profile](./manage-profile) for usage details.
+
+---
+
 ## v1.0.0
 
 **January 2026**
