@@ -10,6 +10,10 @@ The `@abpjs/account` package provides user registration components.
 `RegisterForm` now makes actual API calls for registration and automatically logs in the user after successful registration.
 :::
 
+:::note Self-Registration Setting (v2.0.0)
+If `Abp.Account.IsSelfRegistrationEnabled` is set to `false` in ABP settings, `RegisterForm` will automatically redirect users to the login page. Use the `useSelfRegistrationEnabled` hook to check this setting in custom components.
+:::
+
 ## RegisterForm Component
 
 The `RegisterForm` component provides a complete registration interface:
@@ -137,7 +141,25 @@ function StyledRegisterPage() {
 }
 ```
 
+## Check Self-Registration Status (v2.0.0)
+
+Use the `useSelfRegistrationEnabled` hook to check if registration is enabled:
+
+```tsx
+import { useSelfRegistrationEnabled } from '@abpjs/account';
+
+function ConditionalRegisterLink() {
+  const isEnabled = useSelfRegistrationEnabled();
+
+  if (!isEnabled) {
+    return <span>Registration is disabled</span>;
+  }
+
+  return <Link to="/register">Create an account</Link>;
+}
+```
+
 ## Related
 
-- [Login](/docs/packages/account/login) - Login form
-- [Tenant Box](/docs/packages/account/tenant-box) - Multi-tenant switching
+- [Login](./login) - Login form
+- [Tenant Box](./tenant-box) - Multi-tenant switching

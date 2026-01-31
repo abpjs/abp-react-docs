@@ -4,6 +4,52 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### Breaking Changes
+
+- **`ACCOUNT_ROUTES` removed** - This deprecated export has been removed. Use `AccountProvider` to configure routes.
+
+### New Features
+
+- **`useSelfRegistrationEnabled` hook** - Check if self-registration is enabled from ABP settings:
+  ```tsx
+  import { useSelfRegistrationEnabled } from '@abpjs/account';
+
+  function RegisterLink() {
+    const isEnabled = useSelfRegistrationEnabled();
+    if (!isEnabled) return null;
+    return <Link to="/register">Register</Link>;
+  }
+  ```
+
+- **`AuthWrapper.enableLocalLogin` prop** - Control visibility of local login forms:
+  ```tsx
+  <AuthWrapper enableLocalLogin={false}>
+    {/* Shows disabled message instead of form */}
+  </AuthWrapper>
+  ```
+  Reads from `Abp.Account.EnableLocalLogin` setting by default.
+
+- **`LoginForm` respects self-registration setting** - Register link is automatically hidden when `Abp.Account.IsSelfRegistrationEnabled` is `false`
+
+- **`RegisterForm` respects self-registration setting** - Automatically redirects to login if self-registration is disabled
+
+- **`Account` namespace** - New TypeScript namespace with component interface types for type-safe customization
+
+### ABP Settings Support
+
+The following ABP settings are now respected:
+
+| Setting | Effect |
+|---------|--------|
+| `Abp.Account.EnableLocalLogin` | Hides username/password login when `false` |
+| `Abp.Account.IsSelfRegistrationEnabled` | Hides register link/page when `false` |
+
+---
+
 ## v1.1.0
 
 **January 2026**

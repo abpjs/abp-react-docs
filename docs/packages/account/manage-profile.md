@@ -125,6 +125,23 @@ function CustomLoginPage() {
 | `children` | `ReactNode` | Main content (alternative to mainContent) |
 | `mainContent` | `ReactNode` | Main content to render |
 | `cancelContent` | `ReactNode` | Footer/cancel content area |
+| `enableLocalLogin` | `boolean` | Control local login visibility (v2.0.0) |
+
+### Local Login Setting (v2.0.0)
+
+The `AuthWrapper` automatically reads the `Abp.Account.EnableLocalLogin` setting. When disabled, it shows a message instead of the login form:
+
+```tsx
+// Override the setting value
+<AuthWrapper enableLocalLogin={true}>
+  {/* Always show login form, regardless of setting */}
+</AuthWrapper>
+
+// Let the setting control visibility (default)
+<AuthWrapper>
+  {/* Shows form or disabled message based on ABP setting */}
+</AuthWrapper>
+```
 
 ## Custom Tabs
 

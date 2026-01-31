@@ -38,6 +38,10 @@ function LoginPage() {
 | `showForgotPassword` | `boolean` | `false` | Show "Forgot password" link |
 | `registerPath` | `string` | `/register` | Path for registration link |
 
+:::note Self-Registration Setting (v2.0.0)
+The register link is automatically hidden if `Abp.Account.IsSelfRegistrationEnabled` is set to `false` in ABP settings, even when `showRegisterLink` is `true`.
+:::
+
 ## Using usePasswordFlow Hook
 
 For custom login implementations, use the `usePasswordFlow` hook:
