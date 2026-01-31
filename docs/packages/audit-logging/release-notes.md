@@ -4,6 +4,55 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### New Features
+
+- **`AuditLoggingStateService`** - New state service for programmatic audit logging operations:
+  - `dispatchGetAuditLogs(params?)` - Fetch audit logs and update internal state
+  - `dispatchGetAverageExecutionDurationPerDay(params?)` - Fetch average execution duration statistics
+  - `dispatchGetErrorRate(params?)` - Fetch error rate statistics
+  - `getResult()` - Get current audit logs result
+  - `getTotalCount()` - Get total count of audit logs
+  - `getAverageExecutionStatistics()` - Get cached average execution statistics
+  - `getErrorRateStatistics()` - Get cached error rate statistics
+
+### Example
+
+```tsx
+import { AuditLoggingStateService } from '@abpjs/audit-logging';
+import { RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const stateService = new AuditLoggingStateService(restService);
+
+// Fetch audit logs
+await stateService.dispatchGetAuditLogs({
+  startTime: '2026-01-01',
+  endTime: '2026-01-31',
+  maxResultCount: 10,
+});
+const logs = stateService.getResult();
+console.log(`Found ${stateService.getTotalCount()} logs`);
+
+// Fetch statistics
+await stateService.dispatchGetAverageExecutionDurationPerDay({
+  startDate: '2026-01-01',
+  endDate: '2026-01-31',
+});
+const avgStats = stateService.getAverageExecutionStatistics();
+
+await stateService.dispatchGetErrorRate({
+  startDate: '2026-01-01',
+  endDate: '2026-01-31',
+});
+const errorStats = stateService.getErrorRateStatistics();
+```
+
+---
+
 ## v1.0.0
 
 **January 2026**
