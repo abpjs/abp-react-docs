@@ -26,6 +26,34 @@ This component includes:
 - Delete confirmation
 - Role assignment
 - Permission management button
+- Password requirements display (v1.1.0)
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `onUserCreated` | `(user: UserItem) => void` | - | Called when a user is created |
+| `onUserUpdated` | `(user: UserItem) => void` | - | Called when a user is updated |
+| `onUserDeleted` | `(id: string) => void` | - | Called when a user is deleted |
+| `passwordRulesArr` | `PasswordRule[]` | `[]` | Password rules to display (`'number'`, `'small'`, `'capital'`, `'special'`) |
+| `requiredPasswordLength` | `number` | `0` | Minimum password length to display |
+
+### Password Requirements Display
+
+Show password requirements in the user form:
+
+```tsx
+import { UsersComponent } from '@abpjs/identity';
+
+function UserManagementPage() {
+  return (
+    <UsersComponent
+      passwordRulesArr={['number', 'capital', 'small', 'special']}
+      requiredPasswordLength={6}
+    />
+  );
+}
+```
 
 ## useUsers Hook
 
@@ -194,6 +222,6 @@ await IdentityService.createUser({
 
 ## Related
 
-- [Roles](/docs/packages/identity/roles) - Role management
-- [Permissions](/docs/packages/core/permissions) - Permission checking
-- [Permission Management](/docs/packages/permission-management/overview) - Permission UI
+- [Roles](./roles) - Role management
+- [Permissions](../core/permissions) - Permission checking
+- [Permission Management](../permission-management/overview) - Permission UI

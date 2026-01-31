@@ -4,6 +4,28 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.1.0
+
+**January 2026**
+
+### New Features
+
+- **Password rules display** - `UsersComponent` now supports displaying password requirements:
+  - `passwordRulesArr` prop - Array of rules to display (`'number'`, `'small'`, `'capital'`, `'special'`)
+  - `requiredPasswordLength` prop - Minimum password length to display
+- **`PasswordRule` type** - New exported type for password validation rules
+
+### Example
+
+```tsx
+<UsersComponent
+  passwordRulesArr={['number', 'capital', 'small', 'special']}
+  requiredPasswordLength={6}
+/>
+```
+
+---
+
 ## v1.0.0
 
 **January 2026**
