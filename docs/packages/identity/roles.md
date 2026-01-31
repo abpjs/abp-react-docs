@@ -18,6 +18,30 @@ function RoleManagementPage() {
 }
 ```
 
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `onVisiblePermissionChange` | `(visible: boolean) => void` | - | Called when permission modal visibility changes (v2.0.0) |
+
+### Handling Permission Modal (v2.0.0)
+
+```tsx
+import { RolesComponent } from '@abpjs/identity';
+
+function RoleManagementPage() {
+  const handlePermissionVisibility = (visible: boolean) => {
+    console.log('Permission modal visible:', visible);
+  };
+
+  return (
+    <RolesComponent
+      onVisiblePermissionChange={handlePermissionVisibility}
+    />
+  );
+}
+```
+
 This component includes:
 - Role list
 - Create role modal

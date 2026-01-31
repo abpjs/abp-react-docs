@@ -4,6 +4,37 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### Breaking Changes
+
+- **`IDENTITY_ROUTES` removed** - This deprecated constant has been removed. Use identity config services for route configuration.
+- **`IdentityProviders` removed** - This deprecated provider has been removed.
+
+### New Features
+
+- **`IdentityStateService`** - New service class for programmatic identity state management:
+  - `dispatchGetRoles()` - Dispatch action to fetch roles
+  - `dispatchGetUsers()` - Dispatch action to fetch users
+  - `dispatchCreateRole()` - Dispatch action to create a role
+  - `dispatchUpdateRole()` - Dispatch action to update a role
+  - `dispatchDeleteRole()` - Dispatch action to delete a role
+  - `dispatchCreateUser()` - Dispatch action to create a user
+  - `dispatchUpdateUser()` - Dispatch action to update a user
+  - `dispatchDeleteUser()` - Dispatch action to delete a user
+
+- **`onVisiblePermissionChange` prop** - New callback prop on both `RolesComponent` and `UsersComponent` to handle permission modal visibility changes
+
+- **Component Interface Types** - Added TypeScript interfaces for component inputs/outputs:
+  - `Identity.RolesComponentInputs`
+  - `Identity.RolesComponentOutputs`
+  - `Identity.UsersComponentInputs`
+  - `Identity.UsersComponentOutputs`
+
+---
+
 ## v1.1.0
 
 **January 2026**

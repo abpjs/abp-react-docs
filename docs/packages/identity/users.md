@@ -37,6 +37,7 @@ This component includes:
 | `onUserDeleted` | `(id: string) => void` | - | Called when a user is deleted |
 | `passwordRulesArr` | `PasswordRule[]` | `[]` | Password rules to display (`'number'`, `'small'`, `'capital'`, `'special'`) |
 | `requiredPasswordLength` | `number` | `0` | Minimum password length to display |
+| `onVisiblePermissionChange` | `(visible: boolean) => void` | - | Called when permission modal visibility changes (v2.0.0) |
 
 ### Password Requirements Display
 

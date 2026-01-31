@@ -49,6 +49,7 @@ npm install @abpjs/core @abpjs/theme-shared @abpjs/permission-management
 | Service | Description |
 |---------|-------------|
 | `IdentityService` | Direct API interaction for identity operations |
+| `IdentityStateService` | State management with dispatch methods (v2.0.0) |
 
 ## Quick Example
 
@@ -66,6 +67,39 @@ function IdentityManagement() {
     </div>
   );
 }
+```
+
+## IdentityStateService (v2.0.0)
+
+The `IdentityStateService` provides programmatic access to dispatch identity state actions:
+
+```tsx
+import { IdentityStateService } from '@abpjs/identity';
+
+// Fetch roles
+IdentityStateService.dispatchGetRoles();
+
+// Create a role
+IdentityStateService.dispatchCreateRole({
+  name: 'Manager',
+  isDefault: false,
+  isPublic: true,
+});
+
+// Update a role
+IdentityStateService.dispatchUpdateRole({
+  id: 'role-id',
+  input: { name: 'Senior Manager', isDefault: false, isPublic: true },
+});
+
+// Delete a role
+IdentityStateService.dispatchDeleteRole('role-id');
+
+// User operations
+IdentityStateService.dispatchGetUsers();
+IdentityStateService.dispatchCreateUser({ /* user data */ });
+IdentityStateService.dispatchUpdateUser({ id: 'user-id', input: { /* user data */ } });
+IdentityStateService.dispatchDeleteUser('user-id');
 ```
 
 ## Required Permissions
