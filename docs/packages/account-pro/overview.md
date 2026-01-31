@@ -57,6 +57,7 @@ function App() {
 | `registerUrl` | `string` | `'/account/register'` | Custom registration page URL |
 | `enableSocialLogins` | `boolean` | `false` | Enable social login providers |
 | `enableTwoFactor` | `boolean` | `false` | Enable two-factor authentication |
+| `enableLocalLogin` | `boolean` | `true` | Enable local login (username/password). When false, only social logins are available (v2.0.0) |
 
 ## Components
 
@@ -85,6 +86,7 @@ function LoginPage() {
 | `showTenantBox` | `boolean` | `true` | Show tenant switching UI |
 | `showRegisterLink` | `boolean` | `true` | Show link to registration page |
 | `showForgotPasswordLink` | `boolean` | `true` | Show forgot password link |
+| `isSelfRegistrationEnabled` | `boolean` | `true` | When false, hides register link regardless of showRegisterLink (v2.0.0) |
 
 ### RegisterForm
 
@@ -97,6 +99,15 @@ function RegisterPage() {
   return <RegisterForm />;
 }
 ```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `showTenantBox` | `boolean` | `true` | Show tenant switching UI |
+| `showLoginLink` | `boolean` | `true` | Show link to login page |
+| `loginUrl` | `string` | `'/account/login'` | Custom login page URL |
+| `isSelfRegistrationEnabled` | `boolean` | `true` | When false, shows disabled message and redirects to login (v2.0.0) |
 
 ### TenantBox
 

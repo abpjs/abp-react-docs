@@ -4,6 +4,48 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### New Features
+
+- **`enableLocalLogin` option** - New configuration option for `AccountProProvider` to control local login visibility:
+  ```tsx
+  <AccountProProvider options={{ enableLocalLogin: false }}>
+    {/* Only social login providers will be available */}
+  </AccountProProvider>
+  ```
+
+- **`isSelfRegistrationEnabled` prop** - New prop on `LoginForm` and `RegisterForm` components to control self-registration:
+  - On `LoginForm`: When `false`, hides the register link regardless of `showRegisterLink` setting
+  - On `RegisterForm`: When `false`, displays a message and redirects to login instead of showing the form
+
+- **Component Interface Types** - Added TypeScript interfaces for component inputs/outputs:
+  - `Account.TenantBoxComponentInputs` / `Account.TenantBoxComponentOutputs`
+  - `Account.PersonalSettingsComponentInputs` / `Account.PersonalSettingsComponentOutputs`
+  - `Account.ChangePasswordComponentInputs` / `Account.ChangePasswordComponentOutputs`
+
+### Example
+
+```tsx
+import { LoginForm, RegisterForm } from '@abpjs/account-pro';
+
+// Login form with self-registration disabled
+<LoginForm
+  showTenantBox={true}
+  showRegisterLink={true}
+  isSelfRegistrationEnabled={false}  // Register link won't show
+/>
+
+// Register form with self-registration disabled
+<RegisterForm
+  isSelfRegistrationEnabled={false}  // Shows disabled message
+/>
+```
+
+---
+
 ## v1.0.0
 
 **January 2026**
