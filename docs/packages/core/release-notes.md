@@ -4,6 +4,57 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### Breaking Changes
+
+- **`eLayoutType.setting` removed** - This deprecated layout type has been removed. Use a custom layout instead.
+- **`ConfigService` alias removed** - Use `ConfigStateService` directly. The deprecated alias has been removed.
+
+### New Features
+
+- **`configActions.addRoute`** - Dynamically add routes at runtime:
+  ```tsx
+  import { configActions } from '@abpjs/core';
+
+  // Add at root level
+  dispatch(configActions.addRoute({
+    name: 'Dashboard',
+    path: 'dashboard',
+  }));
+
+  // Add as child route
+  dispatch(configActions.addRoute({
+    name: 'Details',
+    path: 'details',
+    parentName: 'Users',
+  }));
+  ```
+
+- **Session Detail Tracking** - New `SessionDetail` interface for multi-tab support:
+  ```tsx
+  const { sessionStateService } = useAbp();
+  const detail = sessionStateService.getSessionDetail();
+  // { openedTabCount, lastExitTime, remember }
+  ```
+
+- **New Session Actions**:
+  - `sessionActions.setRemember(boolean)` - Set remember flag
+  - `sessionActions.modifyOpenedTabCount('increase' | 'decrease')` - Track tabs
+  - `sessionActions.setSessionDetail(Partial<SessionDetail>)` - Update session detail
+
+- **`selectSessionDetail` selector** - Access session detail from Redux state
+
+- **ReplaceableComponents model** - New type definitions for component replacement system
+
+### Deprecation Updates
+
+- **`selectCopy`** - Now scheduled for removal in v3.0.0 (was v2.0.0)
+
+---
+
 ## v1.1.0
 
 **January 2026**

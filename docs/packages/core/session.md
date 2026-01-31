@@ -136,6 +136,7 @@ function SessionExample() {
 |--------|---------|-------------|
 | `getLanguage()` | `string` | Get current language/culture |
 | `getTenant()` | `Tenant \| undefined` | Get current tenant info |
+| `getSessionDetail()` | `SessionDetail` | Get session detail info (v2.0.0) |
 
 ## ProfileStateService (v1.1.0)
 
@@ -164,6 +165,89 @@ function ProfileExample() {
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `getProfile()` | `Profile \| undefined` | Get current user profile |
+
+## Session Detail (v2.0.0)
+
+The session now includes detailed tracking information for multi-tab support:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function SessionDetailExample() {
+  const { sessionStateService } = useAbp();
+  const detail = sessionStateService.getSessionDetail();
+
+  return (
+    <div>
+      <p>Open tabs: {detail.openedTabCount}</p>
+      <p>Last exit: {new Date(detail.lastExitTime).toLocaleString()}</p>
+      <p>Remember me: {detail.remember ? 'Yes' : 'No'}</p>
+    </div>
+  );
+}
+```
+
+### SessionDetail Object
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `openedTabCount` | `number` | Number of currently opened tabs/windows |
+| `lastExitTime` | `number` | Timestamp of last exit time |
+| `remember` | `boolean` | Whether to remember the session |
+
+### Session Actions (v2.0.0)
+
+New Redux actions for session management:
+
+```tsx
+import { useDispatch } from 'react-redux';
+import { sessionActions } from '@abpjs/core';
+
+function SessionManager() {
+  const dispatch = useDispatch();
+
+  // Track tab open/close
+  useEffect(() => {
+    dispatch(sessionActions.modifyOpenedTabCount('increase'));
+    return () => {
+      dispatch(sessionActions.modifyOpenedTabCount('decrease'));
+    };
+  }, [dispatch]);
+
+  // Set remember me preference
+  const handleRememberMe = (remember: boolean) => {
+    dispatch(sessionActions.setRemember(remember));
+  };
+
+  // Update session detail directly
+  const updateDetail = () => {
+    dispatch(sessionActions.setSessionDetail({
+      remember: true,
+      openedTabCount: 1,
+    }));
+  };
+
+  return <div>...</div>;
+}
+```
+
+| Action | Payload | Description |
+|--------|---------|-------------|
+| `setRemember` | `boolean` | Set remember flag for session persistence |
+| `modifyOpenedTabCount` | `'increase' \| 'decrease'` | Track opened tabs |
+| `setSessionDetail` | `Partial<SessionDetail>` | Update session detail |
+
+### selectSessionDetail Selector (v2.0.0)
+
+```tsx
+import { useSelector } from 'react-redux';
+import { selectSessionDetail } from '@abpjs/core';
+
+function SessionInfo() {
+  const sessionDetail = useSelector(selectSessionDetail);
+  return <p>Tabs open: {sessionDetail.openedTabCount}</p>;
+}
+```
 
 ## Related
 

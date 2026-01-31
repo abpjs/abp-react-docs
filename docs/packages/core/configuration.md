@@ -184,9 +184,45 @@ function ConfigExample() {
 | `getSettings()` | `keyword?: string` | `Record<string, string>` | Get settings, optionally filtered |
 | `getLocalization()` | `key, ...params` | `string` | Get localized string with interpolation |
 
-:::note
-`ConfigService` has been renamed to `ConfigStateService` in v1.1.0. The old name is still exported as an alias but will be removed in v2.0.0.
-:::
+## Dynamic Routes (v2.0.0)
+
+Add routes dynamically using the `addRoute` action:
+
+```tsx
+import { useDispatch } from 'react-redux';
+import { configActions } from '@abpjs/core';
+
+function RouteManager() {
+  const dispatch = useDispatch();
+
+  // Add route at root level
+  const addRootRoute = () => {
+    dispatch(configActions.addRoute({
+      name: 'Dashboard',
+      path: 'dashboard',
+      iconClass: 'fa fa-dashboard',
+    }));
+  };
+
+  // Add child route
+  const addChildRoute = () => {
+    dispatch(configActions.addRoute({
+      name: 'UserDetails',
+      path: 'details',
+      parentName: 'Users', // Will be added as child of 'Users' route
+    }));
+  };
+
+  return (
+    <div>
+      <button onClick={addRootRoute}>Add Dashboard</button>
+      <button onClick={addChildRoute}>Add User Details</button>
+    </div>
+  );
+}
+```
+
+The `addRoute` action automatically computes the full URL based on the parent route hierarchy.
 
 ## Related
 
