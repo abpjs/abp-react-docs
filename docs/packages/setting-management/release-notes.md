@@ -4,6 +4,26 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.1.0
+
+**January 2026**
+
+### New Features
+
+- **`SettingManagementStateService`** - New state service for managing setting tab selection:
+  - `getSelectedTab()` - Get the currently selected tab
+  - `setSelectedTab(tab)` - Set the selected tab
+  - `getState()` - Get the current state
+  - `reset()` - Reset state to initial values
+  - `subscribe(callback)` - Subscribe to state changes
+- **`getSettingManagementStateService()`** - Function to get the singleton state service instance
+
+### New Types
+
+- **`SettingManagement.State`** - State interface with `selectedTab` property
+
+---
+
 ## v1.0.0
 
 **January 2026**
