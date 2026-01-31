@@ -8,6 +8,10 @@ The `@abpjs/audit-logging` package provides components and services for viewing 
 
 [![npm version](https://img.shields.io/npm/v/@abpjs/audit-logging.svg)](https://www.npmjs.com/package/@abpjs/audit-logging)
 
+:::info ABP Commercial License Required
+This package is free to use but requires the corresponding backend module from [ABP Commercial](https://commercial.abp.io/). You can purchase an ABP Commercial license from [abp.io](https://abp.io/pricing).
+:::
+
 ## Installation
 
 ```bash

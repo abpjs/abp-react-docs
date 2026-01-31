@@ -2,6 +2,10 @@
 
 The `@abpjs/identity-pro` package provides advanced identity management components and services for ABP React applications. This is the React equivalent of Angular's `@volo/abp.ng.identity` module.
 
+:::info ABP Commercial License Required
+This package is free to use but requires the corresponding backend module from [ABP Commercial](https://commercial.abp.io/). You can purchase an ABP Commercial license from [abp.io](https://abp.io/pricing).
+:::
+
 ## Installation
 
 ```bash

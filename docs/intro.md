@@ -30,24 +30,35 @@ That's it! You now have a fully configured ABP React project with all dependenci
 
 ## Packages
 
-ABP React consists of 14 packages:
+ABP React consists of 14 packages split between free and pro modules.
+
+### Free Packages
+
+Works with the open-source [ABP Framework](https://abp.io/).
 
 | Package | Description |
 |---------|-------------|
 | [@abpjs/core](./packages/core/overview) | Core infrastructure: authentication, configuration, localization, permissions, REST services |
 | [@abpjs/account](./packages/account/overview) | Login, registration, and tenant switching components |
-| [@abpjs/account-pro](./packages/account-pro/overview) | Pro account module with password recovery, profile management, 2FA |
-| [@abpjs/audit-logging](./packages/audit-logging/overview) | Audit logs viewing with filtering and statistics |
 | [@abpjs/identity](./packages/identity/overview) | User and role management components |
-| [@abpjs/identity-pro](./packages/identity-pro/overview) | Pro identity module with organization units, security logs, claim types |
 | [@abpjs/feature-management](./packages/feature-management/overview) | Feature management modal and services |
-| [@abpjs/language-management](./packages/language-management/overview) | Language and localization string management |
 | [@abpjs/permission-management](./packages/permission-management/overview) | Permission management modal and services |
-| [@abpjs/saas](./packages/saas/overview) | SaaS module with tenants, editions, and connection strings |
 | [@abpjs/setting-management](./packages/setting-management/overview) | Settings UI with email and identity settings |
 | [@abpjs/tenant-management](./packages/tenant-management/overview) | Multi-tenant management components |
 | [@abpjs/theme-basic](./packages/theme-basic/overview) | Layout components (Application, Account, Empty layouts) |
 | [@abpjs/theme-shared](./packages/theme-shared/overview) | Shared UI: toasts, confirmations, theming |
+
+### Pro Packages
+
+These packages are free to use but require the corresponding backend modules from [ABP Commercial](https://commercial.abp.io/). You can purchase an ABP Commercial license from [abp.io](https://abp.io/pricing).
+
+| Package | Description |
+|---------|-------------|
+| [@abpjs/account-pro](./packages/account-pro/overview) | Pro account module with password recovery, profile management, 2FA |
+| [@abpjs/identity-pro](./packages/identity-pro/overview) | Pro identity module with claim types, user/role claims |
+| [@abpjs/audit-logging](./packages/audit-logging/overview) | Audit logs viewing with filtering and statistics |
+| [@abpjs/language-management](./packages/language-management/overview) | Language and localization string management |
+| [@abpjs/saas](./packages/saas/overview) | SaaS module with tenants, editions, and connection strings |
 
 ## Quick Example
 

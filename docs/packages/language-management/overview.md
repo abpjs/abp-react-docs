@@ -2,6 +2,10 @@
 
 The `@abpjs/language-management` package provides language and localization management components for ABP React applications. This is the React equivalent of Angular's `@volo/abp.ng.language-management` module.
 
+:::info ABP Commercial License Required
+This package is free to use but requires the corresponding backend module from [ABP Commercial](https://commercial.abp.io/). You can purchase an ABP Commercial license from [abp.io](https://abp.io/pricing).
+:::
+
 ## Installation
 
 ```bash

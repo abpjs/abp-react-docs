@@ -4,6 +4,27 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.1.0
+
+**January 2026**
+
+### New Features
+
+- **`TenantManagementStateService`** - New state service for managing tenant state:
+  - `get()` - Get all tenants
+  - `getTenantsTotalCount()` - Get total tenant count
+  - `subscribe()` - Subscribe to state changes
+  - `reset()` - Reset state to initial values
+- **`getTenantManagementStateService()`** - Get singleton instance of the state service
+- **`ModalContentType` type** - Exported type for modal content (`'saveConnStr'` | `'saveTenant'`)
+
+### Hook Enhancements
+
+- **`isDisabledSaveButton`** - Computed property that returns `true` when save should be disabled (connection string required but empty)
+- **`onSharedDatabaseChange()`** - Handler for shared database checkbox that auto-clears connection string
+
+---
+
 ## v1.0.0
 
 **January 2026**

@@ -44,6 +44,15 @@ npm install @abpjs/core @abpjs/theme-shared
 | Service | Description |
 |---------|-------------|
 | `TenantManagementService` | Direct API interaction |
+| `TenantManagementStateService` | State management service |
+| `getTenantManagementStateService` | Get singleton state service instance |
+
+### Types
+
+| Type | Description |
+|------|-------------|
+| `SortOrder` | Sort order values (`'asc'` \| `'desc'` \| `''`) |
+| `ModalContentType` | Modal content type (`'saveConnStr'` \| `'saveTenant'`) |
 
 ## Required Permissions
 
