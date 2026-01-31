@@ -36,10 +36,14 @@ function DeleteButton() {
 
 | Method | Parameters | Description |
 |--------|------------|-------------|
-| `info` | `(message, title, options?)` | Show info confirmation |
-| `success` | `(message, title, options?)` | Show success confirmation |
-| `warn` | `(message, title, options?)` | Show warning confirmation |
-| `error` | `(message, title, options?)` | Show error/danger confirmation |
+| `info` | `(message, title?, options?)` | Show info confirmation |
+| `success` | `(message, title?, options?)` | Show success confirmation |
+| `warn` | `(message, title?, options?)` | Show warning confirmation |
+| `error` | `(message, title?, options?)` | Show error/danger confirmation |
+| `show` | `(message, title?, severity?, options?)` | Show with specified severity (v2.0.0) |
+| `clear` | `(status?)` | Clear the current confirmation |
+| `listenToEscape` | `()` | Enable escape key dismissal (v2.0.0) |
+| `subscribe` | `(callback)` | Subscribe to confirmation updates (v2.0.0) |
 
 ### ConfirmationOptions
 
@@ -47,14 +51,23 @@ function DeleteButton() {
 interface ConfirmationOptions {
   yesText?: Config.LocalizationParam;    // Default: 'Yes' (localized)
   cancelText?: Config.LocalizationParam; // Default: 'Cancel' (localized)
-  hideYesBtn?: boolean;   // Hide confirm button
+  hideYesBtn?: boolean;    // Hide confirm button
   hideCancelBtn?: boolean; // Hide cancel button
+  closable?: boolean;      // Allow dismiss via escape/click outside (v2.0.0)
 }
 ```
 
-:::note
-Since v1.1.0, use `yesText` and `cancelText` instead of `yesCopy` and `cancelCopy`. The old properties are deprecated and will be removed in v2.0.0.
+:::warning Breaking Change (v2.0.0)
+The deprecated `yesCopy` and `cancelCopy` properties have been removed. Use `yesText` and `cancelText` instead.
 :::
+
+### Severity Types (v2.0.0)
+
+```tsx
+type Severity = 'neutral' | 'success' | 'info' | 'warning' | 'error';
+```
+
+The `show()` method accepts a severity parameter. If not specified, it defaults to `'neutral'`.
 
 ### Return Value
 
@@ -113,8 +126,72 @@ const status = await confirmation.warn(
   'You have unsaved changes. Discard them?',
   'Unsaved Changes',
   {
-    yesCopy: 'Discard',
-    cancelCopy: 'Keep Editing',
+    yesText: 'Discard',
+    cancelText: 'Keep Editing',
+  }
+);
+```
+
+## Show with Custom Severity (v2.0.0)
+
+Use the `show()` method to display a confirmation with any severity:
+
+```tsx
+const status = await confirmation.show(
+  'This is a neutral message',
+  'Neutral Title',
+  'neutral', // 'neutral' | 'success' | 'info' | 'warning' | 'error'
+  { yesText: 'OK' }
+);
+```
+
+## Escape Key Dismissal (v2.0.0)
+
+Enable escape key to dismiss confirmations:
+
+```tsx
+function App() {
+  const confirmation = useConfirmation();
+
+  useEffect(() => {
+    // Enable escape key listener
+    confirmation.listenToEscape();
+  }, [confirmation]);
+
+  // Now pressing Escape will dismiss open confirmations
+  // (unless closable: false is set)
+}
+```
+
+## Subscribe to Updates (v2.0.0)
+
+Subscribe to confirmation state changes:
+
+```tsx
+useEffect(() => {
+  const unsubscribe = confirmation.subscribe((data) => {
+    if (data) {
+      console.log('Confirmation shown:', data.message);
+    } else {
+      console.log('Confirmation closed');
+    }
+  });
+
+  return () => unsubscribe();
+}, [confirmation]);
+```
+
+## Non-Closable Confirmation (v2.0.0)
+
+Prevent users from dismissing without a choice:
+
+```tsx
+const status = await confirmation.error(
+  'Critical action required. You must choose.',
+  'Required Action',
+  {
+    closable: false, // Cannot escape or click outside
+    hideCancelBtn: true, // Only Yes button
   }
 );
 ```
@@ -133,8 +210,8 @@ function ItemActions({ item }) {
       `Are you sure you want to delete "${item.name}"?`,
       'Delete Item',
       {
-        yesCopy: 'Delete',
-        cancelCopy: 'Cancel',
+        yesText: 'Delete',
+        cancelText: 'Cancel',
       }
     );
 
@@ -168,8 +245,8 @@ function EditForm({ hasChanges }) {
         'You have unsaved changes. Are you sure you want to leave?',
         'Unsaved Changes',
         {
-          yesCopy: 'Leave',
-          cancelCopy: 'Stay',
+          yesText: 'Leave',
+          cancelText: 'Stay',
         }
       );
 
@@ -202,8 +279,8 @@ function BulkActions({ selectedItems }) {
       `Are you sure you want to delete ${selectedItems.length} items? This action cannot be undone.`,
       'Delete Multiple Items',
       {
-        yesCopy: `Delete ${selectedItems.length} Items`,
-        cancelCopy: 'Cancel',
+        yesText: `Delete ${selectedItems.length} Items`,
+        cancelText: 'Cancel',
       }
     );
 

@@ -4,6 +4,42 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### Breaking Changes
+
+- **ToasterService return type** - Methods (`info`, `success`, `warn`, `error`) now return `number` (toast ID) instead of `Promise<Toaster.Status>`
+- **`toaster.remove(id)`** - Now takes `number` instead of `string`
+- **`toaster.addAll()` removed** - Use `show()` method instead
+- **`Toaster.Options` renamed** - Use `Toaster.ToastOptions` (old interface kept for compatibility, deprecated)
+- **`Toaster.Severity` changed** - `'warn'` renamed to `'warning'`, added `'neutral'`
+- **`Confirmation.Options`** - Removed `yesCopy` and `cancelCopy` (use `yesText` and `cancelText`)
+- **`Confirmation.Options`** - No longer extends `Toaster.Options`
+
+### New Features
+
+- **`toaster.show(message, title?, severity?, options)`** - Create toast with specified severity
+- **`toaster.subscribe(callback)`** - Subscribe to toast state changes (observable pattern)
+- **`toaster.clear(containerKey?)`** - Clear toasts by container key
+- **`ToastContainer` `containerKey` prop** - Filter toasts to specific containers
+- **Toast positions** - New `'top'`, `'top-left'`, `'bottom'`, `'bottom-left'` positions
+- **`confirmation.show(message, title?, severity?, options)`** - Create with specified severity
+- **`confirmation.listenToEscape()`** - Enable escape key dismissal
+- **`confirmation.subscribe(callback)`** - Subscribe to confirmation changes
+- **`Confirmation.Options.closable`** - Control dismiss behavior
+- **`Confirmation.Severity` type** - Separate from Toaster, includes `'neutral'`
+- **Sorting icon CSS classes** - `.sorting`, `.sorting_asc`, `.sorting_desc`
+
+### Style Updates
+
+- Updated animation timing (0.4s → 0.2s for fade effects)
+- Added table scrollbar styling
+- Added collapse/expand height transition classes
+
+---
+
 ## v1.1.0
 
 **January 2026**
