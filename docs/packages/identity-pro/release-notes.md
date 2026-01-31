@@ -1,5 +1,82 @@
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### New Features
+
+- **`IdentityStateService`** - New state service for programmatic identity operations with 17 dispatch methods:
+
+  **Role Operations:**
+  - `dispatchGetRoles(params?)` - Fetch roles and update internal state
+  - `dispatchGetRoleById(id)` - Fetch a single role by ID
+  - `dispatchCreateRole(body)` - Create a new role
+  - `dispatchUpdateRole(id, body)` - Update an existing role
+  - `dispatchDeleteRole(id)` - Delete a role
+
+  **User Operations:**
+  - `dispatchGetUsers(params?)` - Fetch users and update internal state
+  - `dispatchGetUserById(id)` - Fetch a single user by ID
+  - `dispatchCreateUser(body)` - Create a new user
+  - `dispatchUpdateUser(id, body)` - Update an existing user
+  - `dispatchDeleteUser(id)` - Delete a user
+  - `dispatchGetUserRoles(id)` - Get roles assigned to a user
+
+  **Claim Type Operations (Pro):**
+  - `dispatchGetClaimTypes(params?)` - Fetch claim types and update internal state
+  - `dispatchGetClaimTypeById(id)` - Fetch a single claim type by ID
+  - `dispatchCreateClaimType(body)` - Create a new claim type
+  - `dispatchUpdateClaimType(body)` - Update an existing claim type
+  - `dispatchDeleteClaimType(id)` - Delete a claim type
+  - `dispatchGetClaimTypeNames()` - Get all claim type names
+
+  **State Getter Methods:**
+  - `getRoles()` / `getRolesTotalCount()` - Access cached roles
+  - `getUsers()` / `getUsersTotalCount()` - Access cached users
+  - `getClaimTypes()` / `getClaimTypesTotalCount()` - Access cached claim types
+  - `getClaimTypeNames()` - Access cached claim type names
+
+### Example
+
+```tsx
+import { IdentityStateService } from '@abpjs/identity-pro';
+import { RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const stateService = new IdentityStateService(restService);
+
+// Fetch and manage roles
+await stateService.dispatchGetRoles({ maxResultCount: 10 });
+const roles = stateService.getRoles();
+console.log(`Found ${stateService.getRolesTotalCount()} roles`);
+
+// Create a new role
+await stateService.dispatchCreateRole({
+  name: 'Manager',
+  isDefault: false,
+  isPublic: true,
+});
+
+// Fetch and manage users
+await stateService.dispatchGetUsers({ filter: 'admin' });
+const users = stateService.getUsers();
+
+// Fetch claim types (Pro feature)
+await stateService.dispatchGetClaimTypes();
+const claimTypes = stateService.getClaimTypes();
+```
+
+---
+
+## v1.0.0
+
+**January 2026**
+
+- Version alignment with @abpjs/core v1.0.0
+
+---
+
 ## v0.7.2 (Initial Release)
 
 ### Components
