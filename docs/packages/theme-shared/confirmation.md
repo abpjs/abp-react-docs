@@ -45,12 +45,16 @@ function DeleteButton() {
 
 ```tsx
 interface ConfirmationOptions {
-  yesCopy?: string;       // Default: 'Yes' (localized)
-  cancelCopy?: string;    // Default: 'Cancel' (localized)
+  yesText?: Config.LocalizationParam;    // Default: 'Yes' (localized)
+  cancelText?: Config.LocalizationParam; // Default: 'Cancel' (localized)
   hideYesBtn?: boolean;   // Hide confirm button
   hideCancelBtn?: boolean; // Hide cancel button
 }
 ```
+
+:::note
+Since v1.1.0, use `yesText` and `cancelText` instead of `yesCopy` and `cancelCopy`. The old properties are deprecated and will be removed in v2.0.0.
+:::
 
 ### Return Value
 
@@ -221,7 +225,27 @@ function BulkActions({ selectedItems }) {
 }
 ```
 
+## Localization Support (v1.1.0)
+
+Button text now accepts `Config.LocalizationParam` for automatic localization:
+
+```tsx
+const status = await confirmation.warn(
+  'Are you sure?',
+  'Confirm',
+  {
+    // Using localization keys
+    yesText: 'AbpIdentity::Delete',
+    cancelText: 'AbpIdentity::Cancel',
+
+    // Or with default values
+    yesText: { key: 'DeleteKey', defaultValue: 'Delete' },
+    cancelText: { key: 'CancelKey', defaultValue: 'Cancel' },
+  }
+);
+```
+
 ## Related
 
-- [Toaster](/docs/packages/theme-shared/toaster) - Toast notifications
-- [Error Handling](/docs/packages/theme-shared/error-handling) - Global error handling
+- [Toaster](./toaster) - Toast notifications
+- [Error Handling](./error-handling) - Global error handling

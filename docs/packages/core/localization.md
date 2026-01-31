@@ -226,6 +226,71 @@ selectLocalizationString('Welcome')
 selectLocalizationString({ key: 'CustomKey', defaultValue: 'Fallback' })
 ```
 
+## LocalizationService Enhancements (v1.1.0)
+
+The `LocalizationService` methods now accept `Config.LocalizationWithDefault` in addition to string keys:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function LocalizationExample() {
+  const { localizationService } = useAbp();
+
+  // String key (existing)
+  const text = localizationService.get('MyKey');
+
+  // Object with default value (new in v1.1.0)
+  const textWithDefault = localizationService.get({
+    key: 'MyKey',
+    defaultValue: 'Fallback text'
+  });
+
+  // With interpolation
+  const greeting = localizationService.get('Hello {0}!', 'World');
+
+  return <div>{greeting}</div>;
+}
+```
+
+### Affected Methods
+
+| Method | Description |
+|--------|-------------|
+| `get()` | Get localized string |
+| `instant()` | Synchronous translation |
+| `t()` | Alias for `get()` |
+
+### Config.LocalizationParam Type
+
+```tsx
+import { Config } from '@abpjs/core';
+
+// Union type for localization keys
+type LocalizationParam = string | Config.LocalizationWithDefault;
+
+// Usage
+const key: Config.LocalizationParam = {
+  key: 'MyKey',
+  defaultValue: 'Default text'
+};
+```
+
+## Date.toLocalISOString() (v1.1.0)
+
+Returns ISO string in local timezone (unlike `toISOString()` which returns UTC):
+
+```tsx
+const date = new Date();
+
+// Standard - returns UTC
+date.toISOString();      // "2026-01-31T13:15:00.000Z"
+
+// New - returns local timezone
+date.toLocalISOString(); // "2026-01-31T16:15:00.000+03:00"
+```
+
+This is useful when you need to send dates to APIs that expect local timezone information.
+
 ## Related
 
 - [Configuration](./configuration) - Application configuration

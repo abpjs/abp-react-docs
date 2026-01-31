@@ -108,8 +108,64 @@ function SessionManager() {
 }
 ```
 
+## SessionStateService (v1.1.0)
+
+The `SessionStateService` provides a service-based API for accessing session state:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function SessionExample() {
+  const { sessionStateService } = useAbp();
+
+  const language = sessionStateService.getLanguage();
+  const tenant = sessionStateService.getTenant();
+
+  return (
+    <div>
+      <p>Language: {language}</p>
+      <p>Tenant: {tenant?.name || 'Host'}</p>
+    </div>
+  );
+}
+```
+
+### SessionStateService Methods
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `getLanguage()` | `string` | Get current language/culture |
+| `getTenant()` | `Tenant \| undefined` | Get current tenant info |
+
+## ProfileStateService (v1.1.0)
+
+The `ProfileStateService` provides access to the current user's profile:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function ProfileExample() {
+  const { profileStateService } = useAbp();
+
+  const profile = profileStateService.getProfile();
+
+  return (
+    <div>
+      <p>Username: {profile?.userName}</p>
+      <p>Email: {profile?.email}</p>
+      <p>Name: {profile?.name} {profile?.surname}</p>
+    </div>
+  );
+}
+```
+
+### ProfileStateService Methods
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `getProfile()` | `Profile \| undefined` | Get current user profile |
+
 ## Related
 
-- [Authentication](/docs/packages/core/authentication) - Auth management
-- [Configuration](/docs/packages/core/configuration) - App configuration
-- [Multi-tenancy Guide](/docs/guides/multi-tenancy) - Tenant switching
+- [Authentication](./authentication) - Auth management
+- [Configuration](./configuration) - App configuration

@@ -231,8 +231,61 @@ function App() {
 }
 ```
 
+## Custom Error Screen (v1.1.0)
+
+Configure custom error screens for specific HTTP error codes:
+
+```tsx
+import { ThemeSharedProvider } from '@abpjs/theme-shared';
+
+// Custom error component
+function CustomErrorScreen({ status }: { status: number }) {
+  return (
+    <div>
+      <h1>Error {status}</h1>
+      <p>Something went wrong. Please contact support.</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeSharedProvider
+      options={{
+        httpErrorConfig: {
+          errorScreen: {
+            component: CustomErrorScreen,
+            forWhichErrors: [401, 403, 404, 500],
+            hideCloseIcon: false,
+          },
+        },
+      }}
+    >
+      <MyApp />
+    </ThemeSharedProvider>
+  );
+}
+```
+
+### HttpErrorConfig Options
+
+```tsx
+interface HttpErrorConfig {
+  errorScreen?: {
+    /** Custom React component to render for errors */
+    component: ComponentType<any>;
+    /** Which error codes to show the custom component for */
+    forWhichErrors?: ErrorScreenErrorCodes[];
+    /** Whether to hide the close icon on the error screen */
+    hideCloseIcon?: boolean;
+  };
+}
+
+type ErrorScreenErrorCodes = 401 | 403 | 404 | 500;
+```
+
 ## Related
 
-- [Toaster](/docs/packages/theme-shared/toaster) - Toast notifications
-- [Confirmation](/docs/packages/theme-shared/confirmation) - Confirmation dialogs
-- [REST Service](/docs/packages/core/rest-service) - HTTP client
+- [Toaster](./toaster) - Toast notifications
+- [Confirmation](./confirmation) - Confirmation dialogs
+- [REST Service](../core/rest-service) - HTTP client

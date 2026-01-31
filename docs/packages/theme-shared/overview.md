@@ -134,8 +134,55 @@ function MyComponent() {
 | `enableColorMode` | `boolean` | `false` | Enable dark/light mode |
 | `defaultColorMode` | `'light' \| 'dark' \| 'system'` | `'light'` | Default color mode |
 
+## LoaderBar Component
+
+The `LoaderBar` shows a progress bar during HTTP requests:
+
+```tsx
+import { LoaderBar } from '@abpjs/theme-shared';
+
+function App() {
+  return (
+    <>
+      <LoaderBar />
+      <MyApp />
+    </>
+  );
+}
+```
+
+### LoaderBar Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `containerClass` | `string` | `'abp-loader-bar'` | CSS class for container |
+| `progressClass` | `string` | `'abp-progress'` | CSS class for progress bar |
+| `filter` | `function` | - | Filter which requests trigger loading |
+| `intervalPeriod` | `number` | `300` | Progress animation interval (ms) |
+| `stopDelay` | `number` | `400` | Delay before hiding after load (ms) |
+
+### Custom Animation Timing (v1.1.0)
+
+```tsx
+<LoaderBar
+  intervalPeriod={200}  // Faster progress animation
+  stopDelay={600}       // Longer delay before hiding
+/>
+```
+
+### Filter Requests
+
+```tsx
+<LoaderBar
+  filter={(request) => {
+    // Only show for API requests, not static assets
+    return request.url?.startsWith('/api') ?? true;
+  }}
+/>
+```
+
 ## Documentation
 
-- [Toaster](/docs/packages/theme-shared/toaster) - Toast notifications
-- [Confirmation](/docs/packages/theme-shared/confirmation) - Confirmation dialogs
-- [Error Handling](/docs/packages/theme-shared/error-handling) - Global error handling
+- [Toaster](./toaster) - Toast notifications
+- [Confirmation](./confirmation) - Confirmation dialogs
+- [Error Handling](./error-handling) - Global error handling

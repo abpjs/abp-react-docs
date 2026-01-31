@@ -39,12 +39,16 @@ function NotificationExample() {
 
 | Method | Parameters | Description |
 |--------|------------|-------------|
-| `success` | `(message: string, title?: string, options?)` | Show success toast |
-| `error` | `(message: string, title?: string, options?)` | Show error toast |
-| `warn` | `(message: string, title?: string, options?)` | Show warning toast |
-| `info` | `(message: string, title?: string, options?)` | Show info toast |
+| `success` | `(message, title?, options?)` | Show success toast |
+| `error` | `(message, title?, options?)` | Show error toast |
+| `warn` | `(message, title?, options?)` | Show warning toast |
+| `info` | `(message, title?, options?)` | Show info toast |
 | `clear` | `()` | Clear all toasts |
 | `remove` | `(id: string)` | Remove specific toast |
+
+:::note
+Since v1.1.0, `message` and `title` accept `Config.LocalizationParam` (string or `{ key, defaultValue }`).
+:::
 
 ### Toast Options
 
@@ -150,7 +154,28 @@ function Form() {
 }
 ```
 
+## Localization Support (v1.1.0)
+
+Toast messages and titles now accept `Config.LocalizationParam` for automatic localization:
+
+```tsx
+import { useToaster } from '@abpjs/theme-shared';
+
+function LocalizedToasts() {
+  const toaster = useToaster();
+
+  // String key (resolved via localization)
+  toaster.success('AbpIdentity::UserCreated', 'AbpIdentity::Success');
+
+  // With default value fallback
+  toaster.success(
+    { key: 'CustomKey', defaultValue: 'Operation completed!' },
+    { key: 'SuccessTitle', defaultValue: 'Success' }
+  );
+}
+```
+
 ## Related
 
-- [Confirmation](/docs/packages/theme-shared/confirmation) - Confirmation dialogs
-- [Error Handling](/docs/packages/theme-shared/error-handling) - Global error handling
+- [Confirmation](./confirmation) - Confirmation dialogs
+- [Error Handling](./error-handling) - Global error handling

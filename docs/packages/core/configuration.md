@@ -135,6 +135,59 @@ function SettingsPanel() {
 }
 ```
 
+## ConfigStateService (v1.1.0)
+
+The `ConfigStateService` provides a service-based API for accessing configuration state, aligned with Angular ABP naming conventions:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function ConfigExample() {
+  const { configStateService } = useAbp();
+
+  // Get application info
+  const appInfo = configStateService.getApplicationInfo();
+
+  // Find route by path
+  const route = configStateService.getRoute('/users', undefined, undefined);
+
+  // Find route by name
+  const routeByName = configStateService.getRoute(undefined, 'Users');
+
+  // Find route by URL
+  const routeByUrl = configStateService.getRoute(undefined, undefined, '/admin/users');
+
+  // Get settings with optional keyword filter
+  const emailSettings = configStateService.getSettings('Email');
+
+  // Get localized string with interpolation
+  const greeting = configStateService.getLocalization(
+    { key: 'HelloUser', defaultValue: 'Hello!' },
+    'John'
+  );
+
+  return (
+    <div>
+      <h1>{appInfo?.name}</h1>
+      <p>{greeting}</p>
+    </div>
+  );
+}
+```
+
+### ConfigStateService Methods
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `getApplicationInfo()` | - | `Config.Application \| undefined` | Get application name and logo |
+| `getRoute()` | `path?, name?, url?` | `ABP.FullRoute \| undefined` | Find route by path, name, or URL |
+| `getSettings()` | `keyword?: string` | `Record<string, string>` | Get settings, optionally filtered |
+| `getLocalization()` | `key, ...params` | `string` | Get localized string with interpolation |
+
+:::note
+`ConfigService` has been renamed to `ConfigStateService` in v1.1.0. The old name is still exported as an alias but will be removed in v2.0.0.
+:::
+
 ## Related
 
 - [Localization](./localization) - Multi-language support

@@ -4,6 +4,22 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.1.0
+
+**January 2026**
+
+### New Features
+
+- **ToasterService localization support** - `info()`, `success()`, `warn()`, `error()` now accept `Config.LocalizationParam` for message and title
+- **LoaderBar customization** - New `intervalPeriod` and `stopDelay` props for animation control
+- **HttpErrorConfig** - New types for custom error screen configuration (`RootParams`, `HttpErrorConfig`, `ErrorScreenErrorCodes`)
+
+### Deprecations
+
+- **Confirmation.Options** - `cancelCopy` and `yesCopy` deprecated in favor of `cancelText` and `yesText` (which accept `Config.LocalizationParam`)
+
+---
+
 ## v1.0.0
 
 **January 2026**
