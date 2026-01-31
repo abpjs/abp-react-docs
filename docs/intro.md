@@ -30,13 +30,14 @@ That's it! You now have a fully configured ABP React project with all dependenci
 
 ## Packages
 
-ABP React consists of 13 packages:
+ABP React consists of 14 packages:
 
 | Package | Description |
 |---------|-------------|
 | [@abpjs/core](./packages/core/overview) | Core infrastructure: authentication, configuration, localization, permissions, REST services |
 | [@abpjs/account](./packages/account/overview) | Login, registration, and tenant switching components |
 | [@abpjs/account-pro](./packages/account-pro/overview) | Pro account module with password recovery, profile management, 2FA |
+| [@abpjs/audit-logging](./packages/audit-logging/overview) | Audit logs viewing with filtering and statistics |
 | [@abpjs/identity](./packages/identity/overview) | User and role management components |
 | [@abpjs/identity-pro](./packages/identity-pro/overview) | Pro identity module with organization units, security logs, claim types |
 | [@abpjs/feature-management](./packages/feature-management/overview) | Feature management modal and services |

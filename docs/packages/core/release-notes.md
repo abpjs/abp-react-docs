@@ -4,6 +4,103 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.1.0
+
+**January 2026**
+
+### New Services
+
+- **`ConfigStateService`** - Renamed from `ConfigService` to align with Angular ABP naming conventions:
+  ```tsx
+  import { ConfigStateService } from '@abpjs/core';
+
+  // Access via useAbp hook
+  const { configStateService } = useAbp();
+
+  // Get application info
+  const appInfo = configStateService.getApplicationInfo();
+
+  // Find route by path, name, or url
+  const route = configStateService.getRoute('/users', undefined, undefined);
+  const routeByName = configStateService.getRoute(undefined, 'Users');
+  const routeByUrl = configStateService.getRoute(undefined, undefined, '/admin/users');
+
+  // Get settings with optional keyword filter
+  const emailSettings = configStateService.getSettings('Email');
+
+  // Get localized string with interpolation
+  const greeting = configStateService.getLocalization(
+    { key: 'HelloUser', defaultValue: 'Hello!' },
+    'John'
+  );
+  ```
+
+- **`SessionStateService`** - Access session state (language, tenant):
+  ```tsx
+  import { SessionStateService } from '@abpjs/core';
+
+  const { sessionStateService } = useAbp();
+
+  const language = sessionStateService.getLanguage();
+  const tenant = sessionStateService.getTenant();
+  ```
+
+- **`ProfileStateService`** - Access profile state:
+  ```tsx
+  import { ProfileStateService } from '@abpjs/core';
+
+  const { profileStateService } = useAbp();
+
+  const profile = profileStateService.getProfile();
+  ```
+
+### LocalizationService Enhancements
+
+The `LocalizationService` methods now accept `Config.LocalizationWithDefault` in addition to string keys:
+
+```tsx
+// String key (existing)
+const text = localizationService.get('MyKey');
+
+// Object with default value (new)
+const textWithDefault = localizationService.get({
+  key: 'MyKey',
+  defaultValue: 'Fallback text'
+});
+
+// With interpolation
+const greeting = localizationService.get('Hello {0}!', 'World');
+```
+
+Affected methods: `get()`, `instant()`, `t()`
+
+### New Date Extension
+
+`Date.prototype.toLocalISOString()` - Returns ISO string in local timezone (unlike `toISOString()` which returns UTC):
+
+```tsx
+const date = new Date();
+
+// Standard - returns UTC
+date.toISOString();      // "2026-01-31T13:15:00.000Z"
+
+// New - returns local timezone
+date.toLocalISOString(); // "2026-01-31T16:15:00.000+03:00"
+```
+
+### New Types
+
+- **`Config.LocalizationParam`** - Union type for localization keys:
+  ```tsx
+  type LocalizationParam = string | LocalizationWithDefault;
+  ```
+
+### Deprecations
+
+- **`ConfigService`** - Renamed to `ConfigStateService`. The old name is still exported as an alias but will be removed in v2.0.0.
+
+---
+
 ## v1.0.0
 
 **January 2026**
