@@ -314,22 +314,21 @@ import type {
 ## Dependencies
 
 - `@abpjs/core` - Core ABP React functionality
-- `@abpjs/oauth` - OAuth authentication support
 
 ## Comparison with @abpjs/account
 
 | Feature | @abpjs/account | @abpjs/account-pro |
 |---------|----------------|-------------------|
-| Login Form | ✓ | ✓ |
-| Register Form | ✓ | ✓ |
-| Tenant Box | ✓ | ✓ |
-| Forgot Password | ✗ | ✓ |
-| Reset Password | ✗ | ✓ |
-| Change Password | ✗ | ✓ |
-| Personal Settings | ✗ | ✓ |
-| Profile Management | ✗ | ✓ |
-| Two-Factor Auth | ✗ | ✓ |
-| Social Logins | ✗ | ✓ |
+| Login Form | Yes | Yes |
+| Register Form | Yes | Yes |
+| Tenant Box | Yes | Yes |
+| Forgot Password | No | Yes |
+| Reset Password | No | Yes |
+| Change Password | No | Yes |
+| Personal Settings | No | Yes |
+| Profile Management | No | Yes |
+| Two-Factor Auth | No | Yes |
+| Social Logins | No | Yes |
 
 ## See Also
 
