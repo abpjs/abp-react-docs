@@ -8,7 +8,7 @@ The `@abpjs/tenant-management` package provides components and hooks for tenant 
 
 :::info New in v0.9.0
 - `fetchTenants` now accepts optional `ABP.PageQueryParams` for pagination/filtering
-- New constants: `TENANT_MANAGEMENT_ROUTES`, `TENANT_MANAGEMENT_ROUTE_PATHS`, `TENANT_MANAGEMENT_POLICIES`
+- New constants: `TENANT_MANAGEMENT_ROUTE_PATHS`, `TENANT_MANAGEMENT_POLICIES`
 :::
 
 ## useTenantManagement Hook
@@ -140,6 +140,7 @@ function TenantManager() {
 | `onClose` | `() => void` | Yes | Called when modal closes |
 | `tenant` | `Tenant \| null` | No | Tenant to edit (null for create) |
 | `onSave` | `() => void` | No | Called after save |
+| `onVisibleFeaturesChange` | `(visible: boolean) => void` | No | Called when features modal visibility changes (v2.0.0) |
 
 ## Creating a Tenant
 

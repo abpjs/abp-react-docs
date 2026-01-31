@@ -4,6 +4,36 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### Breaking Changes
+
+- **`TENANT_MANAGEMENT_ROUTES` removed** - This constant has been removed. Use `TENANT_MANAGEMENT_ROUTE_PATHS` and `TENANT_MANAGEMENT_POLICIES` instead for route configuration.
+
+### New Features
+
+- **`TenantManagementStateService` dispatch methods** - Added programmatic dispatch methods:
+  - `dispatchGetTenants(params?)` - Fetch tenants from API and update state
+  - `dispatchGetTenantById(id)` - Fetch a single tenant by ID
+  - `dispatchCreateTenant(body)` - Create a new tenant
+  - `dispatchUpdateTenant(body)` - Update an existing tenant
+  - `dispatchDeleteTenant(id)` - Delete a tenant
+
+- **`onVisibleFeaturesChange` prop** - New callback prop on `TenantManagementModal` to handle features modal visibility changes
+
+- **Component Interface Types** - Added TypeScript interfaces for component inputs/outputs:
+  - `TenantManagement.TenantsComponentInputs`
+  - `TenantManagement.TenantsComponentOutputs`
+
+### Type Improvements
+
+- **`onSearch` callback** - Updated signature from `(value: any) => void` to `(value: string) => void`
+- **`onPageChange` callback** - Updated signature from `(data: any) => void` to `(page: number) => void`
+
+---
+
 ## v1.1.0
 
 **January 2026**
