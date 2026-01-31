@@ -1,5 +1,80 @@
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### New Features
+
+- **`LanguageManagementStateService`** - New state service for programmatic language management operations:
+
+  **Language Operations:**
+  - `dispatchGetLanguages(params?)` - Fetch languages and update internal state
+  - `dispatchGetLanguageById(id)` - Fetch a single language by ID
+  - `dispatchCreateUpdateLanguage(body, id?)` - Create or update a language
+  - `dispatchDeleteLanguage(id)` - Delete a language
+  - `dispatchSetAsDefaultLanguage(id)` - Set a language as the default
+
+  **Language Text Operations:**
+  - `dispatchGetLanguageTexts(params)` - Fetch language texts with filters
+  - `dispatchUpdateLanguageTextByName(params)` - Update a language text translation
+  - `dispatchRestoreLanguageTextByName(params)` - Restore a language text to its default value
+
+  **Culture & Resource Operations:**
+  - `dispatchGetLanguageCultures()` - Fetch available cultures
+  - `dispatchGetLanguageResources()` - Fetch available localization resources
+
+  **State Getter Methods:**
+  - `getLanguages()` / `getLanguagesTotalCount()` - Access cached languages
+  - `getLanguageTexts()` / `getLanguageTextsTotalCount()` - Access cached language texts
+  - `getCultures()` - Access cached cultures
+  - `getResources()` - Access cached resources
+
+### Example
+
+```tsx
+import { LanguageManagementStateService } from '@abpjs/language-management';
+import { RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const stateService = new LanguageManagementStateService(restService);
+
+// Fetch languages
+await stateService.dispatchGetLanguages({ maxResultCount: 10 });
+const languages = stateService.getLanguages();
+console.log(`Found ${stateService.getLanguagesTotalCount()} languages`);
+
+// Create a new language
+await stateService.dispatchCreateUpdateLanguage({
+  cultureName: 'fr',
+  uiCultureName: 'fr',
+  displayName: 'French',
+  isEnabled: true,
+});
+
+// Fetch language texts
+await stateService.dispatchGetLanguageTexts({
+  resourceName: 'AbpAccount',
+  baseCultureName: 'en',
+  targetCultureName: 'fr',
+});
+const texts = stateService.getLanguageTexts();
+
+// Fetch cultures and resources
+await stateService.dispatchGetLanguageCultures();
+const cultures = stateService.getCultures();
+```
+
+---
+
+## v1.0.0
+
+**January 2026**
+
+- Version alignment with @abpjs/core v1.0.0
+
+---
+
 ## v0.7.2 (Initial Release)
 
 ### Components
