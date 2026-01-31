@@ -4,6 +4,50 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.0.0
+
+**January 2026**
+
+### New Features
+
+- **`PermissionManagementStateService` dispatch methods** - Added programmatic dispatch methods:
+  - `dispatchGetPermissions(params)` - Fetch permissions from API and update internal state
+  - `dispatchUpdatePermissions(request)` - Update permissions via API
+
+- **Component Interface Types** - Added TypeScript interfaces for component inputs/outputs:
+  - `PermissionManagement.PermissionManagementComponentInputs`
+  - `PermissionManagement.PermissionManagementComponentOutputs`
+
+### Example
+
+```tsx
+import {
+  PermissionManagementStateService,
+  PermissionManagementService,
+} from '@abpjs/permission-management';
+import { RestService } from '@abpjs/core';
+
+const rest = new RestService();
+const service = new PermissionManagementService(rest);
+const stateService = new PermissionManagementStateService(service);
+
+// Fetch permissions
+await stateService.dispatchGetPermissions({
+  providerKey: 'role-id',
+  providerName: 'R',
+});
+const groups = stateService.getPermissionGroups();
+
+// Update permissions
+await stateService.dispatchUpdatePermissions({
+  providerKey: 'role-id',
+  providerName: 'R',
+  permissions: [{ name: 'MyPermission', isGranted: true }],
+});
+```
+
+---
+
 ## v1.1.0
 
 **January 2026**
