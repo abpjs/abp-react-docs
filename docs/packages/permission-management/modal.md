@@ -42,6 +42,7 @@ function PermissionManager() {
 | `providerName` | `'R' \| 'U' \| 'C'` | Yes | Permission provider type |
 | `providerKey` | `string` | Yes | Provider identifier (role name, user ID, etc.) |
 | `onSave` | `() => void` | No | Called after permissions are saved |
+| `hideBadges` | `boolean` | No | Hide provider badges on permissions (v1.1.0) |
 
 ## Provider Types
 
@@ -178,15 +179,15 @@ function CustomPermissionUI() {
 }
 ```
 
-### isGrantedByRole (v0.9.0)
+### isGrantedByOtherProviderName (v1.1.0)
 
-Check if a permission is granted by a role provider. Useful for showing visual indicators when a permission comes from an assigned role rather than being directly granted:
+Check if a permission is granted by another provider. Useful for showing visual indicators when a permission comes from a different provider (e.g., a role) rather than being directly granted:
 
 ```tsx
 import { usePermissionManagement } from '@abpjs/permission-management';
 
-function PermissionList() {
-  const { getSelectedGroupPermissions, isGrantedByRole } = usePermissionManagement();
+function PermissionList({ providerName }: { providerName: string }) {
+  const { getSelectedGroupPermissions, isGrantedByOtherProviderName } = usePermissionManagement();
 
   const permissions = getSelectedGroupPermissions();
 
@@ -196,8 +197,8 @@ function PermissionList() {
         <li key={permission.name}>
           <input type="checkbox" checked={permission.isGranted} />
           {permission.displayName}
-          {isGrantedByRole(permission.grantedProviders) && (
-            <span className="badge">From Role</span>
+          {isGrantedByOtherProviderName(permission.grantedProviders, providerName) && (
+            <span className="badge">From Other Provider</span>
           )}
         </li>
       ))}
@@ -206,7 +207,11 @@ function PermissionList() {
 }
 ```
 
+:::note
+`isGrantedByRole` is deprecated. Use `isGrantedByOtherProviderName` instead.
+:::
+
 ## Related
 
-- [Permissions](/docs/packages/core/permissions) - Permission checking
-- [Identity](/docs/packages/identity/overview) - User and role management
+- [Permissions](../core/permissions) - Permission checking
+- [Identity](../identity/overview) - User and role management

@@ -4,6 +4,29 @@ sidebar_position: 99
 
 # Release Notes
 
+## v1.1.0
+
+**January 2026**
+
+### New Features
+
+- **`hideBadges` prop** - `PermissionManagementModal` now supports hiding provider badges:
+  ```tsx
+  <PermissionManagementModal hideBadges />
+  ```
+- **Provider badges** - Permissions now display badges showing which other provider granted them (e.g., "R" for role)
+- **`PermissionManagementStateService`** - New service for accessing permission management state (for Angular API compatibility)
+
+### API Changes
+
+- **`isGrantedByOtherProviderName`** - New method in `usePermissionManagement` hook replacing `isGrantedByRole`
+
+### Deprecations
+
+- **`isGrantedByRole`** - Deprecated, use `isGrantedByOtherProviderName` instead
+
+---
+
 ## v1.0.0
 
 **January 2026**
