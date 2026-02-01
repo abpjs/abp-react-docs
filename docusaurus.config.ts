@@ -35,6 +35,38 @@ const config: Config = {
     locales: ['en'],
   },
 
+  headTags: [
+    // Additional meta tags for broader platform support
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'theme-color',
+        content: '#3182ce', // Mobile browser theme color
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'apple-mobile-web-app-capable',
+        content: 'yes',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'apple-mobile-web-app-status-bar-style',
+        content: 'default',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'apple-touch-icon',
+        href: '/img/logo.png',
+      },
+    },
+  ],
+
   presets: [
     [
       'classic',
@@ -51,8 +83,19 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    // Social card for link previews (WhatsApp, Facebook, Twitter, LinkedIn, etc.)
+    image: 'img/abp-react-social-card.jpg',
+    metadata: [
+      // Open Graph (Facebook, WhatsApp, LinkedIn, Discord, Telegram)
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: 'ABP React' },
+      { property: 'og:title', content: 'ABP React - React UI for ABP Framework' },
+      { property: 'og:description', content: 'A collection of React packages providing UI components and services for building applications with ABP Framework. TypeScript-first with pre-built modules for authentication, identity, permissions, and multi-tenancy.' },
+      // Twitter Card
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: 'ABP React - React UI for ABP Framework' },
+      { name: 'twitter:description', content: 'React packages for ABP Framework with pre-built components for authentication, identity management, permissions, and multi-tenancy.' },
+    ],
     colorMode: {
       respectPrefersColorScheme: true,
     },
