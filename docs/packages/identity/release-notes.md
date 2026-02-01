@@ -4,6 +4,33 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`IdentityService.getAllRoles()` method** - Fetch all roles without pagination in a single request:
+
+  ```tsx
+  import { useIdentityService } from '@abpjs/identity';
+
+  function RoleSelector() {
+    const identityService = useIdentityService();
+
+    const loadAllRoles = async () => {
+      const response = await identityService.getAllRoles();
+      // response.items contains all roles
+    };
+  }
+  ```
+
+  This calls `GET /api/identity/roles/all` endpoint.
+
+- **`IdentityService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+---
+
 ## v2.2.0
 
 **February 2026**
