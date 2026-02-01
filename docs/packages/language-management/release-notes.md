@@ -1,5 +1,25 @@
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`LanguageManagementService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+- **`eLanguageManagementComponents` enum** - New enum for component identifiers, useful for component registration and customization:
+
+  ```tsx
+  import { eLanguageManagementComponents } from '@abpjs/language-management';
+
+  // Available components:
+  // eLanguageManagementComponents.Languages = 'LanguageManagement.LanguagesComponent'
+  // eLanguageManagementComponents.LanguageTexts = 'LanguageManagement.LanguageTextsComponent'
+  ```
+
+---
+
 ## v2.2.0
 
 **February 2026**
