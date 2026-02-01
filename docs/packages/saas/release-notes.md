@@ -1,5 +1,17 @@
 # Release Notes
 
+## v2.2.0
+
+**February 2026**
+
+### New Features
+
+- **Features Modal Management** - Added built-in state management for features modal in both hooks:
+  - `useEditions` hook: `visibleFeatures`, `featuresProviderKey`, `onVisibleFeaturesChange()`, `openFeaturesModal()`
+  - `useTenants` hook: `visibleFeatures`, `featuresProviderKey`, `onVisibleFeaturesChange()`, `openFeaturesModal()`
+
+---
+
 ## v2.1.1
 
 **February 2026**

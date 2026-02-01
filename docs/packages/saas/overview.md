@@ -123,6 +123,10 @@ function MyTenantsComponent() {
 | `getDefaultConnectionString` | `(id) => Promise<Result>` | Get connection string |
 | `updateDefaultConnectionString` | `(payload) => Promise<Result>` | Update connection string |
 | `deleteDefaultConnectionString` | `(id) => Promise<Result>` | Delete connection string |
+| `visibleFeatures` | `boolean` | Whether features modal is visible |
+| `featuresProviderKey` | `string` | Provider key for features modal |
+| `onVisibleFeaturesChange` | `(value: boolean) => void` | Handle features modal visibility |
+| `openFeaturesModal` | `(providerKey: string) => void` | Open features modal for a tenant |
 
 ### useEditions
 
@@ -167,6 +171,10 @@ function MyEditionsComponent() {
 | `updateEdition` | `(data) => Promise<Result>` | Update edition |
 | `deleteEdition` | `(id) => Promise<Result>` | Delete edition |
 | `fetchUsageStatistics` | `() => Promise<Result>` | Fetch usage stats |
+| `visibleFeatures` | `boolean` | Whether features modal is visible |
+| `featuresProviderKey` | `string` | Provider key for features modal |
+| `onVisibleFeaturesChange` | `(value: boolean) => void` | Handle features modal visibility |
+| `openFeaturesModal` | `(providerKey: string) => void` | Open features modal for an edition |
 
 ## Services
 

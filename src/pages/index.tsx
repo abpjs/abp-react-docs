@@ -160,13 +160,6 @@ function HeroSection(): ReactNode {
         {/* Experience tag */}
         <span className={styles.experienceTag}>Built on 5+ Years of ABP Excellence</span>
 
-        {/* Badge */}
-        <Link to="/docs/release-notes/v2.1.1" className={styles.badge}>
-          <span className={styles.badgeIcon}>✨</span>
-          <span>v2.1.1 is now available</span>
-          <span className={styles.badgeArrow}>→</span>
-        </Link>
-
         {/* Headline */}
         <h1 className={styles.heroTitle}>
           Build React Apps with{' '}
