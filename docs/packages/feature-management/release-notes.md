@@ -4,6 +4,14 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+- **`FeatureManagementService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+---
+
 ## v2.2.0
 
 **February 2026**
