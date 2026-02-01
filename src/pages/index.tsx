@@ -90,9 +90,9 @@ function HeroSection(): ReactNode {
       {/* Main content */}
       <div className={styles.heroContent}>
         {/* Badge */}
-        <Link to="/docs/release-notes/v2.1.0" className={styles.badge}>
+        <Link to="/docs/release-notes/v2.1.1" className={styles.badge}>
           <span className={styles.badgeIcon}>✨</span>
-          <span>v2.1.0 is now available</span>
+          <span>v2.1.1 is now available</span>
           <span className={styles.badgeArrow}>→</span>
         </Link>
 
