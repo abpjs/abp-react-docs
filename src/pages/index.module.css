@@ -108,6 +108,24 @@
   margin: 0 auto;
 }
 
+/* Experience tag */
+.experienceTag {
+  display: block;
+  padding: 6px 14px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Badge/pill - Glass style */
 .badge {
   position: relative;
@@ -340,64 +358,73 @@
   font-size: 1.25rem;
 }
 
-/* Quick start code block - Glass style */
+/* Quick start wrapper */
+.quickStartWrapper {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Quick start code block */
 .quickStart {
   position: relative;
-  margin-top: 3rem;
-  padding: 1.25rem 1.75rem;
-  border-radius: 16px;
-  display: inline-block;
-  overflow: hidden;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 
-  /* Glass morphism */
-  background: linear-gradient(
-    135deg,
-    rgba(20, 20, 35, 0.7) 0%,
-    rgba(15, 15, 25, 0.5) 100%
-  );
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Dark background */
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
-  /* Glass depth */
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.05),
-    0 4px 24px rgba(0, 0, 0, 0.3),
-    0 1px 2px rgba(139, 92, 246, 0.1);
+  /* Shadow */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Glass highlight */
-.quickStart::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 30%,
-    rgba(139, 92, 246, 0.2) 50%,
-    rgba(255, 255, 255, 0.1) 70%,
-    transparent 100%
-  );
-}
-
-.quickStartLabel {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.4);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
+.quickStartDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c4b5fd;
+  flex-shrink: 0;
 }
 
 .quickStartCode {
   font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
   font-size: 0.9rem;
-  color: #c4b5fd;
+  color: rgba(255, 255, 255, 0.9);
   user-select: all;
-  text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copyButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.quickStartHelper {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
 }
 
 /* Scroll indicator */
@@ -861,6 +888,13 @@
     0 4px 20px rgba(139, 92, 246, 0.2);
 }
 
+/* Experience Tag - Light Mode */
+[data-theme='light'] .experienceTag {
+  color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 /* Hero Title - Light Mode */
 [data-theme='light'] .heroTitle {
   background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 100%);
@@ -926,36 +960,32 @@
 
 /* Quick Start - Light Mode */
 [data-theme='light'] .quickStart {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(248, 250, 252, 0.8) 100%
-  );
-  border: 1px solid rgba(139, 92, 246, 0.15);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 1),
-    0 4px 24px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(139, 92, 246, 0.05);
+  background: #1e1e2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 }
 
-[data-theme='light'] .quickStart::before {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(139, 92, 246, 0.2) 30%,
-    rgba(139, 92, 246, 0.3) 50%,
-    rgba(139, 92, 246, 0.2) 70%,
-    transparent 100%
-  );
-}
-
-[data-theme='light'] .quickStartLabel {
-  color: rgba(0, 0, 0, 0.5);
+[data-theme='light'] .quickStartDot {
+  background: #a78bfa;
 }
 
 [data-theme='light'] .quickStartCode {
-  color: #7c3aed;
-  text-shadow: none;
+  color: rgba(255, 255, 255, 0.9);
+  background: transparent;
+}
+
+[data-theme='light'] .copyButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme='light'] .copyButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme='light'] .quickStartHelper {
+  color: rgba(0, 0, 0, 0.45);
 }
 
 /* Scroll Indicator - Light Mode */

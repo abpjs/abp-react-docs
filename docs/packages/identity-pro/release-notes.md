@@ -1,5 +1,20 @@
 # Release Notes
 
+## v2.2.0
+
+**February 2026**
+
+### New Features
+
+- **User Unlock** - Added `unlockUser(id)` method to `IdentityService` and `useUsers` hook for unlocking locked out users
+- **Permissions Modal State** - Added built-in permissions modal state management to `useRoles` and `useUsers` hooks:
+  - `visiblePermissions` - Boolean state for modal visibility
+  - `permissionsProviderKey` - Provider key for the permissions modal
+  - `onVisiblePermissionsChange(value)` - Callback to handle modal visibility changes
+  - `openPermissionsModal(providerKey)` - Method to open permissions modal for a specific entity
+
+---
+
 ## v2.1.1
 
 **February 2026**

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 
 import styles from './index.module.css';
@@ -89,6 +88,9 @@ function HeroSection(): ReactNode {
 
       {/* Main content */}
       <div className={styles.heroContent}>
+        {/* Experience tag */}
+        <span className={styles.experienceTag}>Built on 5+ Years of ABP Excellence</span>
+
         {/* Badge */}
         <Link to="/docs/release-notes/v2.1.1" className={styles.badge}>
           <span className={styles.badgeIcon}>✨</span>
@@ -116,17 +118,30 @@ function HeroSection(): ReactNode {
             <span className={styles.buttonIcon}>→</span>
           </Link>
           <Link to="/docs/" className={styles.buttonSecondary}>
-            <span className={styles.buttonIcon}>📖</span>
-            Read the Docs
+            <span className={styles.buttonIcon}>&lt;/&gt;</span>
+            View Documentation
           </Link>
         </div>
 
         {/* Quick start */}
-        <div className={styles.quickStart}>
-          <div className={styles.quickStartLabel}>Quick Start</div>
-          <code className={styles.quickStartCode}>
-            npx create-abp-react my-app
-          </code>
+        <div className={styles.quickStartWrapper}>
+          <div className={styles.quickStart}>
+            <span className={styles.quickStartDot} />
+            <code className={styles.quickStartCode}>
+              npx create-abp-react my-app
+            </code>
+            <button
+              className={styles.copyButton}
+              onClick={() => navigator.clipboard.writeText('npx create-abp-react my-app')}
+              title="Copy to clipboard"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+            </button>
+          </div>
+          <p className={styles.quickStartHelper}>Get up and running in seconds</p>
         </div>
       </div>
 
@@ -244,7 +259,6 @@ function CTASection(): ReactNode {
 }
 
 export default function Home(): ReactNode {
-  const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
       title="Documentation"

@@ -160,11 +160,15 @@ function MyRolesComponent() {
 | `isLoading` | `boolean` | Loading state |
 | `error` | `string \| null` | Error message |
 | `selectedRole` | `Identity.RoleItem \| null` | Selected role for editing |
+| `visiblePermissions` | `boolean` | Permissions modal visibility (v2.2.0) |
+| `permissionsProviderKey` | `string` | Provider key for permissions modal (v2.2.0) |
 | `fetchRoles` | `(params?) => Promise<Result>` | Fetch roles with pagination |
 | `createRole` | `(data) => Promise<Result>` | Create a new role |
 | `updateRole` | `(id, data) => Promise<Result>` | Update existing role |
 | `deleteRole` | `(id) => Promise<Result>` | Delete a role |
 | `setSelectedRole` | `(role) => void` | Set selected role |
+| `openPermissionsModal` | `(providerKey) => void` | Open permissions modal (v2.2.0) |
+| `onVisiblePermissionsChange` | `(value) => void` | Handle permissions modal visibility (v2.2.0) |
 
 ### useUsers
 
@@ -201,11 +205,16 @@ function MyUsersComponent() {
 | `error` | `string \| null` | Error message |
 | `selectedUser` | `Identity.UserItem \| null` | Selected user |
 | `selectedUserRoles` | `Identity.RoleItem[]` | Roles of selected user |
+| `visiblePermissions` | `boolean` | Permissions modal visibility (v2.2.0) |
+| `permissionsProviderKey` | `string` | Provider key for permissions modal (v2.2.0) |
 | `fetchUsers` | `(params?) => Promise<Result>` | Fetch users with pagination |
 | `createUser` | `(data) => Promise<Result>` | Create a new user |
 | `updateUser` | `(id, data) => Promise<Result>` | Update existing user |
 | `deleteUser` | `(id) => Promise<Result>` | Delete a user |
+| `unlockUser` | `(id) => Promise<Result>` | Unlock a locked out user (v2.2.0) |
 | `getUserRoles` | `(id) => Promise<Result>` | Get user's roles |
+| `openPermissionsModal` | `(providerKey) => void` | Open permissions modal (v2.2.0) |
+| `onVisiblePermissionsChange` | `(value) => void` | Handle permissions modal visibility (v2.2.0) |
 
 ### useClaims
 
@@ -301,6 +310,7 @@ Service class for identity-related API operations.
 | `createUser` | `body: UserSaveRequest` | `Promise<UserItem>` | Create a user |
 | `updateUser` | `id: string, body: UserSaveRequest` | `Promise<UserItem>` | Update a user |
 | `deleteUser` | `id: string` | `Promise<void>` | Delete a user |
+| `unlockUser` | `id: string` | `Promise<void>` | Unlock a locked out user (v2.2.0) |
 
 **Claim Methods (Pro):**
 
