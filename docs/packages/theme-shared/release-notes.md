@@ -4,6 +4,39 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`ThemeSharedAppendContentContext`** - New React context for appending scripts or stylesheets to the document. This is the React equivalent of Angular's `THEME_SHARED_APPEND_CONTENT` injection token:
+
+  ```tsx
+  import { ThemeSharedAppendContentContext } from '@abpjs/theme-shared';
+
+  function App() {
+    const appendContent = async () => {
+      // Custom logic to append scripts/styles to the document
+    };
+
+    return (
+      <ThemeSharedAppendContentContext.Provider value={appendContent}>
+        <YourApp />
+      </ThemeSharedAppendContentContext.Provider>
+    );
+  }
+  ```
+
+- **`THEME_SHARED_APPEND_CONTENT` constant** - Token name constant matching Angular's InjectionToken name
+
+### Deprecation Updates
+
+- **`Toaster.Status` removal postponed** - Now scheduled for removal in v3.0 (previously v2.2). Continue using `Confirmation.Status` for new code.
+- **`appendScript` function deprecated** - Will be removed in v2.6. Use `ThemeSharedAppendContentContext` instead.
+
+---
+
 ## v2.2.0
 
 **February 2026**

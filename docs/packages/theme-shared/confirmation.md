@@ -82,7 +82,7 @@ enum Confirmation.Status {
 ```
 
 :::info Changed in v2.1.0
-Prior to v2.1.0, confirmation methods returned `Promise<Toaster.Status>`. The new `Confirmation.Status` enum has the same values but is now specific to confirmations. `Toaster.Status` is deprecated and will be removed in v2.2.0.
+Prior to v2.1.0, confirmation methods returned `Promise<Toaster.Status>`. The new `Confirmation.Status` enum has the same values but is now specific to confirmations. `Toaster.Status` is deprecated and will be removed in v3.0.
 :::
 
 ## Confirmation Types

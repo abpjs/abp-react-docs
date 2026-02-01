@@ -617,6 +617,134 @@
   margin: 0;
 }
 
+/* Enterprise Section */
+.enterpriseSection {
+  position: relative;
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, #0d0d14 0%, #0a0a0f 100%);
+}
+
+.enterpriseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 900px) {
+  .enterpriseGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .enterpriseGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.enterpriseCard {
+  position: relative;
+  padding: 1.75rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.enterpriseCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.enterpriseCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.enterpriseIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: #7c3aed;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.enterpriseCardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.enterpriseList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.enterpriseListItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.5;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+  color: #22c55e;
+  margin-top: 2px;
+}
+
+/* Enterprise Section - Light Mode */
+[data-theme='light'] .enterpriseSection {
+  background: linear-gradient(180deg, #eef1f8 0%, #f8f9fc 100%);
+}
+
+[data-theme='light'] .enterpriseCard {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='light'] .enterpriseCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+[data-theme='light'] .enterpriseIcon {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
+}
+
+[data-theme='light'] .enterpriseCardTitle {
+  color: #1a1a2e;
+}
+
+[data-theme='light'] .enterpriseListItem {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme='light'] .checkIcon {
+  color: #16a34a;
+}
+
 /* CTA Section */
 .ctaSection {
   position: relative;

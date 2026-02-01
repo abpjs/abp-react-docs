@@ -50,6 +50,64 @@ const techStack: TechStackItem[] = [
   { name: 'React Hook Form', image: '/img/stack/reactHookForm.svg' },
 ];
 
+type EnterpriseFeature = {
+  icon: ReactNode;
+  title: string;
+  items: string[];
+};
+
+const enterpriseFeatures: EnterpriseFeature[] = [
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+    title: 'Advanced Security',
+    items: [
+      'Role-Based Access Control (RBAC)',
+      'Fine-grained Permission System',
+      'Organization Units Management',
+      'Two-Factor Authentication Support',
+    ],
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+        <polyline points="10 9 9 9 8 9" />
+      </svg>
+    ),
+    title: 'Audit & Compliance',
+    items: [
+      'Automatic Audit Logging',
+      'Entity Change Tracking',
+      'User Login/Action History',
+      'GDPR Compliance Tools',
+    ],
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+        <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+        <line x1="6" y1="6" x2="6.01" y2="6" />
+        <line x1="6" y1="18" x2="6.01" y2="18" />
+      </svg>
+    ),
+    title: 'Scalable Architecture',
+    items: [
+      'Microservices Support',
+      'Distributed Event Bus',
+      'Background Job System',
+      'Multi-Tenancy Data Isolation',
+    ],
+  },
+];
+
 const features: FeatureItem[] = [
   {
     icon: (
@@ -310,6 +368,42 @@ function TechStackSection(): ReactNode {
   );
 }
 
+function EnterpriseSection(): ReactNode {
+  return (
+    <section className={styles.enterpriseSection}>
+      <div className={styles.featuresHeader}>
+        <span className={styles.featuresBadge}>Enterprise Ready</span>
+        <h2 className={styles.featuresTitle}>Built for Mission-Critical Applications</h2>
+        <p className={styles.featuresSubtitle}>
+          Don't reinvent the wheel. ABP React comes with sophisticated enterprise capabilities
+          that would take months to build from scratch.
+        </p>
+      </div>
+
+      <div className={styles.enterpriseGrid}>
+        {enterpriseFeatures.map((feature, index) => (
+          <div key={index} className={styles.enterpriseCard}>
+            <div className={styles.enterpriseCardHeader}>
+              <div className={styles.enterpriseIcon}>{feature.icon}</div>
+              <h3 className={styles.enterpriseCardTitle}>{feature.title}</h3>
+            </div>
+            <ul className={styles.enterpriseList}>
+              {feature.items.map((item, itemIndex) => (
+                <li key={itemIndex} className={styles.enterpriseListItem}>
+                  <svg className={styles.checkIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function CTASection(): ReactNode {
   return (
     <section className={styles.ctaSection}>
@@ -350,6 +444,7 @@ export default function Home(): ReactNode {
         <ModulesSection />
         <TechStackSection />
         <FeaturesSection />
+        <EnterpriseSection />
         <CTASection />
       </main>
     </Layout>
