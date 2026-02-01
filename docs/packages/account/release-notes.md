@@ -4,6 +4,42 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`AuthWrapper.isMultiTenancyEnabled` prop** - Control whether the tenant box is displayed in authentication forms:
+
+  ```tsx
+  import { AuthWrapper, LoginForm } from '@abpjs/account';
+
+  function LoginPage() {
+    return (
+      <AuthWrapper
+        mainContent={<LoginForm onSuccess={() => {}} />}
+        isMultiTenancyEnabled={true} // Show tenant switching (default)
+      />
+    );
+  }
+  ```
+
+  This corresponds to Angular's `isMultiTenancyEnabled$` observable. Defaults to `true`.
+
+- **`AccountService.apiName` property** - New property for REST API configuration. Defaults to `'default'`:
+
+  ```tsx
+  import { useAccountService } from '@abpjs/account';
+
+  function MyComponent() {
+    const accountService = useAccountService();
+    console.log(accountService.apiName); // 'default'
+  }
+  ```
+
+---
+
 ## v2.2.0
 
 **February 2026**
