@@ -1,0 +1,118 @@
+---
+sidebar_position: 99
+---
+
+# Release Notes
+
+## v2.2.0
+
+**February 2026**
+
+- Version alignment with @abpjs/core
+
+---
+
+## v2.1.1
+
+**February 2026**
+
+- Version alignment with @abpjs/core v2.1.0
+
+---
+
+## v2.0.0
+
+**January 2026**
+
+### New Features
+
+- **`enableLocalLogin` option** - New configuration option for `AccountProProvider` to control local login visibility:
+  ```tsx
+  <AccountProProvider options={{ enableLocalLogin: false }}>
+    {/* Only social login providers will be available */}
+  </AccountProProvider>
+  ```
+
+- **`isSelfRegistrationEnabled` prop** - New prop on `LoginForm` and `RegisterForm` components to control self-registration:
+  - On `LoginForm`: When `false`, hides the register link regardless of `showRegisterLink` setting
+  - On `RegisterForm`: When `false`, displays a message and redirects to login instead of showing the form
+
+- **Component Interface Types** - Added TypeScript interfaces for component inputs/outputs:
+  - `Account.TenantBoxComponentInputs` / `Account.TenantBoxComponentOutputs`
+  - `Account.PersonalSettingsComponentInputs` / `Account.PersonalSettingsComponentOutputs`
+  - `Account.ChangePasswordComponentInputs` / `Account.ChangePasswordComponentOutputs`
+
+### Example
+
+```tsx
+import { LoginForm, RegisterForm } from '@abpjs/account-pro';
+
+// Login form with self-registration disabled
+<LoginForm
+  showTenantBox={true}
+  showRegisterLink={true}
+  isSelfRegistrationEnabled={false}  // Register link won't show
+/>
+
+// Register form with self-registration disabled
+<RegisterForm
+  isSelfRegistrationEnabled={false}  // Shows disabled message
+/>
+```
+
+---
+
+## v1.0.0
+
+**January 2026**
+
+- Version alignment with @abpjs/core v1.0.0
+
+---
+
+## v0.7.2 (Initial Release)
+
+### Features
+
+- **LoginForm** - Complete login form with tenant switching, remember me, and links to register/forgot password
+- **RegisterForm** - User registration form with validation
+- **TenantBox** - Multi-tenant switching component
+- **ForgotPassword** - Password recovery form with email verification
+- **ResetPassword** - Password reset form using email token
+- **ChangePassword** - Change password form for authenticated users
+- **PersonalSettings** - Profile settings form for updating user information
+- **ManageProfile** - Container component with navigation for profile management
+
+### Hooks
+
+- **usePasswordFlow** - OAuth Resource Owner Password Credentials flow for login
+- **useAccountProService** - Access AccountProService for API operations
+- **useAccountProOptions** - Access account configuration options
+
+### Provider
+
+- **AccountProProvider** - Context provider for account configuration with support for:
+  - Custom redirect URLs
+  - Custom login/register URLs
+  - Social logins toggle
+  - Two-factor authentication toggle
+
+### Services
+
+- **AccountProService** with methods:
+  - `findTenant()` - Lookup tenant by name
+  - `register()` - Register new user
+  - `sendPasswordResetCode()` - Send password reset email
+  - `resetPassword()` - Reset password with token
+  - `changePassword()` - Change password for authenticated user
+  - `getProfile()` - Get current user profile
+  - `updateProfile()` - Update user profile
+
+### Routes
+
+- Pre-configured routes with `ACCOUNT_PRO_ROUTES`
+- Route path constants with `ACCOUNT_PRO_PATHS`
+
+### TypeScript
+
+- Full TypeScript support with exported interfaces for all models and request/response types
