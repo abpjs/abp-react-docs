@@ -4,6 +4,14 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.2.0
+
+**February 2026**
+
+- Version alignment with @abp/ng.core
+
+---
+
 ## v2.1.0
 
 **February 2026**
