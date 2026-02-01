@@ -1,5 +1,63 @@
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`SaasService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+- **`eSaasComponents` enum** - New enum for component identifiers, useful for component registration and customization:
+
+  ```tsx
+  import { eSaasComponents } from '@abpjs/saas';
+
+  // Available components:
+  // eSaasComponents.Editions = 'Saas.EditionsComponent'
+  // eSaasComponents.Tenants = 'Saas.TenantsComponent'
+  ```
+
+### Breaking Changes
+
+- **`CreateTenantRequest` interface** - `adminEmailAddress` and `adminPassword` are now required fields (previously optional):
+
+  ```tsx
+  // Before (v2.2.0)
+  interface CreateTenantRequest {
+    name: string;
+    editionId?: string;
+    adminEmailAddress?: string;  // optional
+    adminPassword?: string;       // optional
+  }
+
+  // After (v2.4.0)
+  interface CreateTenantRequest {
+    adminEmailAddress: string;   // required
+    adminPassword: string;        // required
+    name: string;
+    editionId?: string;
+  }
+  ```
+
+- **`UpdateTenantRequest` type** - Now uses `Omit<Tenant, 'editionName'>` pattern, which includes all `Tenant` fields except `editionName`:
+
+  ```tsx
+  // Before (v2.2.0)
+  interface UpdateTenantRequest {
+    id?: string;
+    name: string;
+    editionId?: string;
+    concurrencyStamp?: string;
+  }
+
+  // After (v2.4.0)
+  type UpdateTenantRequest = Omit<Tenant, 'editionName'>;
+  // Includes: id, name, editionId, concurrencyStamp, activationState, activationEndDate, etc.
+  ```
+
+---
+
 ## v2.2.0
 
 **February 2026**
