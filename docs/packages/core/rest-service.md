@@ -129,6 +129,36 @@ The REST service automatically handles:
 - **Tenant Header** - Adds the `__tenant` header for multi-tenant requests
 - **Error Handling** - Formats ABP error responses
 
+## Specifying API Name (v2.4.0)
+
+When working with multiple APIs defined in your configuration, use the `apiName` option to specify which API to use:
+
+```tsx
+import { RestService } from '@abpjs/core';
+
+// Uses the 'default' API URL
+const defaultUsers = await RestService.get('/api/users');
+
+// Uses the 'reporting' API URL defined in Config.Apis
+const reports = await RestService.get('/api/reports', {
+  apiName: 'reporting',
+});
+```
+
+This is useful when your application connects to multiple backend services:
+
+```tsx
+// environment.ts
+const environment: Config.Environment = {
+  apis: {
+    default: { url: 'https://api.example.com' },
+    reporting: { url: 'https://reports.example.com' },
+    notifications: { url: 'https://notifications.example.com' },
+  },
+  // ...
+};
+```
+
 ## Error Handling
 
 ABP errors are automatically formatted. Handle them in your code:

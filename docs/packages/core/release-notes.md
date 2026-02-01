@@ -4,6 +4,250 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+#### Standard DTO Classes
+
+New DTO classes for consistent data transfer patterns across ABP applications:
+
+**List/Paged Results:**
+
+```tsx
+import { ListResultDto, PagedResultDto } from '@abpjs/core';
+
+// ListResultDto - for list responses
+interface UserListResult extends ListResultDto<UserDto> {}
+
+// PagedResultDto - for paginated responses with totalCount
+interface UserPagedResult extends PagedResultDto<UserDto> {}
+```
+
+**Request DTOs:**
+
+```tsx
+import {
+  LimitedResultRequestDto,
+  PagedResultRequestDto,
+  PagedAndSortedResultRequestDto,
+} from '@abpjs/core';
+
+// LimitedResultRequestDto - maxResultCount only
+const limitedRequest = new LimitedResultRequestDto({ maxResultCount: 10 });
+
+// PagedResultRequestDto - maxResultCount + skipCount
+const pagedRequest = new PagedResultRequestDto({
+  maxResultCount: 10,
+  skipCount: 20
+});
+
+// PagedAndSortedResultRequestDto - includes sorting
+const sortedRequest = new PagedAndSortedResultRequestDto({
+  maxResultCount: 10,
+  skipCount: 0,
+  sorting: 'name asc',
+});
+```
+
+**Entity DTOs with Audit Info:**
+
+```tsx
+import {
+  EntityDto,
+  CreationAuditedEntityDto,
+  AuditedEntityDto,
+  FullAuditedEntityDto,
+} from '@abpjs/core';
+
+// EntityDto<TKey> - basic entity with ID
+interface MyEntity extends EntityDto<string> {
+  name: string;
+}
+
+// CreationAuditedEntityDto - includes creationTime, creatorId
+// AuditedEntityDto - adds lastModificationTime, lastModifierId
+// FullAuditedEntityDto - adds isDeleted, deleterId, deletionTime
+
+// With user references:
+import {
+  CreationAuditedEntityWithUserDto,
+  AuditedEntityWithUserDto,
+  FullAuditedEntityWithUserDto,
+} from '@abpjs/core';
+```
+
+#### Loading Strategies
+
+New strategy-based approach for loading external scripts and styles:
+
+```tsx
+import {
+  LazyLoadService,
+  LOADING_STRATEGY,
+  DOM_STRATEGY,
+  CROSS_ORIGIN_STRATEGY,
+} from '@abpjs/core';
+
+const lazyLoadService = new LazyLoadService();
+
+// Load script using pre-configured strategy
+await lazyLoadService.load(
+  LOADING_STRATEGY.AppendAnonymousScriptToHead(
+    'https://cdn.example.com/library.js',
+    'sha384-...' // optional integrity hash
+  )
+);
+
+// Load stylesheet
+await lazyLoadService.load(
+  LOADING_STRATEGY.AppendAnonymousStyleToHead(
+    'https://cdn.example.com/styles.css'
+  )
+);
+
+// Check if already loaded
+if (!lazyLoadService.isLoaded('https://cdn.example.com/library.js')) {
+  await lazyLoadService.load(/* ... */);
+}
+```
+
+Available `LOADING_STRATEGY` presets:
+- `AppendAnonymousScriptToBody(src, integrity?)`
+- `AppendAnonymousScriptToHead(src, integrity?)`
+- `AppendAnonymousStyleToHead(src, integrity?)`
+- `PrependAnonymousScriptToHead(src, integrity?)`
+- `PrependAnonymousStyleToHead(src, integrity?)`
+
+#### Content Strategies
+
+For inserting inline scripts and styles:
+
+```tsx
+import {
+  DomInsertionService,
+  getDomInsertionService,
+  CONTENT_STRATEGY,
+} from '@abpjs/core';
+
+const domInsertionService = getDomInsertionService();
+
+// Insert inline style
+domInsertionService.insertContent(
+  CONTENT_STRATEGY.AppendStyleToHead(`
+    .my-class { color: red; }
+  `)
+);
+
+// Insert inline script
+domInsertionService.insertContent(
+  CONTENT_STRATEGY.AppendScriptToHead(`
+    console.log('Script loaded');
+  `)
+);
+
+// Check if content was already inserted
+if (!domInsertionService.hasInserted(myContent)) {
+  domInsertionService.insertContent(/* ... */);
+}
+```
+
+Available `CONTENT_STRATEGY` presets:
+- `AppendScriptToBody(content)`
+- `AppendScriptToHead(content)`
+- `AppendStyleToHead(content)`
+- `PrependStyleToHead(content)`
+
+#### DOM Strategies
+
+Low-level control over element insertion:
+
+```tsx
+import { DOM_STRATEGY, DomStrategy } from '@abpjs/core';
+
+// Pre-configured strategies
+DOM_STRATEGY.AppendToHead()    // Insert at end of <head>
+DOM_STRATEGY.PrependToHead()   // Insert at start of <head>
+DOM_STRATEGY.AppendToBody()    // Insert at end of <body>
+DOM_STRATEGY.BeforeElement(el) // Insert before element
+DOM_STRATEGY.AfterElement(el)  // Insert after element
+
+// Custom strategy
+const strategy = new DomStrategy(
+  document.getElementById('container')!,
+  'beforeend'
+);
+```
+
+#### Cross-Origin Strategies
+
+Configure CORS and integrity for loaded resources:
+
+```tsx
+import { CROSS_ORIGIN_STRATEGY } from '@abpjs/core';
+
+// Anonymous CORS with SRI integrity
+CROSS_ORIGIN_STRATEGY.Anonymous('sha384-...');
+
+// Credentials CORS
+CROSS_ORIGIN_STRATEGY.UseCredentials();
+```
+
+#### Content Security Strategies
+
+Apply CSP nonces to dynamically inserted content:
+
+```tsx
+import { CONTENT_SECURITY_STRATEGY } from '@abpjs/core';
+
+// Apply nonce for CSP compliance
+CONTENT_SECURITY_STRATEGY.Loose('nonce-abc123');
+
+// No CSP (default)
+CONTENT_SECURITY_STRATEGY.None();
+```
+
+### API Changes
+
+- **`Config.Environment.hmr`** - New optional boolean flag for Hot Module Replacement
+- **`Config.ApiConfig`** - New interface type for API configuration (previously inline)
+- **`Rest.Config.apiName`** - Specify which API to use for requests (from `Config.Apis`)
+
+### New Utilities
+
+```tsx
+import {
+  isUndefinedOrEmptyString,
+  generateHash,
+  fromLazyLoad,
+  noop,
+} from '@abpjs/core';
+
+// Check for undefined or empty string
+isUndefinedOrEmptyString(undefined); // true
+isUndefinedOrEmptyString('');        // true
+isUndefinedOrEmptyString('hello');   // false
+
+// Generate hash from string
+const hash = generateHash('my-string'); // number
+
+// Load element with promise
+const script = document.createElement('script');
+script.src = 'https://example.com/lib.js';
+await fromLazyLoad(script, DOM_STRATEGY.AppendToHead());
+
+// No-op function
+const doNothing = noop();
+```
+
+### Deprecations
+
+- **`ABP.Root.requirements`** - Deprecated and now optional. Will be removed in v3.0.
+
+---
+
 ## v2.2.0
 
 **February 2026**

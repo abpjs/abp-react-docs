@@ -22,6 +22,8 @@ npm install @abpjs/core
 - **Permissions** - Fine-grained permission checking
 - **REST Service** - Axios-based HTTP client with interceptors
 - **Session Management** - User session state handling
+- **Loading Strategies** - Strategy-based script/style loading (v2.4.0)
+- **Standard DTOs** - ABP-standard DTO classes for entities and pagination (v2.4.0)
 
 ## Main Exports
 
@@ -48,6 +50,7 @@ npm install @abpjs/core
 | `LocalizationService` | Translation services |
 | `RestService` | HTTP client with ABP interceptors |
 | `LazyLoadService` | Dynamic module/script loading |
+| `DomInsertionService` | DOM content insertion with tracking (v2.4.0) |
 
 ### Redux Slices
 

@@ -747,6 +747,67 @@
   line-height: 1.4;
 }
 
+/* Tech Stack Section */
+.techStackSection {
+  position: relative;
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, #0a0a0f 0%, #0d0d14 100%);
+}
+
+.techStackGrid {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+.techStackCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  border-radius: 16px;
+  width: 148px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.techStackCard:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.techStackImage {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.techStackCard:hover .techStackImage {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+.techStackName {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
 /* ========================================
    LIGHT MODE STYLES
    ======================================== */
@@ -1019,6 +1080,27 @@
   color: rgba(0, 0, 0, 0.55);
 }
 
+/* Tech Stack Section - Light Mode */
+[data-theme='light'] .techStackSection {
+  background: linear-gradient(180deg, #f8f9fc 0%, #eef1f8 100%);
+}
+
+[data-theme='light'] .techStackCard {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='light'] .techStackCard:hover {
+  background: #fff;
+  border-color: rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .techStackName {
+  color: #1a1a2e;
+}
+
 /* CTA Section - Light Mode */
 [data-theme='light'] .ctaSection {
   background: linear-gradient(180deg, #f8f9fc 0%, #eef1f8 100%);
@@ -1077,5 +1159,25 @@
 
   .moduleCard {
     justify-content: flex-start;
+  }
+
+  .techStackGrid {
+    gap: 0.75rem;
+    justify-content: flex-start;
+    padding: 0.5rem 1rem;
+  }
+
+  .techStackCard {
+    padding: 0.75rem 0.5rem;
+    width: 90px;
+  }
+
+  .techStackImage {
+    width: 32px;
+    height: 32px;
+  }
+
+  .techStackName {
+    font-size: 0.75rem;
   }
 }

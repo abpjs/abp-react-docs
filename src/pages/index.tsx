@@ -36,6 +36,20 @@ const proModules: ModuleItem[] = [
   { name: 'SaaS', description: 'Tenants, editions, connections', image: '/img/modules/saas.svg', link: '/docs/packages/saas/overview' },
 ];
 
+type TechStackItem = {
+  name: string;
+  image: string;
+};
+
+const techStack: TechStackItem[] = [
+  { name: 'React 18', image: '/img/stack/react.svg' },
+  { name: 'TypeScript', image: '/img/stack/typescript.svg' },
+  { name: 'Vite', image: '/img/stack/vite.svg' },
+  { name: 'Chakra UI', image: '/img/stack/chakraui.svg' },
+  { name: 'React Query', image: '/img/stack/react-query.svg' },
+  { name: 'React Hook Form', image: '/img/stack/reactHookForm.svg' },
+];
+
 const features: FeatureItem[] = [
   {
     icon: (
@@ -273,6 +287,29 @@ function ModulesSection(): ReactNode {
   );
 }
 
+function TechStackSection(): ReactNode {
+  return (
+    <section className={styles.techStackSection}>
+      <div className={styles.featuresHeader}>
+        <span className={styles.featuresBadge}>Technology</span>
+        <h2 className={styles.featuresTitle}>Modern Technology Stack</h2>
+        <p className={styles.featuresSubtitle}>
+          Built with the latest and most robust tools in the React ecosystem. Future-proof your application with industry standards.
+        </p>
+      </div>
+
+      <div className={styles.techStackGrid}>
+        {techStack.map((tech, index) => (
+          <div key={index} className={styles.techStackCard}>
+            <img src={tech.image} alt={tech.name} className={styles.techStackImage} />
+            <span className={styles.techStackName}>{tech.name}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function CTASection(): ReactNode {
   return (
     <section className={styles.ctaSection}>
@@ -311,6 +348,7 @@ export default function Home(): ReactNode {
       <main>
         <HeroSection />
         <ModulesSection />
+        <TechStackSection />
         <FeaturesSection />
         <CTASection />
       </main>
