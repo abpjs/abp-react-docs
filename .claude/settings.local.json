@@ -39,7 +39,9 @@
       "Bash(git stash:*)",
       "Read",
       "Edit",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
