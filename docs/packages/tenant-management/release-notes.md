@@ -4,6 +4,69 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`TenantManagementService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+- **Admin credentials for new tenants** - When creating a new tenant, you must now provide admin credentials:
+
+  ```tsx
+  import { useTenantManagement } from '@abpjs/tenant-management';
+
+  function CreateTenantExample() {
+    const { createTenant } = useTenantManagement();
+
+    const handleCreate = async () => {
+      await createTenant({
+        name: 'New Tenant',
+        adminEmailAddress: 'admin@newtenant.com',
+        adminPassword: 'SecurePassword123!',
+      });
+    };
+  }
+  ```
+
+  The `TenantManagementModal` component automatically displays admin email and password fields when creating new tenants.
+
+### Breaking Changes
+
+- **`AddRequest` interface** - Now requires `adminEmailAddress` and `adminPassword` fields:
+
+  ```tsx
+  // Before (v2.2.0)
+  interface AddRequest {
+    name: string;
+  }
+
+  // After (v2.4.0)
+  interface AddRequest {
+    name: string;
+    adminEmailAddress: string;
+    adminPassword: string;
+  }
+  ```
+
+- **`UpdateRequest` interface** - No longer extends `AddRequest`. Now only requires `id` and `name`:
+
+  ```tsx
+  // Before (v2.2.0)
+  interface UpdateRequest extends AddRequest {
+    id: string;
+  }
+
+  // After (v2.4.0)
+  interface UpdateRequest {
+    id: string;
+    name: string;
+  }
+  ```
+
+---
+
 ## v2.2.0
 
 **February 2026**
