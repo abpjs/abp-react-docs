@@ -144,3 +144,24 @@ html {
 [data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
   background: rgba(139, 92, 246, 0.5);
 }
+
+/* Mobile sidebar fix */
+.navbar-sidebar {
+  z-index: 100;
+}
+
+.navbar-sidebar--show {
+  display: block !important;
+}
+
+/* Ensure navbar toggle is visible on mobile */
+@media screen and (max-width: 996px) {
+  .navbar__toggle {
+    display: flex !important;
+  }
+
+  .navbar-sidebar {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+  }
+}

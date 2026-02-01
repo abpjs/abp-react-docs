@@ -6,12 +6,13 @@
 .heroSection {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 6rem 2rem 4rem;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to allow navbar sidebar */
   background: linear-gradient(180deg, #0a0a0f 0%, #0d0d14 50%, #0a0a0f 100%);
 }
 
@@ -794,6 +795,331 @@
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.5);
   line-height: 1.4;
+}
+
+/* ========================================
+   LIGHT MODE STYLES
+   ======================================== */
+
+/* Hero Section - Light Mode */
+[data-theme='light'] .heroSection {
+  background: linear-gradient(180deg, #f8f9fc 0%, #eef1f8 50%, #f8f9fc 100%);
+}
+
+/* Star field - hidden in light mode, replaced with subtle dots */
+[data-theme='light'] .starField {
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(139, 92, 246, 0.15), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(99, 102, 241, 0.1), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(139, 92, 246, 0.12), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(99, 102, 241, 0.08), transparent),
+    radial-gradient(1px 1px at 160px 120px, rgba(139, 92, 246, 0.1), transparent),
+    radial-gradient(2px 2px at 200px 50px, rgba(139, 92, 246, 0.15), transparent),
+    radial-gradient(1px 1px at 250px 150px, rgba(99, 102, 241, 0.08), transparent),
+    radial-gradient(2px 2px at 300px 100px, rgba(139, 92, 246, 0.06), transparent);
+  opacity: 0.6;
+}
+
+/* Glow orbs - softer for light mode */
+[data-theme='light'] .glowOrb1 {
+  background: radial-gradient(ellipse, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+  opacity: 0.8;
+}
+
+[data-theme='light'] .glowOrb2 {
+  background: radial-gradient(ellipse, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+}
+
+[data-theme='light'] .glowOrb3 {
+  background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+}
+
+/* Badge - Light Mode */
+[data-theme='light'] .badge {
+  color: #7c3aed;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.1) 0%,
+    rgba(139, 92, 246, 0.04) 100%
+  );
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 2px 12px rgba(139, 92, 246, 0.1);
+}
+
+[data-theme='light'] .badge:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.15) 0%,
+    rgba(139, 92, 246, 0.06) 100%
+  );
+  border-color: rgba(139, 92, 246, 0.5);
+  color: #6d28d9;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 4px 20px rgba(139, 92, 246, 0.2);
+}
+
+/* Hero Title - Light Mode */
+[data-theme='light'] .heroTitle {
+  background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hero Subtitle - Light Mode */
+[data-theme='light'] .heroSubtitle {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Primary Button - stays mostly the same, minor adjustments */
+[data-theme='light'] .buttonPrimary {
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    0 4px 20px rgba(139, 92, 246, 0.3),
+    0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+[data-theme='light'] .buttonPrimary:hover {
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    0 8px 30px rgba(139, 92, 246, 0.4),
+    0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Secondary Button - Light Mode */
+[data-theme='light'] .buttonSecondary {
+  color: #1a1a2e;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.04) 0%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='light'] .buttonSecondary::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    transparent 100%
+  );
+}
+
+[data-theme='light'] .buttonSecondary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.06) 0%,
+    rgba(0, 0, 0, 0.03) 100%
+  );
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #1a1a2e;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Quick Start - Light Mode */
+[data-theme='light'] .quickStart {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.8) 100%
+  );
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 1),
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(139, 92, 246, 0.05);
+}
+
+[data-theme='light'] .quickStart::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.2) 30%,
+    rgba(139, 92, 246, 0.3) 50%,
+    rgba(139, 92, 246, 0.2) 70%,
+    transparent 100%
+  );
+}
+
+[data-theme='light'] .quickStartLabel {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='light'] .quickStartCode {
+  color: #7c3aed;
+  text-shadow: none;
+}
+
+/* Scroll Indicator - Light Mode */
+[data-theme='light'] .scrollIndicator {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='light'] .scrollMouse {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='light'] .scrollMouse::before {
+  background: rgba(139, 92, 246, 0.7);
+}
+
+/* Features Section - Light Mode */
+[data-theme='light'] .featuresSection {
+  background: linear-gradient(180deg, #f8f9fc 0%, #eef1f8 100%);
+}
+
+/* Features Badge - Light Mode */
+[data-theme='light'] .featuresBadge {
+  color: #7c3aed;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.1) 0%,
+    rgba(139, 92, 246, 0.04) 100%
+  );
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 2px 8px rgba(139, 92, 246, 0.08);
+}
+
+[data-theme='light'] .featuresTitle {
+  color: #1a1a2e;
+}
+
+[data-theme='light'] .featuresSubtitle {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* Feature Cards - Light Mode */
+[data-theme='light'] .featureCard {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='light'] .featureCard::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 20%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.5) 80%,
+    transparent 100%
+  );
+}
+
+[data-theme='light'] .featureCard::after {
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(139, 92, 246, 0.05) 0%,
+    transparent 60%
+  );
+}
+
+[data-theme='light'] .featureCard:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border-color: rgba(139, 92, 246, 0.2);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 1),
+    0 8px 40px rgba(139, 92, 246, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Feature Icon - Light Mode */
+[data-theme='light'] .featureIcon {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.12) 0%,
+    rgba(139, 92, 246, 0.05) 100%
+  );
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 2px 8px rgba(139, 92, 246, 0.12);
+}
+
+[data-theme='light'] .featureTitle {
+  color: #1a1a2e;
+}
+
+[data-theme='light'] .featureDescription {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* Modules Section - Light Mode */
+[data-theme='light'] .modulesSection {
+  background: linear-gradient(180deg, #eef1f8 0%, #f8f9fc 100%);
+}
+
+[data-theme='light'] .moduleCategoryTitle {
+  color: #1a1a2e;
+}
+
+[data-theme='light'] .moduleCategoryDesc {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* Module Cards - Light Mode */
+[data-theme='light'] .moduleCard {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='light'] .moduleCard:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border-color: rgba(139, 92, 246, 0.25);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+}
+
+[data-theme='light'] .moduleName {
+  color: #1a1a2e;
+}
+
+[data-theme='light'] .moduleDesc {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* CTA Section - Light Mode */
+[data-theme='light'] .ctaSection {
+  background: linear-gradient(180deg, #f8f9fc 0%, #eef1f8 100%);
+}
+
+[data-theme='light'] .ctaGlow {
+  background: radial-gradient(ellipse, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+}
+
+[data-theme='light'] .ctaTitle {
+  color: #1a1a2e;
+}
+
+[data-theme='light'] .ctaSubtitle {
+  color: rgba(0, 0, 0, 0.55);
 }
 
 /* Responsive adjustments */
