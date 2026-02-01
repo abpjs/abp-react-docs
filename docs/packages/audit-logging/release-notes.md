@@ -4,6 +4,25 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`AuditLoggingService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+- **`eAuditLoggingComponents` enum** - New enum for component identifiers, useful for component registration and customization:
+
+  ```tsx
+  import { eAuditLoggingComponents } from '@abpjs/audit-logging';
+
+  // Available components:
+  // eAuditLoggingComponents.AuditLogs = 'AuditLogging.AuditLogsComponent'
+  ```
+
+---
+
 ## v2.2.0
 
 **February 2026**
