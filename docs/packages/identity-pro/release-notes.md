@@ -1,5 +1,54 @@
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`IdentityService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+- **`getAllRoles()` method** - New method to fetch all roles without pagination:
+
+  ```tsx
+  import { useIdentityService } from '@abpjs/identity-pro';
+
+  function RoleSelector() {
+    const identityService = useIdentityService();
+    const [roles, setRoles] = useState<Identity.RoleItem[]>([]);
+
+    useEffect(() => {
+      // Fetch all roles without pagination (calls /api/identity/roles/all)
+      identityService.getAllRoles().then((response) => {
+        setRoles(response.items);
+      });
+    }, []);
+
+    return (
+      <select>
+        {roles.map((role) => (
+          <option key={role.id} value={role.id}>
+            {role.name}
+          </option>
+        ))}
+      </select>
+    );
+  }
+  ```
+
+- **`eIdentityComponents` enum** - New enum for component identifiers, useful for component registration and customization:
+
+  ```tsx
+  import { eIdentityComponents } from '@abpjs/identity-pro';
+
+  // Available components:
+  // eIdentityComponents.Claims = 'Identity.ClaimsComponent'
+  // eIdentityComponents.Roles = 'Identity.RolesComponent'
+  // eIdentityComponents.Users = 'Identity.UsersComponent'
+  ```
+
+---
+
 ## v2.2.0
 
 **February 2026**
