@@ -36,29 +36,67 @@ ABP React consists of 14 packages split between free and pro modules.
 
 Works with the open-source [ABP Framework](https://abp.io/).
 
-| Package | Description |
-|---------|-------------|
-| [@abpjs/core](./packages/core/overview) | Core infrastructure: authentication, configuration, localization, permissions, REST services |
-| [@abpjs/account](./packages/account/overview) | Login, registration, and tenant switching components |
-| [@abpjs/identity](./packages/identity/overview) | User and role management components |
-| [@abpjs/feature-management](./packages/feature-management/overview) | Feature management modal and services |
-| [@abpjs/permission-management](./packages/permission-management/overview) | Permission management modal and services |
-| [@abpjs/setting-management](./packages/setting-management/overview) | Settings UI with email and identity settings |
-| [@abpjs/tenant-management](./packages/tenant-management/overview) | Multi-tenant management components |
-| [@abpjs/theme-basic](./packages/theme-basic/overview) | Layout components (Application, Account, Empty layouts) |
-| [@abpjs/theme-shared](./packages/theme-shared/overview) | Shared UI: toasts, confirmations, theming |
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem', margin: '1rem 0 2rem'}}>
+  <a href="./packages/core/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/identity.svg" alt="Core" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Core</span>
+  </a>
+  <a href="./packages/account/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/account.svg" alt="Account" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Account</span>
+  </a>
+  <a href="./packages/identity/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/identity.svg" alt="Identity" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Identity</span>
+  </a>
+  <a href="./packages/feature-management/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/feature-management.svg" alt="Feature Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Features</span>
+  </a>
+  <a href="./packages/permission-management/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/identity.svg" alt="Permission Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Permissions</span>
+  </a>
+  <a href="./packages/setting-management/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/setting-management.svg" alt="Setting Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Settings</span>
+  </a>
+  <a href="./packages/tenant-management/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/tenant-management.svg" alt="Tenant Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Tenants</span>
+  </a>
+  <a href="./packages/theme-shared/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/setting-management.svg" alt="Theme Shared" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Theme</span>
+  </a>
+</div>
 
 ### Pro Packages
 
-These packages are free to use but require the corresponding backend modules from [ABP Commercial](https://commercial.abp.io/). You can purchase an ABP Commercial license from [abp.io](https://abp.io/pricing).
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem', margin: '1rem 0 2rem'}}>
+  <a href="./packages/account-pro/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/account-pro.svg" alt="Account Pro" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Account Pro</span>
+  </a>
+  <a href="./packages/identity-pro/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/identity-pro.svg" alt="Identity Pro" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Identity Pro</span>
+  </a>
+  <a href="./packages/audit-logging/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/audit-logging.svg" alt="Audit Logging" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Audit Logs</span>
+  </a>
+  <a href="./packages/language-management/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/text-template-management.svg" alt="Language Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Languages</span>
+  </a>
+  <a href="./packages/saas/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/saas.svg" alt="SaaS" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>SaaS</span>
+  </a>
+</div>
 
-| Package | Description |
-|---------|-------------|
-| [@abpjs/account-pro](./packages/account-pro/overview) | Pro account module with password recovery, profile management, 2FA |
-| [@abpjs/identity-pro](./packages/identity-pro/overview) | Pro identity module with claim types, user/role claims |
-| [@abpjs/audit-logging](./packages/audit-logging/overview) | Audit logs viewing with filtering and statistics |
-| [@abpjs/language-management](./packages/language-management/overview) | Language and localization string management |
-| [@abpjs/saas](./packages/saas/overview) | SaaS module with tenants, editions, and connection strings |
+These packages are free to use but require the corresponding backend modules from [ABP Commercial](https://commercial.abp.io/).
 
 ## Quick Example
 
