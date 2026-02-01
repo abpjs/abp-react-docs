@@ -11,6 +11,32 @@ type FeatureItem = {
   description: string;
 };
 
+type ModuleItem = {
+  name: string;
+  description: string;
+  image: string;
+  link: string;
+};
+
+const freeModules: ModuleItem[] = [
+  { name: 'Core', description: 'Authentication, configuration, localization', image: '/img/modules/identity.svg', link: '/docs/packages/core/overview' },
+  { name: 'Account', description: 'Login, registration, tenant switching', image: '/img/modules/account.svg', link: '/docs/packages/account/overview' },
+  { name: 'Identity', description: 'User and role management', image: '/img/modules/identity.svg', link: '/docs/packages/identity/overview' },
+  { name: 'Features', description: 'Feature management modal', image: '/img/modules/feature-management.svg', link: '/docs/packages/feature-management/overview' },
+  { name: 'Permissions', description: 'Permission management modal', image: '/img/modules/identity.svg', link: '/docs/packages/permission-management/overview' },
+  { name: 'Settings', description: 'Email and identity settings', image: '/img/modules/setting-management.svg', link: '/docs/packages/setting-management/overview' },
+  { name: 'Tenants', description: 'Multi-tenant management', image: '/img/modules/tenant-management.svg', link: '/docs/packages/tenant-management/overview' },
+  { name: 'Theme', description: 'Toasts, confirmations, theming', image: '/img/modules/setting-management.svg', link: '/docs/packages/theme-shared/overview' },
+];
+
+const proModules: ModuleItem[] = [
+  { name: 'Account Pro', description: 'Password recovery, 2FA, profiles', image: '/img/modules/account-pro.svg', link: '/docs/packages/account-pro/overview' },
+  { name: 'Identity Pro', description: 'Claim types, user/role claims', image: '/img/modules/identity-pro.svg', link: '/docs/packages/identity-pro/overview' },
+  { name: 'Audit Logs', description: 'Audit logs with filtering', image: '/img/modules/audit-logging.svg', link: '/docs/packages/audit-logging/overview' },
+  { name: 'Languages', description: 'Language and localization management', image: '/img/modules/text-template-management.svg', link: '/docs/packages/language-management/overview' },
+  { name: 'SaaS', description: 'Tenants, editions, connections', image: '/img/modules/saas.svg', link: '/docs/packages/saas/overview' },
+];
+
 const features: FeatureItem[] = [
   {
     icon: '🔐',
@@ -140,6 +166,54 @@ function FeaturesSection(): ReactNode {
   );
 }
 
+function ModulesSection(): ReactNode {
+  return (
+    <section className={styles.modulesSection}>
+      <div className={styles.featuresHeader}>
+        <span className={styles.featuresBadge}>Packages</span>
+        <h2 className={styles.featuresTitle}>Modular by Design</h2>
+        <p className={styles.featuresSubtitle}>
+          Pick only the packages you need. Each module is independent and fully typed.
+        </p>
+      </div>
+
+      <div className={styles.modulesContainer}>
+        <div className={styles.moduleCategory}>
+          <h3 className={styles.moduleCategoryTitle}>Free Packages</h3>
+          <p className={styles.moduleCategoryDesc}>Works with open-source ABP Framework</p>
+          <div className={styles.modulesGrid}>
+            {freeModules.map((module, index) => (
+              <Link key={index} to={module.link} className={styles.moduleCard}>
+                <img src={module.image} alt={module.name} className={styles.moduleImage} />
+                <div className={styles.moduleInfo}>
+                  <span className={styles.moduleName}>{module.name}</span>
+                  <span className={styles.moduleDesc}>{module.description}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.moduleCategory}>
+          <h3 className={styles.moduleCategoryTitle}>Pro Packages</h3>
+          <p className={styles.moduleCategoryDesc}>Requires ABP Commercial backend modules</p>
+          <div className={styles.modulesGrid}>
+            {proModules.map((module, index) => (
+              <Link key={index} to={module.link} className={styles.moduleCard}>
+                <img src={module.image} alt={module.name} className={styles.moduleImage} />
+                <div className={styles.moduleInfo}>
+                  <span className={styles.moduleName}>{module.name}</span>
+                  <span className={styles.moduleDesc}>{module.description}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTASection(): ReactNode {
   return (
     <section className={styles.ctaSection}>
@@ -178,6 +252,7 @@ export default function Home(): ReactNode {
     >
       <main>
         <HeroSection />
+        <ModulesSection />
         <FeaturesSection />
         <CTASection />
       </main>
