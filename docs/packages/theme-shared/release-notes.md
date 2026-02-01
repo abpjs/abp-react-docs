@@ -4,6 +4,55 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.1.0
+
+**February 2026**
+
+### New Types
+
+- **`Confirmation.Status` enum** - New confirmation-specific status enum, replacing usage of `Toaster.Status` for confirmation dialogs:
+  ```tsx
+  import { Confirmation } from '@abpjs/theme-shared';
+
+  const status = await confirmation.info('Are you sure?');
+
+  if (status === Confirmation.Status.confirm) {
+    // User confirmed
+  } else if (status === Confirmation.Status.reject) {
+    // User rejected
+  } else if (status === Confirmation.Status.dismiss) {
+    // User dismissed (escape key, click outside)
+  }
+  ```
+
+### API Changes
+
+- **Confirmation service return type** - All confirmation methods (`info`, `success`, `warn`, `error`, `show`) now return `Promise<Confirmation.Status>` instead of `Promise<Toaster.Status>`
+- **`confirmation.clear(status?)` parameter** - Now accepts `Confirmation.Status` instead of `Toaster.Status`
+- **`useConfirmationState().respond()`** - Now accepts `Confirmation.Status` instead of `Toaster.Status`
+
+### Deprecations
+
+- **`Toaster.Status` deprecated** - Use `Confirmation.Status` for confirmation dialogs. `Toaster.Status` will be removed in v2.2.0.
+
+### Migration
+
+```tsx
+// Before (v2.0.0)
+import { Toaster } from '@abpjs/theme-shared';
+
+const status = await confirmation.info('Are you sure?');
+if (status === Toaster.Status.confirm) { /* ... */ }
+
+// After (v2.1.0)
+import { Confirmation } from '@abpjs/theme-shared';
+
+const status = await confirmation.info('Are you sure?');
+if (status === Confirmation.Status.confirm) { /* ... */ }
+```
+
+---
+
 ## v2.0.0
 
 **January 2026**

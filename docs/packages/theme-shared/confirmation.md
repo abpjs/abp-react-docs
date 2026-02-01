@@ -9,7 +9,7 @@ The `useConfirmation` hook provides promise-based confirmation dialogs.
 ## Basic Usage
 
 ```tsx
-import { useConfirmation, Toaster } from '@abpjs/theme-shared';
+import { useConfirmation, Confirmation } from '@abpjs/theme-shared';
 
 function DeleteButton() {
   const confirmation = useConfirmation();
@@ -20,7 +20,7 @@ function DeleteButton() {
       'Delete Item'
     );
 
-    if (status === Toaster.Status.confirm) {
+    if (status === Confirmation.Status.confirm) {
       // User clicked "Yes"
       await deleteItem();
     }
@@ -69,17 +69,21 @@ type Severity = 'neutral' | 'success' | 'info' | 'warning' | 'error';
 
 The `show()` method accepts a severity parameter. If not specified, it defaults to `'neutral'`.
 
-### Return Value
+### Return Value (v2.1.0)
 
-All methods return a `Promise<Toaster.Status>`:
+All methods return a `Promise<Confirmation.Status>`:
 
 ```tsx
-enum Toaster.Status {
+enum Confirmation.Status {
   confirm = 'confirm',  // User clicked Yes
   reject = 'reject',    // User clicked Cancel
   dismiss = 'dismiss',  // Dialog was dismissed
 }
 ```
+
+:::info Changed in v2.1.0
+Prior to v2.1.0, confirmation methods returned `Promise<Toaster.Status>`. The new `Confirmation.Status` enum has the same values but is now specific to confirmations. `Toaster.Status` is deprecated and will be removed in v2.2.0.
+:::
 
 ## Confirmation Types
 
@@ -199,7 +203,7 @@ const status = await confirmation.error(
 ## Delete Pattern
 
 ```tsx
-import { useConfirmation, useToaster, Toaster } from '@abpjs/theme-shared';
+import { useConfirmation, useToaster, Confirmation } from '@abpjs/theme-shared';
 
 function ItemActions({ item }) {
   const confirmation = useConfirmation();
@@ -215,7 +219,7 @@ function ItemActions({ item }) {
       }
     );
 
-    if (status === Toaster.Status.confirm) {
+    if (status === Confirmation.Status.confirm) {
       try {
         await deleteItem(item.id);
         toaster.success('Item deleted successfully', 'Success');
@@ -232,7 +236,7 @@ function ItemActions({ item }) {
 ## Unsaved Changes Pattern
 
 ```tsx
-import { useConfirmation, Toaster } from '@abpjs/theme-shared';
+import { useConfirmation, Confirmation } from '@abpjs/theme-shared';
 import { useNavigate } from 'react-router-dom';
 
 function EditForm({ hasChanges }) {
@@ -250,7 +254,7 @@ function EditForm({ hasChanges }) {
         }
       );
 
-      if (status !== Toaster.Status.confirm) return;
+      if (status !== Confirmation.Status.confirm) return;
     }
 
     navigate(-1);
@@ -268,7 +272,7 @@ function EditForm({ hasChanges }) {
 ## Bulk Delete Pattern
 
 ```tsx
-import { useConfirmation, useToaster, Toaster } from '@abpjs/theme-shared';
+import { useConfirmation, useToaster, Confirmation } from '@abpjs/theme-shared';
 
 function BulkActions({ selectedItems }) {
   const confirmation = useConfirmation();
@@ -284,7 +288,7 @@ function BulkActions({ selectedItems }) {
       }
     );
 
-    if (status === Toaster.Status.confirm) {
+    if (status === Confirmation.Status.confirm) {
       try {
         await Promise.all(selectedItems.map((item) => deleteItem(item.id)));
         toaster.success(`${selectedItems.length} items deleted`, 'Success');
