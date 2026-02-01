@@ -421,6 +421,13 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+.copiedTooltip {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #a78bfa;
+  white-space: nowrap;
+}
+
 .quickStartHelper {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.4);
@@ -547,149 +554,65 @@
 /* Feature cards grid */
 .featuresGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
+}
+
+@media screen and (max-width: 900px) {
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .featureCard {
   position: relative;
-  padding: 2rem;
-  border-radius: 20px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  padding: 1.75rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
 
-  /* Glass morphism base */
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  /* Glass border - simulates light refraction */
+  /* Clean white card */
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-
-  /* Subtle inner glow */
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.05),
-    0 4px 24px rgba(0, 0, 0, 0.2);
-}
-
-/* Glass highlight effect - simulates light reflection */
-.featureCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 20%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0.1) 80%,
-    transparent 100%
-  );
-}
-
-/* Subtle gradient overlay for depth */
-.featureCard::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    ellipse at 50% 0%,
-    rgba(139, 92, 246, 0.03) 0%,
-    transparent 60%
-  );
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .featureCard:hover {
-  transform: translateY(-6px) scale(1.01);
-
-  /* Enhanced glass on hover */
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.03) 100%
-  );
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   border-color: rgba(139, 92, 246, 0.2);
-
-  /* Elevated shadow */
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    0 8px 40px rgba(139, 92, 246, 0.15),
-    0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.featureCard:hover::after {
-  opacity: 1;
 }
 
 .featureIcon {
-  position: relative;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.25rem;
-  font-size: 1.5rem;
-  border-radius: 14px;
-
-  /* Glass morphism for icon */
-  background: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.15) 0%,
-    rgba(139, 92, 246, 0.05) 100%
-  );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-
-  /* Inner glow */
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    0 2px 8px rgba(139, 92, 246, 0.2);
-}
-
-/* Light reflection on icon */
-.featureIcon::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    transparent 100%
-  );
-  border-radius: 14px 14px 0 0;
-  pointer-events: none;
+  border-radius: 12px;
+  color: #7c3aed;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.15);
 }
 
 .featureTitle {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: #fff;
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
 }
 
 .featureDescription {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.55);
   line-height: 1.6;
   margin: 0;
 }
@@ -1030,60 +953,21 @@
 
 /* Feature Cards - Light Mode */
 [data-theme='light'] .featureCard {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.7) 100%
-  );
+  background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    0 4px 24px rgba(0, 0, 0, 0.06);
-}
-
-[data-theme='light'] .featureCard::before {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 20%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0.5) 80%,
-    transparent 100%
-  );
-}
-
-[data-theme='light'] .featureCard::after {
-  background: radial-gradient(
-    ellipse at 50% 0%,
-    rgba(139, 92, 246, 0.05) 0%,
-    transparent 60%
-  );
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme='light'] .featureCard:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0.85) 100%
-  );
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   border-color: rgba(139, 92, 246, 0.2);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 1),
-    0 8px 40px rgba(139, 92, 246, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Feature Icon - Light Mode */
 [data-theme='light'] .featureIcon {
-  background: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.12) 0%,
-    rgba(139, 92, 246, 0.05) 100%
-  );
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.8),
-    0 2px 8px rgba(139, 92, 246, 0.12);
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
 }
 
 [data-theme='light'] .featureTitle {

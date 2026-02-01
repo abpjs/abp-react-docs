@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 
 import styles from './index.module.css';
 
 type FeatureItem = {
-  icon: string;
+  icon: ReactNode;
   title: string;
   description: string;
 };
@@ -38,42 +38,111 @@ const proModules: ModuleItem[] = [
 
 const features: FeatureItem[] = [
   {
-    icon: '🔐',
-    title: 'Easy Authentication',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+    ),
+    title: 'Enterprise Security',
     description:
-      'Built-in OAuth2/OIDC support with ready-to-use login, registration, and multi-tenant switching components.',
+      'Built-in authentication, authorization, and permission management based on industry standards.',
   },
   {
-    icon: '⚡',
-    title: 'ABP Framework Integration',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+        <line x1="12" y1="22.08" x2="12" y2="12" />
+      </svg>
+    ),
+    title: 'Modular Design',
     description:
-      'Seamlessly connect to your ABP backend with pre-built services for identity, permissions, tenant management, and localization.',
+      'Fully modular architecture allowing you to compose your application from independent, reusable modules.',
   },
   {
-    icon: '📦',
-    title: 'Modular Architecture',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    ),
+    title: 'Multi-Tenancy',
     description:
-      'Pick only the packages you need. Each module is independent and built with React, TypeScript, and Chakra UI.',
+      'First-class support for SaaS applications with automated tenant resolution and data isolation.',
   },
   {
-    icon: '🎨',
-    title: 'Chakra UI Components',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+    ),
+    title: 'High Performance',
     description:
-      'Beautiful, accessible components built on Chakra UI. Fully customizable to match your brand.',
+      'Optimized for speed with code splitting, lazy loading, and efficient state management.',
   },
   {
-    icon: '🌐',
-    title: 'Multi-Tenancy Ready',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+    title: 'Identity Management',
     description:
-      'Full multi-tenant support out of the box. Switch tenants, manage tenant-specific settings, and more.',
+      'Complete user, role, and organization unit management system ready to use.',
   },
   {
-    icon: '🎛️',
-    title: 'Feature Management',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+        <path d="M2 17l10 5 10-5" />
+        <path d="M2 12l10 5 10-5" />
+      </svg>
+    ),
+    title: 'Rapid Development',
     description:
-      'Control tenant features with the built-in Feature Management module. Enable, disable, or configure features per tenant.',
+      'CLI tools, code generators, and pre-built components to speed up your development cycle.',
   },
 ];
+
+function QuickStartCommand(): ReactNode {
+  const [copied, setCopied] = useState(false);
+  const command = 'npx create-abp-react my-app';
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(command);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className={styles.quickStartWrapper}>
+      <div className={styles.quickStart}>
+        <span className={styles.quickStartDot} />
+        <code className={styles.quickStartCode}>{command}</code>
+        <button
+          className={styles.copyButton}
+          onClick={handleCopy}
+          title="Copy to clipboard"
+        >
+          {copied ? (
+            <span className={styles.copiedTooltip}>Copied!</span>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          )}
+        </button>
+      </div>
+      <p className={styles.quickStartHelper}>Get up and running in seconds</p>
+    </div>
+  );
+}
 
 function HeroSection(): ReactNode {
   return (
@@ -124,25 +193,7 @@ function HeroSection(): ReactNode {
         </div>
 
         {/* Quick start */}
-        <div className={styles.quickStartWrapper}>
-          <div className={styles.quickStart}>
-            <span className={styles.quickStartDot} />
-            <code className={styles.quickStartCode}>
-              npx create-abp-react my-app
-            </code>
-            <button
-              className={styles.copyButton}
-              onClick={() => navigator.clipboard.writeText('npx create-abp-react my-app')}
-              title="Copy to clipboard"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-              </svg>
-            </button>
-          </div>
-          <p className={styles.quickStartHelper}>Get up and running in seconds</p>
-        </div>
+        <QuickStartCommand />
       </div>
 
       {/* Scroll indicator */}
