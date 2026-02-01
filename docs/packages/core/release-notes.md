@@ -4,6 +4,42 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.1.0
+
+**February 2026**
+
+### New Features
+
+- **`ConfigStateService.dispatchSetEnvironment()`** - New dispatch method to set the environment configuration at runtime:
+  ```tsx
+  import { useAbp } from '@abpjs/core';
+
+  function MyComponent() {
+    const { configStateService } = useAbp();
+
+    // Update environment configuration
+    configStateService.dispatchSetEnvironment({
+      production: true,
+      application: { name: 'My App' },
+      oAuthConfig: { /* ... */ },
+      apis: { default: { url: 'https://api.example.com' } },
+    });
+  }
+  ```
+
+### API Changes
+
+- **`toLocalISOString` made optional** - The `Date.prototype.toLocalISOString` method is now optional to match the Angular API. Use optional chaining when calling:
+  ```tsx
+  // Before (v2.0.0)
+  const isoString = date.toLocalISOString();
+
+  // After (v2.1.0) - use optional chaining for safety
+  const isoString = date.toLocalISOString?.();
+  ```
+
+---
+
 ## v2.0.0
 
 **January 2026**

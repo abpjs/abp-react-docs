@@ -183,6 +183,36 @@ function ConfigExample() {
 | `getRoute()` | `path?, name?, url?` | `ABP.FullRoute \| undefined` | Find route by path, name, or URL |
 | `getSettings()` | `keyword?: string` | `Record<string, string>` | Get settings, optionally filtered |
 | `getLocalization()` | `key, ...params` | `string` | Get localized string with interpolation |
+| `dispatchSetEnvironment()` | `environment: Config.Environment` | `void` | Set the environment configuration (v2.1.0) |
+
+### Setting Environment at Runtime (v2.1.0)
+
+Use `dispatchSetEnvironment` to update the environment configuration dynamically:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function EnvironmentSwitcher() {
+  const { configStateService } = useAbp();
+
+  const switchToProduction = () => {
+    configStateService.dispatchSetEnvironment({
+      production: true,
+      application: { name: 'My App' },
+      oAuthConfig: {
+        issuer: 'https://auth.example.com',
+        clientId: 'MyApp_App',
+        scope: 'openid profile email MyApp',
+      },
+      apis: {
+        default: { url: 'https://api.example.com' },
+      },
+    });
+  };
+
+  return <button onClick={switchToProduction}>Switch to Production</button>;
+}
+```
 
 ## Dynamic Routes (v2.0.0)
 
