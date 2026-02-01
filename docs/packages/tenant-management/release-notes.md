@@ -4,6 +4,57 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.2.0
+
+**February 2026**
+
+### New Features
+
+- **Features Modal Support in `useTenantManagement`** - New state and methods for managing the features modal:
+  - `visibleFeatures` - Whether the features modal is visible
+  - `featuresProviderKey` - Provider key (tenant ID) for the features modal
+  - `openFeaturesModal(providerKey)` - Open the features modal for a specific tenant
+  - `onVisibleFeaturesChange(visible)` - Handle features modal visibility changes
+
+### Example
+
+```tsx
+import { useTenantManagement } from '@abpjs/tenant-management';
+import { FeatureManagementModal } from '@abpjs/feature-management';
+
+function TenantsWithFeatures() {
+  const {
+    tenants,
+    visibleFeatures,
+    featuresProviderKey,
+    openFeaturesModal,
+    onVisibleFeaturesChange,
+  } = useTenantManagement();
+
+  return (
+    <>
+      {tenants.map((tenant) => (
+        <div key={tenant.id}>
+          <span>{tenant.name}</span>
+          <button onClick={() => openFeaturesModal(tenant.id)}>
+            Manage Features
+          </button>
+        </div>
+      ))}
+
+      <FeatureManagementModal
+        isOpen={visibleFeatures}
+        onClose={() => onVisibleFeaturesChange(false)}
+        providerName="T"
+        providerKey={featuresProviderKey}
+      />
+    </>
+  );
+}
+```
+
+---
+
 ## v2.1.0
 
 **February 2026**

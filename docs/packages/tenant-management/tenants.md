@@ -78,6 +78,10 @@ function TenantList() {
 | `updateTenant` | `(id: string, input: UpdateTenantInput) => Promise<void>` | Update a tenant |
 | `deleteTenant` | `(id: string) => Promise<void>` | Delete a tenant |
 | `refresh` | `() => void` | Refresh the tenant list |
+| `visibleFeatures` | `boolean` | Whether the features modal is visible (v2.2.0) |
+| `featuresProviderKey` | `string` | Provider key (tenant ID) for features modal (v2.2.0) |
+| `openFeaturesModal` | `(providerKey: string) => void` | Open features modal for a tenant (v2.2.0) |
+| `onVisibleFeaturesChange` | `(visible: boolean) => void` | Handle features modal visibility (v2.2.0) |
 
 ### Tenant Type
 
