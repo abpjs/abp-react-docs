@@ -64,9 +64,9 @@ function HeroSection(): ReactNode {
       {/* Main content */}
       <div className={styles.heroContent}>
         {/* Badge */}
-        <Link to="/docs/" className={styles.badge}>
+        <Link to="/docs/release-notes/v2.0.0" className={styles.badge}>
           <span className={styles.badgeIcon}>✨</span>
-          <span>v1.1.0 is now available</span>
+          <span>v2.0.0 is now available</span>
           <span className={styles.badgeArrow}>→</span>
         </Link>
 
