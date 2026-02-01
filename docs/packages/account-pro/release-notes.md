@@ -4,6 +4,42 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.4.0
+
+**February 2026**
+
+### New Features
+
+- **`AccountProService.apiName` property** - New property for REST API configuration. Defaults to `'default'`.
+
+- **Phone number confirmation methods** - New methods for SMS-based phone verification:
+
+  ```tsx
+  import { useAccountProService } from '@abpjs/account-pro';
+
+  function PhoneVerification() {
+    const accountProService = useAccountProService();
+
+    const sendCode = async () => {
+      // Send confirmation token to user's phone
+      await accountProService.sendPhoneNumberConfirmationToken();
+    };
+
+    const confirmPhone = async (token: string) => {
+      // Confirm phone number with the received token
+      await accountProService.confirmPhoneNumber(token);
+    };
+  }
+  ```
+
+- **`ProfileResponse.phoneNumberConfirmed` field** - New field indicating whether the user's phone number is confirmed.
+
+### Deprecations
+
+- **`ProfileResponse.isPhoneNumberConfirmed`** - Deprecated in favor of `phoneNumberConfirmed`. Will be removed in a future version.
+
+---
+
 ## v2.2.0
 
 **February 2026**
