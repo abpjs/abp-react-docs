@@ -4,6 +4,47 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Component Replacement Keys
+
+New constants for replacing identity components:
+
+```tsx
+import { eIdentityComponents } from '@abpjs/identity';
+
+// Available component keys:
+// eIdentityComponents.Roles = 'Identity.RolesComponent'
+// eIdentityComponents.Users = 'Identity.UsersComponent'
+```
+
+#### Route Names
+
+New constants for identity route names (localization keys):
+
+```tsx
+import { eIdentityRouteNames } from '@abpjs/identity';
+
+// Available route names:
+// eIdentityRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
+// eIdentityRouteNames.IdentityManagement = 'AbpIdentity::Menu:IdentityManagement'
+// eIdentityRouteNames.Roles = 'AbpIdentity::Roles'
+// eIdentityRouteNames.Users = 'AbpIdentity::Users'
+```
+
+### New Exports
+
+- `eIdentityComponents` - Constants for component replacement keys
+- `IdentityComponentKey` - Type for identity component key values
+- `eIdentityRouteNames` - Constants for route names (localization keys)
+- `IdentityRouteNameKey` - Type for identity route name values
+
+---
+
 ## v2.4.0
 
 **February 2026**
