@@ -1,5 +1,50 @@
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Route Names
+
+New constants for language management route names (localization keys):
+
+```tsx
+import { eLanguageManagementRouteNames } from '@abpjs/language-management';
+
+// Available route names:
+// eLanguageManagementRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
+// eLanguageManagementRouteNames.Languages = 'LanguageManagement::Menu:Languages'
+// eLanguageManagementRouteNames.LanguageTexts = 'LanguageManagement::LanguageTexts'
+```
+
+### API Changes
+
+- **`eLanguageManagementComponents`** - Changed from TypeScript `enum` to `const` object for better tree-shaking and type inference:
+
+  ```tsx
+  // Before (v2.4.0)
+  enum eLanguageManagementComponents {
+    Languages = 'LanguageManagement.LanguagesComponent',
+    // ...
+  }
+
+  // After (v2.7.0)
+  const eLanguageManagementComponents = {
+    Languages: 'LanguageManagement.LanguagesComponent',
+    // ...
+  } as const;
+  ```
+
+### New Exports
+
+- `eLanguageManagementRouteNames` - Constants for route names (localization keys)
+- `LanguageManagementRouteNameKey` - Type for language management route name values
+- `LanguageManagementComponentKey` - Type for language management component key values
+
+---
+
 ## v2.4.0
 
 **February 2026**
