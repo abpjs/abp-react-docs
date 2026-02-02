@@ -1,5 +1,70 @@
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Admin Change Password
+
+New method to change a user's password as an admin:
+
+```tsx
+import { useIdentityService } from '@abpjs/identity-pro';
+
+function AdminPasswordReset() {
+  const identityService = useIdentityService();
+
+  const resetPassword = async (userId: string, newPassword: string) => {
+    await identityService.changePassword(userId, { newPassword });
+  };
+}
+```
+
+#### Route Names
+
+New constants for identity pro route names (localization keys):
+
+```tsx
+import { eIdentityRouteNames } from '@abpjs/identity-pro';
+
+// Available route names:
+// eIdentityRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
+// eIdentityRouteNames.IdentityManagement = 'AbpIdentity::Menu:IdentityManagement'
+// eIdentityRouteNames.Roles = 'AbpIdentity::Roles'
+// eIdentityRouteNames.Users = 'AbpIdentity::Users'
+// eIdentityRouteNames.ClaimTypes = 'AbpIdentity::ClaimTypes'
+```
+
+### API Changes
+
+- **`eIdentityComponents`** - Changed from TypeScript `enum` to `const` object for better tree-shaking and type inference:
+
+  ```tsx
+  // Before (v2.4.0)
+  enum eIdentityComponents {
+    Claims = 'Identity.ClaimsComponent',
+    // ...
+  }
+
+  // After (v2.7.0)
+  const eIdentityComponents = {
+    Claims: 'Identity.ClaimsComponent',
+    // ...
+  } as const;
+  ```
+
+### New Exports
+
+- `IdentityService.changePassword(id, body)` - Admin method to change user password
+- `Identity.ChangePasswordRequest` - Interface for password change request
+- `eIdentityRouteNames` - Constants for route names (localization keys)
+- `IdentityRouteNameKey` - Type for identity route name values
+- `IdentityComponentKey` - Type for identity component key values
+
+---
+
 ## v2.4.0
 
 **February 2026**
