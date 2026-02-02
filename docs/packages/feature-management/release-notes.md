@@ -4,6 +4,29 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Component Replacement Keys
+
+New constants for replacing feature management components:
+
+```tsx
+import { eFeatureManagementComponents } from '@abpjs/feature-management';
+
+// Available component keys:
+// eFeatureManagementComponents.FeatureManagement = 'FeatureManagement.FeatureManagementComponent'
+```
+
+### New Exports
+
+- `eFeatureManagementComponents` - Constants for component replacement keys
+
+---
+
 ## v2.4.0
 
 **February 2026**
