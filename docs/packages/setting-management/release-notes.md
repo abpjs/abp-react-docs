@@ -4,6 +4,43 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Component Replacement Keys
+
+New constants for replacing setting management components:
+
+```tsx
+import { eSettingManagementComponents } from '@abpjs/setting-management';
+
+// Available component keys:
+// eSettingManagementComponents.SettingManagement = 'SettingManagement.SettingManagementComponent'
+```
+
+#### Route Names
+
+New constants for setting management route names (localization keys):
+
+```tsx
+import { eSettingManagementRouteNames } from '@abpjs/setting-management';
+
+// Available route names:
+// eSettingManagementRouteNames.Settings = 'AbpSettingManagement::Settings'
+```
+
+### New Exports
+
+- `eSettingManagementComponents` - Constants for component replacement keys
+- `SettingManagementComponentKey` - Type for setting management component key values
+- `eSettingManagementRouteNames` - Constants for route names (localization keys)
+- `SettingManagementRouteNameKey` - Type for setting management route name values
+
+---
+
 ## v2.4.0
 
 **February 2026**
