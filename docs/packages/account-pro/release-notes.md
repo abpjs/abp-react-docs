@@ -4,6 +4,56 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Component Replacement Keys
+
+New constants for replacing account pro components:
+
+```tsx
+import { eAccountComponents } from '@abpjs/account-pro';
+
+// Available component keys:
+// eAccountComponents.Account = 'Account.AccountComponent'
+// eAccountComponents.Login = 'Account.LoginComponent'
+// eAccountComponents.Register = 'Account.RegisterComponent'
+// eAccountComponents.ForgotPassword = 'Account.ForgotPasswordComponent'
+// eAccountComponents.ResetPassword = 'Account.ResetPasswordComponent'
+// eAccountComponents.ManageProfile = 'Account.ManageProfileComponent'
+// eAccountComponents.TenantBox = 'Account.TenantBoxComponent'
+// eAccountComponents.ChangePassword = 'Account.ChangePasswordComponent'
+// eAccountComponents.PersonalSettings = 'Account.PersonalSettingsComponent'
+```
+
+#### Route Names
+
+New constants for account pro route names (localization keys):
+
+```tsx
+import { eAccountRouteNames } from '@abpjs/account-pro';
+
+// Available route names:
+// eAccountRouteNames.Account = 'AbpAccount::Menu:Account'
+// eAccountRouteNames.Login = 'AbpAccount::Login'
+// eAccountRouteNames.Register = 'AbpAccount::Register'
+// eAccountRouteNames.ForgotPassword = 'AbpAccount::ForgotPassword'
+// eAccountRouteNames.ResetPassword = 'AbpAccount::ResetPassword'
+// eAccountRouteNames.ManageProfile = 'AbpAccount::ManageYourProfile'
+```
+
+### New Exports
+
+- `eAccountComponents` - Constants for component replacement keys
+- `AccountComponentKey` - Type for account component key values
+- `eAccountRouteNames` - Constants for route names (localization keys)
+- `AccountRouteNameKey` - Type for account route name values
+
+---
+
 ## v2.4.0
 
 **February 2026**
