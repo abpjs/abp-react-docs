@@ -1,5 +1,51 @@
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Route Names
+
+New constants for SaaS route names (localization keys):
+
+```tsx
+import { eSaasRouteNames } from '@abpjs/saas';
+
+// Available route names:
+// eSaasRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
+// eSaasRouteNames.Saas = 'Saas::Menu:Saas'
+// eSaasRouteNames.Tenants = 'Saas::Tenants'
+// eSaasRouteNames.Editions = 'Saas::Editions'
+```
+
+### API Changes
+
+- **`eSaasComponents`** - Changed from TypeScript `enum` to `const` object for better tree-shaking and type inference:
+
+  ```tsx
+  // Before (v2.4.0)
+  enum eSaasComponents {
+    Editions = 'Saas.EditionsComponent',
+    // ...
+  }
+
+  // After (v2.7.0)
+  const eSaasComponents = {
+    Editions: 'Saas.EditionsComponent',
+    // ...
+  } as const;
+  ```
+
+### New Exports
+
+- `eSaasRouteNames` - Constants for route names (localization keys)
+- `SaasRouteNameKey` - Type for SaaS route name values
+- `SaasComponentKey` - Type for SaaS component key values
+
+---
+
 ## v2.4.0
 
 **February 2026**
