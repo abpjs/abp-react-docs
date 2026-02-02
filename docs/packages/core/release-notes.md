@@ -4,6 +4,183 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Utility Functions
+
+New utility functions for common operations:
+
+**`mapEnumToOptions()`** - Convert enums to select options:
+
+```tsx
+import { mapEnumToOptions } from '@abpjs/core';
+
+enum Status {
+  Active = 0,
+  Inactive = 1,
+  Pending = 2,
+}
+
+const options = mapEnumToOptions(Status);
+// Returns: [
+//   { key: 'Active', value: 0 },
+//   { key: 'Inactive', value: 1 },
+//   { key: 'Pending', value: 2 }
+// ]
+
+// Use in a select component
+<Select>
+  {options.map((opt) => (
+    <option key={opt.key} value={opt.value}>
+      {opt.key}
+    </option>
+  ))}
+</Select>
+```
+
+**`isNumber()`** - Validate numeric values:
+
+```tsx
+import { isNumber } from '@abpjs/core';
+
+isNumber(42);      // true
+isNumber('42');    // true
+isNumber('3.14');  // true
+isNumber('abc');   // false
+isNumber('');      // false
+isNumber(NaN);     // false
+```
+
+**`generatePassword()`** - Generate secure random passwords:
+
+```tsx
+import { generatePassword } from '@abpjs/core';
+
+const password = generatePassword();     // 16 character password
+const short = generatePassword(8);       // 8 character password
+const long = generatePassword(32);       // 32 character password
+
+// Passwords include: lowercase, uppercase, digits, and special characters
+```
+
+#### Application Configuration Types
+
+New interfaces for culture and date/time formatting:
+
+```tsx
+import { ApplicationConfiguration } from '@abpjs/core';
+
+// Access current culture information
+const currentCulture: ApplicationConfiguration.CurrentCulture = {
+  cultureName: 'en-US',
+  displayName: 'English (United States)',
+  englishName: 'English',
+  nativeName: 'English',
+  isRightToLeft: false,
+  twoLetterIsoLanguageName: 'en',
+  threeLetterIsoLanguageName: 'eng',
+  dateTimeFormat: {
+    calendarAlgorithmType: 'SolarCalendar',
+    dateSeparator: '/',
+    fullDateTimePattern: 'dddd, MMMM d, yyyy h:mm:ss tt',
+    longTimePattern: 'h:mm:ss tt',
+    shortDatePattern: 'M/d/yyyy',
+    shortTimePattern: 'h:mm tt',
+  },
+};
+```
+
+#### New Types
+
+**`ABP.Option<T>`** - Type for enum-to-options mapping:
+
+```tsx
+import { ABP } from '@abpjs/core';
+
+// Used with mapEnumToOptions()
+type StatusOption = ABP.Option<typeof Status>;
+// { key: 'Active' | 'Inactive' | 'Pending', value: 0 | 1 | 2 }
+```
+
+**`ABP.Test`** - Configuration for test environments:
+
+```tsx
+import { ABP } from '@abpjs/core';
+
+const testConfig: ABP.Test = {
+  baseHref: '/test/',
+};
+```
+
+**Utility Types:**
+
+```tsx
+import {
+  InferredInstanceOf,
+  InferredContextOf,
+  ComponentFactory,
+  RenderProp,
+} from '@abpjs/core';
+
+// Infer props type from a component
+type ButtonProps = InferredInstanceOf<typeof Button>;
+
+// Infer context type from a render prop
+type ContextType = InferredContextOf<typeof renderFunction>;
+```
+
+#### DomInsertionService Updates
+
+New method and return value:
+
+```tsx
+import { getDomInsertionService, CONTENT_STRATEGY } from '@abpjs/core';
+
+const domInsertionService = getDomInsertionService();
+
+// insertContent() now returns the inserted element
+const styleElement = domInsertionService.insertContent(
+  CONTENT_STRATEGY.AppendStyleToHead('.my-class { color: red; }')
+);
+
+// New: removeContent() to remove an element
+domInsertionService.removeContent(styleElement);
+
+// has() replaces hasInserted() (hasInserted still works but deprecated)
+if (!domInsertionService.has(myContent)) {
+  domInsertionService.insertContent(/* ... */);
+}
+```
+
+#### Configuration Options
+
+**`ABP.Root.skipGetAppConfiguration`** - Skip fetching app configuration on initialization:
+
+```tsx
+import { AbpProvider } from '@abpjs/core';
+
+// Useful for testing or when configuration is loaded separately
+<AbpProvider options={{ skipGetAppConfiguration: true }}>
+  <App />
+</AbpProvider>
+```
+
+### API Changes
+
+- **`DomInsertionService.insertContent()`** - Now returns the inserted element (previously void)
+- **`DomInsertionService.inserted`** - Made private (was readonly)
+- **`ContentStrategy.insertElement()`** - Now returns the inserted element
+
+### Deprecations
+
+- **`DomInsertionService.hasInserted()`** - Use `has()` instead
+
+---
+
 ## v2.4.0
 
 **February 2026**
