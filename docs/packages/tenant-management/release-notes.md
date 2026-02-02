@@ -4,6 +4,45 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Component Replacement Keys
+
+New constants for replacing tenant management components:
+
+```tsx
+import { eTenantManagementComponents } from '@abpjs/tenant-management';
+
+// Available component keys:
+// eTenantManagementComponents.Tenants = 'TenantManagement.TenantsComponent'
+```
+
+#### Route Names
+
+New constants for tenant management route names (localization keys):
+
+```tsx
+import { eTenantManagementRouteNames } from '@abpjs/tenant-management';
+
+// Available route names:
+// eTenantManagementRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
+// eTenantManagementRouteNames.TenantManagement = 'AbpTenantManagement::Menu:TenantManagement'
+// eTenantManagementRouteNames.Tenants = 'AbpTenantManagement::Tenants'
+```
+
+### New Exports
+
+- `eTenantManagementComponents` - Constants for component replacement keys
+- `TenantManagementComponentKey` - Type for tenant management component key values
+- `eTenantManagementRouteNames` - Constants for route names (localization keys)
+- `TenantManagementRouteNameKey` - Type for tenant management route name values
+
+---
+
 ## v2.4.0
 
 **February 2026**
