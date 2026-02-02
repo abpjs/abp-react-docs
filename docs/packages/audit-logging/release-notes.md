@@ -4,6 +4,118 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### EntityChangeService
+
+New service for managing entity changes:
+
+```tsx
+import { EntityChangeService } from '@abpjs/audit-logging';
+import { RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const entityChangeService = new EntityChangeService(restService);
+
+// Get paginated entity changes
+const response = await entityChangeService.getEntityChanges({
+  startDate: '2026-01-01',
+  endDate: '2026-01-31',
+  maxResultCount: 10,
+});
+
+// Get entity change by ID
+const change = await entityChangeService.getEntityChangeById('change-id');
+
+// Get entity changes with username for a specific entity
+const changesWithUser = await entityChangeService.getEntityChangesWithUserName(
+  'entity-id',
+  'MyApp.Domain.Entities.Product'
+);
+
+// Get single entity change with username
+const changeWithUser = await entityChangeService.getEntityChangeWithUserNameById('change-id');
+```
+
+#### Entity Change Models
+
+New namespace for entity change types:
+
+```tsx
+import { EntityChange, eEntityChangeType } from '@abpjs/audit-logging';
+
+// Query parameters
+const params: EntityChange.EntityChangesQueryParams = {
+  entityChangeType: eEntityChangeType.Updated,
+  entityId: 'some-id',
+  startDate: '2026-01-01',
+  endDate: '2026-01-31',
+};
+
+// Entity change item
+const change: EntityChange.Item = {
+  id: 'change-id',
+  auditLogId: 'audit-log-id',
+  changeType: eEntityChangeType.Created,
+  entityId: 'entity-id',
+  entityTypeFullName: 'MyApp.Domain.Entities.Product',
+  changeTime: '2026-01-15T10:30:00Z',
+  propertyChanges: [
+    {
+      propertyName: 'Name',
+      originalValue: 'Old Name',
+      newValue: 'New Name',
+      // ...
+    },
+  ],
+  // ...
+};
+```
+
+#### Entity Change Type Enum
+
+New enum for entity change types:
+
+```tsx
+import { eEntityChangeType } from '@abpjs/audit-logging';
+
+// Available values:
+// eEntityChangeType.Created = 0
+// eEntityChangeType.Updated = 1
+// eEntityChangeType.Deleted = 2
+```
+
+#### Route Names
+
+New constants for audit logging route names (localization keys):
+
+```tsx
+import { eAuditLoggingRouteNames } from '@abpjs/audit-logging';
+
+// Available route names:
+// eAuditLoggingRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
+// eAuditLoggingRouteNames.AuditLogging = 'AbpAuditLogging::Menu:AuditLogging'
+```
+
+### New Exports
+
+- `EntityChangeService` - Service for entity change operations
+- `EntityChange` - Namespace with entity change types
+- `EntityChange.Item` - Entity change item interface
+- `EntityChange.ItemWithUserName` - Entity change with username
+- `EntityChange.PropertyChange` - Property change interface
+- `EntityChange.EntityChangesQueryParams` - Query parameters type
+- `EntityChange.Response` - Paginated response type
+- `eEntityChangeType` - Enum for entity change types (Created, Updated, Deleted)
+- `eAuditLoggingRouteNames` - Constants for route names
+- `AuditLoggingRouteNameKey` - Type for route name values
+
+---
+
 ## v2.4.0
 
 **February 2026**
