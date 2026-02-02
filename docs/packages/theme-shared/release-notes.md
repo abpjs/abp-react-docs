@@ -4,6 +4,174 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Password Validation Utilities
+
+New utilities for validating passwords against ABP Identity settings:
+
+```tsx
+import { useAbpConfig } from '@abpjs/core';
+import { getPasswordValidators, getPasswordValidationRules } from '@abpjs/theme-shared';
+import { useForm } from 'react-hook-form';
+
+function PasswordForm() {
+  const { getSetting } = useAbpConfig();
+  const { register, formState: { errors } } = useForm();
+
+  // Option 1: Get validators array
+  const validators = getPasswordValidators({ getSetting });
+
+  // Option 2: Get react-hook-form compatible rules
+  const passwordRules = getPasswordValidationRules({ getSetting });
+
+  return (
+    <form>
+      <input
+        type="password"
+        {...register('password', passwordRules)}
+      />
+      {errors.password && <span>{errors.password.message}</span>}
+    </form>
+  );
+}
+```
+
+The validators read settings from ABP's `Abp.Identity.Password.*` configuration:
+- `RequiredLength` - Minimum password length
+- `MaxLength` - Maximum password length
+- `RequireDigit` - Requires at least one digit
+- `RequireLowercase` - Requires at least one lowercase letter
+- `RequireUppercase` - Requires at least one uppercase letter
+- `RequireNonAlphanumeric` - Requires at least one special character
+- `RequiredUniqueChars` - Minimum unique characters
+
+#### ModalService
+
+New service for programmatic modal rendering:
+
+```tsx
+import { ModalProvider, ModalContainer, useModal } from '@abpjs/theme-shared';
+
+// Wrap your app with ModalProvider
+function App() {
+  return (
+    <ModalProvider>
+      <MainContent />
+      <ModalContainer />
+    </ModalProvider>
+  );
+}
+
+// Use the modal service in components
+function MyComponent() {
+  const modal = useModal();
+
+  const openModal = () => {
+    modal.renderTemplate(
+      (context) => (
+        <Dialog open onClose={() => modal.clearModal()}>
+          <DialogContent>Hello {context?.name}</DialogContent>
+        </Dialog>
+      ),
+      { name: 'World' }
+    );
+  };
+
+  return <button onClick={openModal}>Open Modal</button>;
+}
+```
+
+**ModalService methods:**
+- `renderTemplate(render, context?)` - Render a template in the modal container
+- `clearModal()` - Clear the current modal
+- `getContainer()` - Get the container ref for the modal
+- `detectChanges()` - Force a re-render of the modal content
+
+#### HTTP Error Configuration
+
+New context and hook for HTTP error configuration:
+
+```tsx
+import { HttpErrorConfigContext, useHttpErrorConfig, httpErrorConfigFactory } from '@abpjs/theme-shared';
+
+function App() {
+  const httpErrorConfig = {
+    skipHandledErrorCodes: [404], // Let 404s pass through
+    errorScreen: {
+      component: MyCustomErrorComponent,
+      forWhichErrors: [401, 403, 500],
+    },
+  };
+
+  return (
+    <HttpErrorConfigContext.Provider value={httpErrorConfig}>
+      <YourApp />
+    </HttpErrorConfigContext.Provider>
+  );
+}
+
+// Access config in components
+function MyComponent() {
+  const config = useHttpErrorConfig();
+
+  if (config.skipHandledErrorCodes?.includes(404)) {
+    // Skip handling 404 errors
+  }
+}
+```
+
+### API Changes
+
+#### HttpErrorConfig
+
+- **`skipHandledErrorCodes`** - New property to specify error codes that should pass through without being handled
+- **`errorScreen.forWhichErrors`** - Simplified from a tuple type to `ErrorScreenErrorCodes[]` array
+
+```tsx
+// Before (v2.4.0)
+interface HttpErrorConfig {
+  errorScreen?: {
+    forWhichErrors?: [401] | [401, 403] | [401, 403, 404] | [401, 403, 404, 500];
+  };
+}
+
+// After (v2.7.0)
+interface HttpErrorConfig {
+  skipHandledErrorCodes?: ErrorScreenErrorCodes[] | number[];
+  errorScreen?: {
+    forWhichErrors?: ErrorScreenErrorCodes[]; // Simple array
+  };
+}
+```
+
+### New Exports
+
+- `getPasswordValidators(store)` - Get password validators from ABP settings
+- `getPasswordValidationRules(store)` - Get react-hook-form compatible validation rules
+- `getPasswordSettings(store)` - Get password settings from store
+- `PasswordSettings` - Interface for password settings
+- `PasswordValidator` - Type for password validator functions
+- `PASSWORD_SETTING_KEYS` - Constants for ABP Identity password setting keys
+- `ModalProvider` - Provider component for modal service
+- `ModalContainer` - Component to render modal content
+- `useModal()` - Hook to access modal service
+- `useModalState()` - Hook to access current modal state
+- `useModalContext()` - Hook to access full modal context
+- `ModalService` - Interface for modal service
+- `ModalState` - Interface for modal state
+- `ModalTemplateRender` - Type for modal render functions
+- `HttpErrorConfigContext` - Context for HTTP error configuration
+- `useHttpErrorConfig()` - Hook to access HTTP error configuration
+- `httpErrorConfigFactory()` - Factory function for default HTTP error config
+- `HTTP_ERROR_CONFIG` - Token name constant
+
+---
+
 ## v2.4.0
 
 **February 2026**
