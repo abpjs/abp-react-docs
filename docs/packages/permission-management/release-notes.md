@@ -4,6 +4,30 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Component Replacement Keys
+
+New constants for replacing permission management components:
+
+```tsx
+import { ePermissionManagementComponents } from '@abpjs/permission-management';
+
+// Available component keys:
+// ePermissionManagementComponents.PermissionManagement = 'PermissionManagement.PermissionManagementComponent'
+```
+
+### New Exports
+
+- `ePermissionManagementComponents` - Constants for component replacement keys
+- `PermissionManagementComponentKey` - Type for permission management component key values
+
+---
+
 ## v2.4.0
 
 **February 2026**
