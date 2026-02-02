@@ -4,6 +4,62 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.7.0
+
+**February 2026**
+
+### New Features
+
+#### Component Replacement Keys
+
+New constants for replacing account components:
+
+```tsx
+import { eAccountComponents } from '@abpjs/account';
+
+// Available component keys:
+// eAccountComponents.Login = 'Account.LoginComponent'
+// eAccountComponents.Register = 'Account.RegisterComponent'
+// eAccountComponents.ManageProfile = 'Account.ManageProfileComponent'
+// eAccountComponents.TenantBox = 'Account.TenantBoxComponent'
+// eAccountComponents.AuthWrapper = 'Account.AuthWrapperComponent'
+// eAccountComponents.ChangePassword = 'Account.ChangePasswordComponent'
+// eAccountComponents.PersonalSettings = 'Account.PersonalSettingsComponent'
+```
+
+#### Route Names
+
+New constants for account route names (localization keys):
+
+```tsx
+import { eAccountRouteNames } from '@abpjs/account';
+
+// Available route names:
+// eAccountRouteNames.Account = 'AbpAccount::Menu:Account'
+// eAccountRouteNames.Login = 'AbpAccount::Login'
+// eAccountRouteNames.Register = 'AbpAccount::Register'
+// eAccountRouteNames.ManageProfile = 'AbpAccount::ManageYourProfile'
+```
+
+#### TenantIdResponse Enhancement
+
+The `TenantIdResponse` interface now includes the tenant name:
+
+```tsx
+interface TenantIdResponse {
+  success: boolean;
+  tenantId: string;
+  name?: string; // New in v2.7.0
+}
+```
+
+### New Exports
+
+- `eAccountComponents` - Constants for component replacement keys
+- `eAccountRouteNames` - Constants for route names (localization keys)
+
+---
+
 ## v2.4.0
 
 **February 2026**
