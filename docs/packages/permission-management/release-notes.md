@@ -4,6 +4,38 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### New Features
+
+#### `getAssignedCount()` Method
+
+New method on `usePermissionManagement` hook to get the count of granted permissions for a specific group:
+
+```tsx
+import { usePermissionManagement } from '@abpjs/permission-management';
+
+function PermissionGroupList() {
+  const { groups, getAssignedCount } = usePermissionManagement();
+
+  return (
+    <ul>
+      {groups.map((group) => (
+        <li key={group.name}>
+          {group.displayName} ({getAssignedCount(group.name)}/{group.permissions.length})
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+This is useful for displaying permission counts in the UI, such as "Identity (3/5)" to show 3 out of 5 permissions are granted.
+
+---
+
 ## v2.9.0
 
 **February 2026**
