@@ -1,5 +1,204 @@
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Route Names Changes
+
+- **`eSaasRouteNames.Administration` removed** - Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead.
+
+```tsx
+// Before (v2.9.0)
+import { eSaasRouteNames } from '@abpjs/saas';
+const admin = eSaasRouteNames.Administration; // ❌ Removed
+
+// After (v3.0.0)
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+const admin = eThemeSharedRouteNames.Administration; // ✅ Use this instead
+```
+
+### New Features
+
+#### Route Providers
+
+New route configuration system using `RoutesService` from `@abpjs/core`:
+
+```tsx
+import { configureRoutes, initializeSaasRoutes, SAAS_ROUTE_CONFIG } from '@abpjs/saas';
+import { getRoutesService } from '@abpjs/core';
+
+// Option 1: Use configureRoutes with RoutesService
+const routes = getRoutesService();
+const addRoutes = configureRoutes(routes);
+addRoutes();
+
+// Option 2: Use initializeSaasRoutes helper
+initializeSaasRoutes(routes);
+
+// Option 3: Access the route configuration directly
+console.log(SAAS_ROUTE_CONFIG);
+// { path: '/saas', name: 'Saas::Menu:Saas', iconClass: 'fas fa-building', ... }
+```
+
+Also available as a provider object:
+
+```tsx
+import { SAAS_ROUTE_PROVIDERS } from '@abpjs/saas';
+
+const configure = SAAS_ROUTE_PROVIDERS.useFactory(routes);
+configure();
+```
+
+#### Policy Names
+
+New constants for permission checking:
+
+```tsx
+import { eSaasPolicyNames } from '@abpjs/saas';
+
+// Available policies:
+// eSaasPolicyNames.Saas = 'Saas.Tenants || Saas.Editions'
+// eSaasPolicyNames.Tenants = 'Saas.Tenants'
+// eSaasPolicyNames.Editions = 'Saas.Editions'
+```
+
+#### Config Options
+
+New `SaasConfigOptions` interface for module extensibility configuration:
+
+```tsx
+import { SaasConfigOptions, eSaasComponents } from '@abpjs/saas';
+
+const options: SaasConfigOptions = {
+  entityActionContributors: {
+    [eSaasComponents.Tenants]: [
+      (actions) => [...actions, { text: 'Custom Action', icon: 'fa fa-star' }]
+    ]
+  },
+  entityPropContributors: {
+    [eSaasComponents.Tenants]: [
+      (props) => [...props, { name: 'customField', displayName: 'Custom' }]
+    ]
+  }
+};
+```
+
+#### Extensions System
+
+New extension tokens and defaults for customizing SaaS components:
+
+**Entity Actions** - Row-level actions in grids:
+
+```tsx
+import {
+  EntityAction,
+  DEFAULT_EDITIONS_ENTITY_ACTIONS,
+  DEFAULT_TENANTS_ENTITY_ACTIONS,
+  DEFAULT_SAAS_ENTITY_ACTIONS,
+  SAAS_ENTITY_ACTION_CONTRIBUTORS,
+} from '@abpjs/saas';
+```
+
+**Toolbar Actions** - Grid toolbar buttons:
+
+```tsx
+import {
+  ToolbarAction,
+  DEFAULT_EDITIONS_TOOLBAR_ACTIONS,
+  DEFAULT_TENANTS_TOOLBAR_ACTIONS,
+  DEFAULT_SAAS_TOOLBAR_ACTIONS,
+  SAAS_TOOLBAR_ACTION_CONTRIBUTORS,
+} from '@abpjs/saas';
+```
+
+**Entity Props** - Grid column definitions:
+
+```tsx
+import {
+  EntityProp,
+  DEFAULT_EDITIONS_ENTITY_PROPS,
+  DEFAULT_TENANTS_ENTITY_PROPS,
+  DEFAULT_SAAS_ENTITY_PROPS,
+  SAAS_ENTITY_PROP_CONTRIBUTORS,
+} from '@abpjs/saas';
+```
+
+**Form Props** - Create/Edit form fields:
+
+```tsx
+import {
+  FormProp,
+  DEFAULT_EDITIONS_CREATE_FORM_PROPS,
+  DEFAULT_TENANTS_CREATE_FORM_PROPS,
+  DEFAULT_SAAS_CREATE_FORM_PROPS,
+  DEFAULT_EDITIONS_EDIT_FORM_PROPS,
+  DEFAULT_TENANTS_EDIT_FORM_PROPS,
+  DEFAULT_SAAS_EDIT_FORM_PROPS,
+  SAAS_CREATE_FORM_PROP_CONTRIBUTORS,
+  SAAS_EDIT_FORM_PROP_CONTRIBUTORS,
+} from '@abpjs/saas';
+```
+
+#### Extensions Guard
+
+New guard for loading extensions before route activation:
+
+```tsx
+import {
+  saasExtensionsGuard,
+  useSaasExtensionsGuard,
+  SaasExtensionsGuard,
+} from '@abpjs/saas';
+
+// Function-based guard
+const canActivate = await saasExtensionsGuard();
+
+// React hook
+function ProtectedRoute({ children }) {
+  const { isLoaded, loading } = useSaasExtensionsGuard();
+
+  if (loading) return <Loading />;
+  if (!isLoaded) return <Navigate to="/unauthorized" />;
+
+  return children;
+}
+```
+
+### New Exports
+
+**Config Subpackage:**
+- `eSaasPolicyNames` - Policy name constants
+- `SaasPolicyNameKey` - Type for policy name values
+- `SAAS_ROUTE_CONFIG` - Default route configuration object
+- `configureRoutes()` - Configure routes with custom RoutesService
+- `initializeSaasRoutes()` - Initialize routes immediately
+- `SAAS_ROUTE_PROVIDERS` - Route providers object
+
+**Models:**
+- `SaasConfigOptions` - Configuration options interface
+- `SaasEntityActionContributors`, `SaasToolbarActionContributors` - Contributor types
+- `SaasEntityPropContributors`, `SaasCreateFormPropContributors`, `SaasEditFormPropContributors`
+
+**Tokens Subpackage:**
+- `EntityAction<T>`, `ToolbarAction<T>`, `EntityProp<T>`, `FormProp<T>` - Extension interfaces
+- `DEFAULT_EDITIONS_ENTITY_ACTIONS`, `DEFAULT_TENANTS_ENTITY_ACTIONS`, `DEFAULT_SAAS_ENTITY_ACTIONS`
+- `DEFAULT_EDITIONS_TOOLBAR_ACTIONS`, `DEFAULT_TENANTS_TOOLBAR_ACTIONS`, `DEFAULT_SAAS_TOOLBAR_ACTIONS`
+- `DEFAULT_EDITIONS_ENTITY_PROPS`, `DEFAULT_TENANTS_ENTITY_PROPS`, `DEFAULT_SAAS_ENTITY_PROPS`
+- `DEFAULT_EDITIONS_CREATE_FORM_PROPS`, `DEFAULT_TENANTS_CREATE_FORM_PROPS`, `DEFAULT_SAAS_CREATE_FORM_PROPS`
+- `DEFAULT_EDITIONS_EDIT_FORM_PROPS`, `DEFAULT_TENANTS_EDIT_FORM_PROPS`, `DEFAULT_SAAS_EDIT_FORM_PROPS`
+- Contributor callback types: `EntityActionContributorCallback<T>`, `ToolbarActionContributorCallback<T>`, etc.
+- Token symbols: `SAAS_ENTITY_ACTION_CONTRIBUTORS`, `SAAS_TOOLBAR_ACTION_CONTRIBUTORS`, etc.
+
+**Guards Subpackage:**
+- `saasExtensionsGuard()` - Async guard function
+- `useSaasExtensionsGuard()` - React hook
+- `SaasExtensionsGuard` - Class-based guard
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -22,11 +221,12 @@ New constants for SaaS route names (localization keys):
 import { eSaasRouteNames } from '@abpjs/saas';
 
 // Available route names:
-// eSaasRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
 // eSaasRouteNames.Saas = 'Saas::Menu:Saas'
 // eSaasRouteNames.Tenants = 'Saas::Tenants'
 // eSaasRouteNames.Editions = 'Saas::Editions'
 ```
+
+> **Note:** `Administration` was removed in v3.0.0. Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead.
 
 ### API Changes
 
