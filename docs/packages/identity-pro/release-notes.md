@@ -1,5 +1,335 @@
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `eIdentityRouteNames.Administration` removed
+
+The `Administration` key has been removed from `eIdentityRouteNames`. Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead:
+
+```tsx
+// Before (v2.7.0)
+import { eIdentityRouteNames } from '@abpjs/identity-pro';
+const adminRoute = eIdentityRouteNames.Administration;
+
+// After (v3.0.0)
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+const adminRoute = eThemeSharedRouteNames.Administration;
+```
+
+#### `getClaimTypeNames()` replaced with `getRolesClaimTypes()` and `getUsersClaimTypes()`
+
+The `getClaimTypeNames()` method has been removed and replaced with separate methods for roles and users:
+
+```tsx
+// Before (v2.9.0)
+const claimTypes = await identityService.getClaimTypeNames();
+
+// After (v3.0.0)
+const rolesClaimTypes = await identityService.getRolesClaimTypes();
+const usersClaimTypes = await identityService.getUsersClaimTypes();
+```
+
+#### `dispatchGetClaimTypeNames()` removed from IdentityStateService
+
+The `dispatchGetClaimTypeNames()` method has been removed from `IdentityStateService`. Fetch claim types directly using the new service methods.
+
+### New Features
+
+#### Route Providers
+
+New route provider system for initializing identity routes:
+
+```tsx
+import { initializeIdentityRoutes } from '@abpjs/identity-pro';
+
+// Call once during app initialization
+initializeIdentityRoutes();
+
+// This registers:
+// - Identity Management (under Administration)
+// - /identity/roles
+// - /identity/users
+// - /identity/claim-types
+// - /identity/organization-units
+```
+
+For advanced configuration with a custom RoutesService:
+
+```tsx
+import { configureRoutes, IDENTITY_ROUTE_PROVIDERS } from '@abpjs/identity-pro';
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const addRoutes = configureRoutes(routesService);
+addRoutes();
+```
+
+#### Setting Tab Providers
+
+New provider for registering identity settings tabs:
+
+```tsx
+import {
+  configureSettingTabs,
+  IDENTITY_SETTING_TAB_PROVIDERS,
+} from '@abpjs/identity-pro';
+import { getSettingTabsService } from '@abpjs/core';
+import { IdentitySettingsComponent } from './components/IdentitySettings';
+
+const settingTabsService = getSettingTabsService();
+const addTabs = configureSettingTabs(settingTabsService, {
+  component: IdentitySettingsComponent,
+});
+addTabs();
+```
+
+#### Policy Names
+
+New constants for identity permission policies:
+
+```tsx
+import { eIdentityPolicyNames } from '@abpjs/identity-pro';
+
+// Available policies:
+eIdentityPolicyNames.IdentityManagement  // 'AbpIdentity.Roles || AbpIdentity.Users || AbpIdentity.ClaimTypes || AbpIdentity.OrganizationUnits'
+eIdentityPolicyNames.Roles               // 'AbpIdentity.Roles'
+eIdentityPolicyNames.Users               // 'AbpIdentity.Users'
+eIdentityPolicyNames.ClaimTypes          // 'AbpIdentity.ClaimTypes'
+eIdentityPolicyNames.OrganizationUnits   // 'AbpIdentity.OrganizationUnits'
+
+// Use with permission checking
+import { usePermission } from '@abpjs/core';
+
+function IdentityMenu() {
+  const canManageIdentity = usePermission(eIdentityPolicyNames.IdentityManagement);
+
+  if (!canManageIdentity) return null;
+  return <IdentityManagementLink />;
+}
+```
+
+#### Setting Tab Names
+
+New constants for identity setting tab names:
+
+```tsx
+import { eIdentitySettingTabNames } from '@abpjs/identity-pro';
+
+// Available setting tab names:
+eIdentitySettingTabNames.IdentityManagement  // 'AbpIdentity::Menu:IdentityManagement'
+```
+
+#### Identity Settings Models
+
+New TypeScript interfaces for identity settings configuration:
+
+```tsx
+import { Settings, Password, Lockout, SignIn, User } from '@abpjs/identity-pro';
+
+// Full settings structure
+const settings: Settings = {
+  password: {
+    requiredLength: 6,
+    requiredUniqueChars: 1,
+    requireNonAlphanumeric: true,
+    requireLowercase: true,
+    requireUppercase: true,
+    requireDigit: true,
+  },
+  lockout: {
+    allowedForNewUsers: true,
+    lockoutDuration: 300,
+    maxFailedAccessAttempts: 5,
+  },
+  signIn: {
+    requireConfirmedEmail: false,
+    enablePhoneNumberConfirmation: false,
+    requireConfirmedPhoneNumber: false,
+  },
+  user: {
+    isUserNameUpdateEnabled: true,
+    isEmailUpdateEnabled: true,
+  },
+};
+```
+
+#### `getUserAssingableRoles()` Method
+
+New method on `IdentityService` to get roles that can be assigned to users:
+
+```tsx
+import { useIdentityService } from '@abpjs/identity-pro';
+
+function UserRoleAssignment() {
+  const identityService = useIdentityService();
+
+  const loadAssignableRoles = async () => {
+    const response = await identityService.getUserAssingableRoles();
+    // response.items contains roles available for assignment
+  };
+}
+```
+
+This calls `GET /api/identity/users/assignable-roles` endpoint.
+
+#### `getRolesClaimTypes()` and `getUsersClaimTypes()` Methods
+
+New separate methods for fetching claim types available for roles and users:
+
+```tsx
+import { useIdentityService } from '@abpjs/identity-pro';
+
+function ClaimTypeSelector() {
+  const identityService = useIdentityService();
+
+  // For role claims
+  const loadRoleClaimTypes = async () => {
+    const claimTypes = await identityService.getRolesClaimTypes();
+    // GET /api/identity/roles/available-claim-types
+  };
+
+  // For user claims
+  const loadUserClaimTypes = async () => {
+    const claimTypes = await identityService.getUsersClaimTypes();
+    // GET /api/identity/users/available-claim-types
+  };
+}
+```
+
+#### Extensions System
+
+New extensibility system for customizing identity components:
+
+```tsx
+import {
+  EntityAction,
+  EntityProp,
+  ToolbarAction,
+  FormProp,
+  DEFAULT_CLAIMS_ENTITY_ACTIONS,
+  DEFAULT_ROLES_ENTITY_ACTIONS,
+  DEFAULT_USERS_ENTITY_ACTIONS,
+  DEFAULT_ORGANIZATION_UNITS_ENTITY_ACTIONS,
+  DEFAULT_CLAIMS_ENTITY_PROPS,
+  DEFAULT_ROLES_ENTITY_PROPS,
+  DEFAULT_USERS_ENTITY_PROPS,
+  DEFAULT_ORGANIZATION_UNITS_ENTITY_PROPS,
+} from '@abpjs/identity-pro';
+
+// Define custom entity action
+const customAction: EntityAction<Identity.User> = {
+  text: 'Send Email',
+  action: ({ record }) => sendEmail(record),
+  permission: 'AbpIdentity.Users.Email',
+  icon: 'fa fa-envelope',
+};
+
+// Define custom entity property
+const customProp: EntityProp<Identity.User> = {
+  type: 'string',
+  name: 'department',
+  displayName: 'Department',
+  sortable: true,
+  valueResolver: ({ record }) => record.extraProperties?.department,
+};
+
+// Define custom form field
+const customFormProp: FormProp<Identity.UserSaveRequest> = {
+  type: 'text',
+  name: 'employeeId',
+  displayName: 'Employee ID',
+  validators: [{ type: 'required' }],
+};
+```
+
+#### Extensions Guard
+
+New guard for protecting routes with extensions:
+
+```tsx
+import { IdentityExtensionsGuard } from '@abpjs/identity-pro';
+
+// Use in route configuration to ensure extensions are loaded
+```
+
+#### Config Subpackage
+
+The `@volo/abp.ng.identity/config` functionality is now merged into the main package:
+
+```tsx
+// All config exports are available from the main package
+import {
+  configureRoutes,
+  configureSettingTabs,
+  IDENTITY_ROUTE_PROVIDERS,
+  IDENTITY_SETTING_TAB_PROVIDERS,
+  initializeIdentityRoutes,
+  eIdentityRouteNames,
+  eIdentityPolicyNames,
+  eIdentitySettingTabNames,
+  Settings,
+  Password,
+  Lockout,
+  SignIn,
+  User,
+} from '@abpjs/identity-pro';
+```
+
+### New Exports
+
+**Route and Policy:**
+- `initializeIdentityRoutes()` - Initialize identity routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `IDENTITY_ROUTE_PROVIDERS` - Route provider configuration object
+- `eIdentityPolicyNames` - Constants for identity permission policies
+- `IdentityPolicyNameKey` - Type for policy name values
+
+**Setting Tabs:**
+- `configureSettingTabs(settingTabs, options)` - Configure identity setting tabs
+- `IDENTITY_SETTING_TAB_PROVIDERS` - Setting tab provider configuration
+- `eIdentitySettingTabNames` - Constants for setting tab names
+- `IdentitySettingTabNameKey` - Type for setting tab name values
+
+**Settings Models:**
+- `Settings` - Full identity settings interface
+- `Password` - Password settings interface
+- `Lockout` - Lockout settings interface
+- `SignIn` - Sign-in settings interface
+- `User` - User settings interface
+
+**Service Methods:**
+- `IdentityService.getUserAssingableRoles()` - Get assignable roles
+- `IdentityService.getRolesClaimTypes()` - Get claim types for roles
+- `IdentityService.getUsersClaimTypes()` - Get claim types for users
+
+**Extensions:**
+- `EntityAction<T>` - Interface for entity actions
+- `EntityProp<T>` - Interface for entity properties
+- `ToolbarAction<T>` - Interface for toolbar actions
+- `FormProp<T>` - Interface for form properties
+- `EntityActionContributorCallback<T>` - Callback type for entity action contributors
+- `EntityPropContributorCallback<T>` - Callback type for entity prop contributors
+- `ToolbarActionContributorCallback<T>` - Callback type for toolbar action contributors
+- `CreateFormPropContributorCallback<T>` - Callback type for create form contributors
+- `EditFormPropContributorCallback<T>` - Callback type for edit form contributors
+- `DEFAULT_CLAIMS_ENTITY_ACTIONS` - Default claims entity actions
+- `DEFAULT_ROLES_ENTITY_ACTIONS` - Default roles entity actions
+- `DEFAULT_USERS_ENTITY_ACTIONS` - Default users entity actions
+- `DEFAULT_ORGANIZATION_UNITS_ENTITY_ACTIONS` - Default org units entity actions
+- `DEFAULT_CLAIMS_ENTITY_PROPS` - Default claims entity props
+- `DEFAULT_ROLES_ENTITY_PROPS` - Default roles entity props
+- `DEFAULT_USERS_ENTITY_PROPS` - Default users entity props
+- `DEFAULT_ORGANIZATION_UNITS_ENTITY_PROPS` - Default org units entity props
+
+**Guards:**
+- `IdentityExtensionsGuard` - Guard for extensions loading
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -213,7 +543,6 @@ New constants for identity pro route names (localization keys):
 import { eIdentityRouteNames } from '@abpjs/identity-pro';
 
 // Available route names:
-// eIdentityRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
 // eIdentityRouteNames.IdentityManagement = 'AbpIdentity::Menu:IdentityManagement'
 // eIdentityRouteNames.Roles = 'AbpIdentity::Roles'
 // eIdentityRouteNames.Users = 'AbpIdentity::Users'
