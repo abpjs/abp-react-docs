@@ -4,6 +4,28 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.9.0
+
+**February 2026**
+
+### Breaking Changes
+
+- **`RoutesComponent.isDropdownChildDynamic` prop removed** - This prop was not functional and has been removed. If you were passing this prop, simply remove it:
+
+  ```tsx
+  // Before (v2.7.0)
+  <RoutesComponent isDropdownChildDynamic={true} />
+
+  // After (v2.9.0)
+  <RoutesComponent />
+  ```
+
+### Internal Changes
+
+- Dependency update to @abpjs/theme-shared v2.9.0
+
+---
+
 ## v2.7.0
 
 **February 2026**
