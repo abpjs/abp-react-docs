@@ -4,6 +4,241 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Removed `Toaster.Status` enum
+
+The deprecated `Toaster.Status` enum has been removed. Use `Confirmation.Status` instead:
+
+```tsx
+// Before (removed)
+import { Toaster } from '@abpjs/theme-shared';
+if (status === Toaster.Status.confirm) { /* ... */ }
+
+// After (v3.0.0)
+import { Confirmation } from '@abpjs/theme-shared';
+if (status === Confirmation.Status.confirm) { /* ... */ }
+```
+
+#### Removed `Toaster.Options` and `Toaster.Message`
+
+The deprecated `Toaster.Options` and `Toaster.Message` interfaces have been removed. Use `Toaster.ToastOptions` and `Toaster.Toast` instead.
+
+#### Removed `Confirmation.Options.closable`
+
+The deprecated `closable` property has been removed. Use `dismissible` instead:
+
+```tsx
+// Before (removed)
+confirmation.info('Message', 'Title', { closable: true });
+
+// After (v3.0.0)
+confirmation.info('Message', 'Title', { dismissible: true });
+```
+
+#### Removed setting-management model
+
+The `SettingManagement` model has been removed from `@abpjs/theme-shared`. Use `SettingTabsService` from `@abpjs/core` instead:
+
+```tsx
+// Before (removed)
+import { SettingManagement } from '@abpjs/theme-shared';
+
+// After (v3.0.0)
+import { getSettingTabsService } from '@abpjs/core';
+
+const settingTabsService = getSettingTabsService();
+settingTabsService.add([
+  { name: 'General', order: 1 },
+]);
+```
+
+#### NavItem model changes
+
+The `NavItem` interface has changed:
+- **`id` property is now required** - Each nav item must have a unique identifier
+- **`permission` renamed to `requiredPolicy`** - Aligns with ABP naming conventions
+
+```tsx
+// Before (v2.9.0)
+const item: NavItem = {
+  component: MyComponent,
+  order: 1,
+  permission: 'MyPolicy',
+};
+
+// After (v3.0.0)
+const item: NavItem = {
+  id: 'my-item',           // Required
+  component: MyComponent,
+  order: 1,
+  requiredPolicy: 'MyPolicy',  // Renamed
+};
+```
+
+#### Nav items utility functions replaced by NavItemsService
+
+The utility functions for managing nav items have been replaced with a service-based approach:
+
+```tsx
+// Before (v2.9.0 - removed)
+import {
+  addNavItem,
+  removeNavItem,
+  clearNavItems,
+  getNavItems,
+  getNavItemsSync,
+  subscribeToNavItems,
+} from '@abpjs/theme-shared';
+
+addNavItem({ component: MyComponent, order: 1 });
+
+// After (v3.0.0)
+import { getNavItemsService } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+navItemsService.addItems([{ id: 'my-item', component: MyComponent, order: 1 }]);
+```
+
+### New Features
+
+#### NavItemsService
+
+A new service for managing navigation items with reactive updates:
+
+```tsx
+import { NavItemsService, getNavItemsService } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+
+// Add items
+navItemsService.addItems([
+  { id: 'profile', component: ProfileComponent, order: 1 },
+  { id: 'settings', component: SettingsComponent, order: 2 },
+]);
+
+// Get current items (sorted by order)
+const items = navItemsService.items;
+
+// Subscribe to changes
+const unsubscribe = navItemsService.subscribe((items) => {
+  console.log('Items changed:', items);
+});
+
+// Observable-like pattern for Angular compatibility
+const subscription = navItemsService.items$.subscribe((items) => {
+  console.log('Items:', items);
+});
+subscription.unsubscribe();
+
+// Remove an item by id
+navItemsService.removeItem('profile');
+
+// Patch an item
+navItemsService.patchItem('settings', { order: 10 });
+
+// Clear all items
+navItemsService.clear();
+```
+
+#### eThemeSharedRouteNames Enum
+
+New enum for theme shared route names:
+
+```tsx
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+
+// Use for route registration
+routesService.add([
+  {
+    name: 'MyAdminPage',
+    path: '/admin/my-page',
+    parentName: eThemeSharedRouteNames.Administration, // 'AbpUiNavigation::Menu:Administration'
+  },
+]);
+```
+
+#### Route Provider
+
+New functions for initializing theme-shared routes:
+
+```tsx
+import {
+  initializeThemeSharedRoutes,
+  configureRoutes,
+  THEME_SHARED_ROUTE_PROVIDERS,
+} from '@abpjs/theme-shared';
+
+// Simple initialization - call once during app startup
+initializeThemeSharedRoutes();
+
+// This registers the Administration route that other modules use as a parent:
+// {
+//   name: 'AbpUiNavigation::Menu:Administration',
+//   path: '',
+//   order: 100,
+//   iconClass: 'fa fa-wrench',
+// }
+
+// Advanced: configure routes with custom RoutesService
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+configureRoutes(routesService)();
+```
+
+### New Exports
+
+- `NavItemsService` - Service class for managing nav items
+- `getNavItemsService()` - Get NavItemsService singleton
+- `NavItem` - Updated interface with `id` and `requiredPolicy`
+- `eThemeSharedRouteNames` - Enum for route names
+- `initializeThemeSharedRoutes()` - Initialize theme-shared routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `THEME_SHARED_ROUTE_PROVIDERS` - Route provider configuration object
+
+### Migration Guide
+
+#### Migrating from nav items utility functions
+
+```tsx
+// v2.9.0
+import { addNavItem, removeNavItem, getNavItemsSync } from '@abpjs/theme-shared';
+
+addNavItem({ component: MyComponent, order: 1, permission: 'MyPolicy' });
+const items = getNavItemsSync();
+removeNavItem(myItem);
+
+// v3.0.0
+import { getNavItemsService } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+navItemsService.addItems([{ id: 'my-item', component: MyComponent, order: 1, requiredPolicy: 'MyPolicy' }]);
+const items = navItemsService.items;
+navItemsService.removeItem('my-item');
+```
+
+#### Migrating from setting-management model
+
+```tsx
+// v2.9.0
+import { SettingManagement } from '@abpjs/theme-shared';
+
+const tabs: SettingManagement.Tab[] = [...];
+
+// v3.0.0
+import { getSettingTabsService } from '@abpjs/core';
+
+const settingTabsService = getSettingTabsService();
+settingTabsService.add([...]);
+```
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -164,7 +399,7 @@ function MyComponent() {
 
 ### Deprecations
 
-- **`Confirmation.Options.closable`** - Deprecated in favor of `dismissible`. Will be removed in v3.0.
+- **`Confirmation.Options.closable`** - Deprecated in favor of `dismissible`. Removed in v3.0.0.
 
 ```tsx
 // Before (deprecated)
@@ -397,7 +632,7 @@ interface HttpErrorConfig {
 
 ### Deprecation Updates
 
-- **`Toaster.Status` removal postponed** - Now scheduled for removal in v3.0 (previously v2.2). Continue using `Confirmation.Status` for new code.
+- **`Toaster.Status` removal postponed** - Removed in v3.0.0. Use `Confirmation.Status` instead.
 - **`appendScript` function deprecated** - Will be removed in v2.6. Use `ThemeSharedAppendContentContext` instead.
 
 ---
@@ -439,7 +674,7 @@ interface HttpErrorConfig {
 
 ### Deprecations
 
-- **`Toaster.Status` deprecated** - Use `Confirmation.Status` for confirmation dialogs. `Toaster.Status` will be removed in v2.2.0.
+- **`Toaster.Status` deprecated** - Use `Confirmation.Status` for confirmation dialogs. Removed in v3.0.0.
 
 ### Migration
 
