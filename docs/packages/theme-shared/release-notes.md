@@ -4,6 +4,203 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.9.0
+
+**February 2026**
+
+### New Features
+
+#### RTL/LTR Style Switching
+
+New handler and utilities for automatic RTL/LTR stylesheet switching based on locale direction:
+
+```tsx
+import { useLazyStyleHandler, BOOTSTRAP } from '@abpjs/theme-shared';
+
+function App() {
+  const { direction, setDirection } = useLazyStyleHandler({
+    styles: [BOOTSTRAP], // Optional, defaults to [BOOTSTRAP]
+    initialDirection: 'ltr',
+  });
+
+  // Switch to RTL when language changes
+  const handleLanguageChange = (lang: string) => {
+    if (lang === 'ar' || lang === 'he') {
+      setDirection('rtl');
+    } else {
+      setDirection('ltr');
+    }
+  };
+
+  return <div dir={direction}>...</div>;
+}
+```
+
+The handler automatically:
+- Sets the `dir` attribute on `document.body`
+- Swaps Bootstrap CSS files (`bootstrap-ltr.min.css` ↔ `bootstrap-rtl.min.css`)
+- Removes old direction stylesheets to prevent conflicts
+
+**Helper Functions:**
+
+```tsx
+import {
+  createLazyStyleHref,
+  getLoadedBootstrapDirection,
+  initLazyStyleHandler,
+} from '@abpjs/theme-shared';
+
+// Convert style pattern to actual href
+const href = createLazyStyleHref('bootstrap-{{dir}}.min.css', 'rtl');
+// Returns: 'bootstrap-rtl.min.css'
+
+// Check which Bootstrap direction is currently loaded
+const currentDir = getLoadedBootstrapDirection();
+// Returns: 'ltr' | 'rtl' | undefined
+
+// Initialize handler for providers
+const init = initLazyStyleHandler({ initialDirection: 'ltr' });
+```
+
+#### Navigation Items API
+
+New utility functions for managing navigation items dynamically:
+
+```tsx
+import {
+  addNavItem,
+  removeNavItem,
+  clearNavItems,
+  getNavItems,
+  getNavItemsSync,
+  subscribeToNavItems,
+  NavItem,
+} from '@abpjs/theme-shared';
+
+// Add a navigation item
+const myNavItem: NavItem = {
+  component: MyUserMenuComponent,
+  order: 10,
+  permission: 'AbpIdentity.Users',
+};
+addNavItem(myNavItem);
+
+// Get items synchronously
+const items = getNavItemsSync();
+
+// Subscribe to changes (observable-like pattern)
+const subscription = getNavItems().subscribe((items) => {
+  console.log('Nav items updated:', items);
+});
+
+// Cleanup
+subscription.unsubscribe();
+
+// Alternative subscription method
+const unsubscribe = subscribeToNavItems((items) => {
+  console.log('Nav items:', items);
+});
+unsubscribe();
+
+// Remove a specific item
+removeNavItem(myNavItem);
+
+// Clear all items
+clearNavItems();
+```
+
+**NavItem Interface:**
+
+```tsx
+interface NavItem {
+  component?: ComponentType<any>;  // React component to render
+  html?: string;                   // Raw HTML (use with caution)
+  action?: () => void;             // Click action
+  order?: number;                  // Sort order (lower = first)
+  permission?: string;             // Required permission
+}
+```
+
+#### Lazy Styles Context
+
+New context for configuring lazy-loaded stylesheets:
+
+```tsx
+import {
+  LazyStylesContext,
+  useLazyStyles,
+  DEFAULT_LAZY_STYLES,
+  LAZY_STYLES,
+} from '@abpjs/theme-shared';
+
+// Provide custom lazy styles
+function App() {
+  const customStyles = [
+    'bootstrap-{{dir}}.min.css',
+    'custom-theme-{{dir}}.css',
+  ];
+
+  return (
+    <LazyStylesContext.Provider value={customStyles}>
+      <YourApp />
+    </LazyStylesContext.Provider>
+  );
+}
+
+// Access lazy styles in components
+function MyComponent() {
+  const lazyStyles = useLazyStyles();
+  // Default: ['bootstrap-{{dir}}.min.css']
+}
+```
+
+### New Types
+
+- **`LocaleDirection`** - Type for RTL/LTR direction: `'ltr' | 'rtl'`
+
+### API Changes
+
+- **`Confirmation.Options.dismissible`** - New property to control whether the confirmation can be dismissed by clicking outside or pressing escape
+
+### Deprecations
+
+- **`Confirmation.Options.closable`** - Deprecated in favor of `dismissible`. Will be removed in v3.0.
+
+```tsx
+// Before (deprecated)
+confirmation.info('Message', 'Title', { closable: true });
+
+// After (v2.9.0)
+confirmation.info('Message', 'Title', { dismissible: true });
+```
+
+### Style Updates
+
+- Added RTL support for `.data-tables-filter` class (text alignment switches in RTL mode)
+
+### New Exports
+
+- `useLazyStyleHandler(options?)` - Hook for RTL/LTR style switching
+- `createLazyStyleHref(style, dir)` - Create lazy style href from pattern
+- `getLoadedBootstrapDirection(styles?)` - Get current Bootstrap direction
+- `initLazyStyleHandler(options?)` - Initialize lazy style handler
+- `LazyStyleHandlerOptions` - Options interface for lazy style handler
+- `addNavItem(item)` - Add a navigation item
+- `removeNavItem(item)` - Remove a navigation item
+- `clearNavItems()` - Clear all navigation items
+- `getNavItems()` - Get navigation items (observable-like)
+- `getNavItemsSync()` - Get navigation items synchronously
+- `subscribeToNavItems(callback)` - Subscribe to navigation item changes
+- `NavItem` - Navigation item interface
+- `LazyStylesContext` - Context for lazy styles configuration
+- `useLazyStyles()` - Hook to access lazy styles
+- `DEFAULT_LAZY_STYLES` - Default lazy styles array
+- `LAZY_STYLES` - Alias for DEFAULT_LAZY_STYLES
+- `BOOTSTRAP` - Bootstrap CSS pattern constant (`'bootstrap-{{dir}}.min.css'`)
+- `LocaleDirection` - Type for locale direction
+
+---
+
 ## v2.7.0
 
 **February 2026**
