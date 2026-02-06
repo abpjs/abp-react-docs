@@ -4,6 +4,66 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.9.0
+
+**February 2026**
+
+### New Features
+
+#### Logo Component
+
+New `Logo` component for displaying the application logo on account pages (login, register, etc.):
+
+```tsx
+import { Logo } from '@abpjs/account-pro';
+
+// Default usage - displays app name as text
+<Logo />
+
+// With custom logo URL
+<Logo logoUrl="/assets/logo.png" alt="My App Logo" />
+
+// With custom dimensions
+<Logo
+  logoUrl="/assets/logo.png"
+  maxWidth="200px"
+  maxHeight="60px"
+/>
+
+// With custom children
+<Logo>
+  <img src="/custom-logo.svg" alt="Custom" />
+</Logo>
+```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `logoUrl` | `string` | - | Custom logo URL. If not provided, uses the application name as text. |
+| `alt` | `string` | `"Logo"` | Alt text for the logo image |
+| `maxWidth` | `string` | `"150px"` | Maximum width of the logo |
+| `maxHeight` | `string` | `"50px"` | Maximum height of the logo |
+| `children` | `JSX.Element` | - | Custom children to render instead of the default logo |
+
+#### Component Replacement Key
+
+New component key for replacing the Logo component:
+
+```tsx
+import { eAccountComponents } from '@abpjs/account-pro';
+
+// eAccountComponents.Logo = 'Account.LogoComponent'
+```
+
+### New Exports
+
+- `Logo` - Logo component for account pages
+- `LogoProps` - TypeScript interface for Logo component props
+- `eAccountComponents.Logo` - Component replacement key for Logo
+
+---
+
 ## v2.7.0
 
 **February 2026**
