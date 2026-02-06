@@ -4,6 +4,190 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Route Names Changes
+
+- **`eTextTemplateManagementRouteNames.Administration` removed** - Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead.
+
+```tsx
+// Before (v2.9.0)
+import { eTextTemplateManagementRouteNames } from '@abpjs/text-template-management';
+const admin = eTextTemplateManagementRouteNames.Administration; // ❌ Removed
+
+// After (v3.0.0)
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+const admin = eThemeSharedRouteNames.Administration; // ✅ Use this instead
+```
+
+### New Features
+
+#### Route Providers
+
+New route configuration system using `RoutesService` from `@abpjs/core`:
+
+```tsx
+import {
+  configureRoutes,
+  initializeTextTemplateManagementRoutes,
+  TEXT_TEMPLATE_MANAGEMENT_ROUTE_CONFIG,
+} from '@abpjs/text-template-management';
+import { getRoutesService } from '@abpjs/core';
+
+// Option 1: Use configureRoutes with RoutesService
+const routes = getRoutesService();
+const addRoutes = configureRoutes(routes);
+addRoutes();
+
+// Option 2: Use initializeTextTemplateManagementRoutes helper
+initializeTextTemplateManagementRoutes(routes);
+
+// Option 3: Access the route configuration directly
+console.log(TEXT_TEMPLATE_MANAGEMENT_ROUTE_CONFIG);
+// { path: '/text-template-management', name: '...', iconClass: 'fas fa-file-alt', ... }
+```
+
+Also available as a provider object:
+
+```tsx
+import { TEXT_TEMPLATE_MANAGEMENT_ROUTE_PROVIDERS } from '@abpjs/text-template-management';
+
+const configure = TEXT_TEMPLATE_MANAGEMENT_ROUTE_PROVIDERS.useFactory(routes);
+configure();
+```
+
+#### Policy Names
+
+New constants for permission checking:
+
+```tsx
+import { eTextTemplateManagementPolicyNames } from '@abpjs/text-template-management';
+
+// Available policies:
+// eTextTemplateManagementPolicyNames.TextTemplates = 'TextTemplateManagement.TextTemplates'
+```
+
+#### Config Options
+
+New `TextTemplateManagementConfigOptions` interface for module extensibility:
+
+```tsx
+import {
+  TextTemplateManagementConfigOptions,
+  eTextTemplateManagementComponents,
+} from '@abpjs/text-template-management';
+
+const options: TextTemplateManagementConfigOptions = {
+  entityActionContributors: {
+    [eTextTemplateManagementComponents.TextTemplates]: [
+      (actions) => [...actions, { text: 'Custom Action', icon: 'fa fa-star' }]
+    ]
+  },
+  entityPropContributors: {
+    [eTextTemplateManagementComponents.TextTemplates]: [
+      (props) => [...props, { name: 'customField', displayName: 'Custom' }]
+    ]
+  }
+};
+```
+
+#### Extensions System
+
+New extension tokens and defaults for customizing text template management components:
+
+**Entity Actions** - Row-level actions in grids:
+
+```tsx
+import {
+  EntityAction,
+  DEFAULT_TEXT_TEMPLATES_ENTITY_ACTIONS,
+  DEFAULT_TEXT_TEMPLATE_MANAGEMENT_ENTITY_ACTIONS,
+  TEXT_TEMPLATE_MANAGEMENT_ENTITY_ACTION_CONTRIBUTORS,
+} from '@abpjs/text-template-management';
+```
+
+**Toolbar Actions** - Grid toolbar buttons:
+
+```tsx
+import {
+  ToolbarAction,
+  DEFAULT_TEXT_TEMPLATES_TOOLBAR_ACTIONS,
+  DEFAULT_TEXT_TEMPLATE_MANAGEMENT_TOOLBAR_ACTIONS,
+  TEXT_TEMPLATE_MANAGEMENT_TOOLBAR_ACTION_CONTRIBUTORS,
+} from '@abpjs/text-template-management';
+```
+
+**Entity Props** - Grid column definitions:
+
+```tsx
+import {
+  EntityProp,
+  DEFAULT_TEXT_TEMPLATES_ENTITY_PROPS,
+  DEFAULT_TEXT_TEMPLATE_MANAGEMENT_ENTITY_PROPS,
+  TEXT_TEMPLATE_MANAGEMENT_ENTITY_PROP_CONTRIBUTORS,
+} from '@abpjs/text-template-management';
+```
+
+#### Extensions Guard
+
+New guard for loading extensions before route activation:
+
+```tsx
+import {
+  textTemplateManagementExtensionsGuard,
+  useTextTemplateManagementExtensionsGuard,
+  TextTemplateManagementExtensionsGuard,
+} from '@abpjs/text-template-management';
+
+// Function-based guard
+const canActivate = await textTemplateManagementExtensionsGuard();
+
+// React hook
+function ProtectedRoute({ children }) {
+  const { isLoaded, loading } = useTextTemplateManagementExtensionsGuard();
+
+  if (loading) return <Loading />;
+  if (!isLoaded) return <Navigate to="/unauthorized" />;
+
+  return children;
+}
+```
+
+### New Exports
+
+**Config Subpackage:**
+- `eTextTemplateManagementPolicyNames` - Policy name constants
+- `TextTemplateManagementPolicyNameKey` - Type for policy name values
+- `TEXT_TEMPLATE_MANAGEMENT_ROUTE_CONFIG` - Default route configuration object
+- `configureRoutes()` - Configure routes with custom RoutesService
+- `initializeTextTemplateManagementRoutes()` - Initialize routes immediately
+- `TEXT_TEMPLATE_MANAGEMENT_ROUTE_PROVIDERS` - Route providers object
+
+**Models:**
+- `TextTemplateManagementConfigOptions` - Configuration options interface
+- `TextTemplateManagementEntityActionContributors` - Entity action contributor type
+- `TextTemplateManagementToolbarActionContributors` - Toolbar action contributor type (typo fixed from v2.x)
+- `TextTemplateManagementEntityPropContributors` - Entity prop contributor type
+
+**Tokens Subpackage:**
+- `EntityAction<T>`, `ToolbarAction<T>`, `EntityProp<T>` - Extension interfaces
+- `DEFAULT_TEXT_TEMPLATES_ENTITY_ACTIONS`, `DEFAULT_TEXT_TEMPLATE_MANAGEMENT_ENTITY_ACTIONS`
+- `DEFAULT_TEXT_TEMPLATES_TOOLBAR_ACTIONS`, `DEFAULT_TEXT_TEMPLATE_MANAGEMENT_TOOLBAR_ACTIONS`
+- `DEFAULT_TEXT_TEMPLATES_ENTITY_PROPS`, `DEFAULT_TEXT_TEMPLATE_MANAGEMENT_ENTITY_PROPS`
+- Contributor callback types: `EntityActionContributorCallback<T>`, `ToolbarActionContributorCallback<T>`, `EntityPropContributorCallback<T>`
+- Token symbols: `TEXT_TEMPLATE_MANAGEMENT_ENTITY_ACTION_CONTRIBUTORS`, `TEXT_TEMPLATE_MANAGEMENT_TOOLBAR_ACTION_CONTRIBUTORS`, `TEXT_TEMPLATE_MANAGEMENT_ENTITY_PROP_CONTRIBUTORS`
+
+**Guards Subpackage:**
+- `textTemplateManagementExtensionsGuard()` - Async guard function
+- `useTextTemplateManagementExtensionsGuard()` - React hook
+- `TextTemplateManagementExtensionsGuard` - Class-based guard
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -71,8 +255,9 @@ sidebar_position: 99
   - `InlineTemplateContent` = `'TextTemplateManagement.InlineTemplateContent'`
 
 - **eTextTemplateManagementRouteNames** - Route name localization keys:
-  - `Administration` = `'AbpUiNavigation::Menu:Administration'`
   - `TextTemplates` = `'TextTemplateManagement::Menu:TextTemplates'`
+
+> **Note:** `Administration` was removed in v3.0.0. Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead.
 
 ### TypeScript
 
