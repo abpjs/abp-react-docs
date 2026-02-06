@@ -4,6 +4,141 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### New Features
+
+#### Route Providers
+
+New route provider system for initializing account routes:
+
+```tsx
+import { initializeAccountRoutes } from '@abpjs/account-pro';
+
+// Call once during app initialization
+initializeAccountRoutes();
+
+// This registers:
+// - /account (parent route, invisible)
+// - /account/login
+// - /account/register
+// - /account/forgot-password
+// - /account/reset-password
+// - /account/manage
+```
+
+For advanced configuration with a custom RoutesService:
+
+```tsx
+import { configureRoutes, ACCOUNT_ROUTE_PROVIDERS } from '@abpjs/account-pro';
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const addRoutes = configureRoutes(routesService);
+addRoutes();
+```
+
+#### Setting Tab Providers
+
+New provider for registering account settings tabs:
+
+```tsx
+import {
+  configureSettingTabs,
+  ACCOUNT_SETTING_TAB_PROVIDERS,
+} from '@abpjs/account-pro';
+import { getSettingTabsService } from '@abpjs/core';
+import { AccountSettingsComponent } from './components/AccountSettings';
+
+const settingTabsService = getSettingTabsService();
+const addTabs = configureSettingTabs(settingTabsService, {
+  component: AccountSettingsComponent,
+});
+addTabs();
+```
+
+This registers an "Account" tab in the Settings page (requires `Volo.Account.SettingManagement` policy).
+
+#### Setting Tab Names
+
+New constants for account setting tab names:
+
+```tsx
+import { eAccountSettingTabNames } from '@abpjs/account-pro';
+
+// Available setting tab names:
+eAccountSettingTabNames.Account  // 'AbpAccount::Menu:Account'
+```
+
+#### Account Config Options
+
+New interface for configuring the account module:
+
+```tsx
+import { AccountConfigOptions, ACCOUNT_OPTIONS, DEFAULT_ACCOUNT_OPTIONS } from '@abpjs/account-pro';
+
+// Interface
+interface AccountConfigOptions {
+  redirectUrl?: string;  // Default: '/'
+}
+
+// Default options
+const defaults = DEFAULT_ACCOUNT_OPTIONS;
+// { redirectUrl: '/' }
+```
+
+#### Account Options Factory
+
+New factory function for creating account options with defaults:
+
+```tsx
+import { accountOptionsFactory } from '@abpjs/account-pro';
+
+// With custom redirect URL
+const options = accountOptionsFactory({ redirectUrl: '/dashboard' });
+// { redirectUrl: '/dashboard' }
+
+// With defaults
+const defaultOptions = accountOptionsFactory({});
+// { redirectUrl: '/' }
+```
+
+#### Config Subpackage
+
+The `@volo/abp.ng.account/config` functionality is now merged into the main package:
+
+```tsx
+// All config exports are available from the main package
+import {
+  configureRoutes,
+  configureSettingTabs,
+  ACCOUNT_ROUTE_PROVIDERS,
+  ACCOUNT_SETTING_TAB_PROVIDERS,
+  initializeAccountRoutes,
+  eAccountRouteNames,
+  eAccountSettingTabNames,
+} from '@abpjs/account-pro';
+```
+
+### New Exports
+
+- `initializeAccountRoutes()` - Initialize account routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `ACCOUNT_ROUTE_PROVIDERS` - Route provider configuration object
+- `configureSettingTabs(settingTabs, options)` - Configure account setting tabs
+- `ACCOUNT_SETTING_TAB_PROVIDERS` - Setting tab provider configuration
+- `AccountSettingTabOptions` - Options interface for setting tab configuration
+- `eAccountSettingTabNames` - Constants for setting tab names
+- `AccountSettingTabNameKey` - Type for setting tab name values
+- `AccountConfigOptions` - Interface for account configuration options
+- `ACCOUNT_OPTIONS` - Symbol token for account options
+- `DEFAULT_ACCOUNT_OPTIONS` - Default account options object
+- `accountOptionsFactory(options)` - Create account options with defaults
+
+---
+
 ## v2.9.0
 
 **February 2026**
