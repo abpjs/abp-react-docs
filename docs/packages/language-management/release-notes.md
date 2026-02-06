@@ -1,5 +1,179 @@
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Route Names Changes
+
+- **`eLanguageManagementRouteNames.Administration` removed** - Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead.
+- **`eLanguageManagementRouteNames.Languages` value changed** - From `'LanguageManagement::Menu:Languages'` to `'LanguageManagement::Languages'`
+- **`eLanguageManagementRouteNames.LanguageManagement` added** - New key for parent route (`'LanguageManagement::LanguageManagement'`)
+
+```tsx
+// Before (v2.9.0)
+import { eLanguageManagementRouteNames } from '@abpjs/language-management';
+const admin = eLanguageManagementRouteNames.Administration; // ❌ Removed
+
+// After (v3.0.0)
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+const admin = eThemeSharedRouteNames.Administration; // ✅ Use this instead
+```
+
+#### Removed Methods
+
+- **`getLanguagesTotalCount()` removed from `LanguageManagementStateService`** - Use the `totalCount` property from the language response directly:
+
+```tsx
+// Before (v2.9.0)
+const total = stateService.getLanguagesTotalCount();
+
+// After (v3.0.0)
+const languages = stateService.getLanguages();
+// Access totalCount from the response if needed
+```
+
+### New Features
+
+#### Route Providers
+
+New route configuration system using `RoutesService` from `@abpjs/core`:
+
+```tsx
+import { initializeLanguageManagementRoutes, configureRoutes } from '@abpjs/language-management';
+
+// Option 1: Use the global RoutesService
+const addRoutes = initializeLanguageManagementRoutes();
+addRoutes();
+
+// Option 2: Use a custom RoutesService instance
+import { getRoutesService } from '@abpjs/core';
+const routes = getRoutesService();
+const addRoutes = configureRoutes(routes);
+addRoutes();
+```
+
+Also available as a provider object:
+
+```tsx
+import { LANGUAGE_MANAGEMENT_ROUTE_PROVIDERS } from '@abpjs/language-management';
+
+LANGUAGE_MANAGEMENT_ROUTE_PROVIDERS.configureRoutes(routes);
+```
+
+#### Policy Names
+
+New constants for permission checking:
+
+```tsx
+import { eLanguageManagementPolicyNames } from '@abpjs/language-management';
+
+// Available policies:
+// eLanguageManagementPolicyNames.LanguageManagement = 'LanguageManagement.Languages || LanguageManagement.LanguageTexts'
+// eLanguageManagementPolicyNames.Languages = 'LanguageManagement.Languages'
+// eLanguageManagementPolicyNames.LanguageTexts = 'LanguageManagement.LanguageTexts'
+```
+
+#### Extensions System
+
+New extension tokens and defaults for customizing language management components:
+
+**Entity Actions** - Row-level actions in grids:
+
+```tsx
+import {
+  EntityAction,
+  DEFAULT_LANGUAGES_ENTITY_ACTIONS,
+  DEFAULT_LANGUAGE_TEXTS_ENTITY_ACTIONS,
+  LANGUAGE_MANAGEMENT_ENTITY_ACTION_CONTRIBUTORS,
+} from '@abpjs/language-management';
+```
+
+**Toolbar Actions** - Grid toolbar buttons:
+
+```tsx
+import {
+  ToolbarAction,
+  DEFAULT_LANGUAGES_TOOLBAR_ACTIONS,
+  LANGUAGE_MANAGEMENT_TOOLBAR_ACTION_CONTRIBUTORS,
+} from '@abpjs/language-management';
+```
+
+**Entity Props** - Grid column definitions:
+
+```tsx
+import {
+  EntityProp,
+  DEFAULT_LANGUAGES_ENTITY_PROPS,
+  LANGUAGE_MANAGEMENT_ENTITY_PROP_CONTRIBUTORS,
+} from '@abpjs/language-management';
+```
+
+**Form Props** - Create/Edit form fields:
+
+```tsx
+import {
+  FormProp,
+  DEFAULT_LANGUAGES_CREATE_FORM_PROPS,
+  DEFAULT_LANGUAGES_EDIT_FORM_PROPS,
+  LANGUAGE_MANAGEMENT_CREATE_FORM_PROP_CONTRIBUTORS,
+  LANGUAGE_MANAGEMENT_EDIT_FORM_PROP_CONTRIBUTORS,
+} from '@abpjs/language-management';
+```
+
+#### Extensions Guard
+
+New guard for loading extensions before route activation:
+
+```tsx
+import {
+  languageManagementExtensionsGuard,
+  useLanguageManagementExtensionsGuard,
+  LanguageManagementExtensionsGuard,
+} from '@abpjs/language-management';
+
+// Function-based guard
+await languageManagementExtensionsGuard();
+
+// React hook
+function LanguageManagementLayout() {
+  const { isLoaded, loading } = useLanguageManagementExtensionsGuard();
+
+  if (loading) return <Loading />;
+  return <Outlet />;
+}
+```
+
+### New Exports
+
+**Config Subpackage:**
+- `eLanguageManagementPolicyNames` - Policy name constants
+- `LanguageManagementPolicyNameKey` - Type for policy name values
+- `configureRoutes()` - Configure routes with custom RoutesService
+- `initializeLanguageManagementRoutes()` - Initialize routes with global RoutesService
+- `LANGUAGE_MANAGEMENT_ROUTE_PROVIDERS` - Route providers object
+
+**Tokens Subpackage:**
+- `EntityAction<T>`, `ToolbarAction<T>`, `EntityProp<T>`, `FormProp<T>` - Extension interfaces
+- `DEFAULT_LANGUAGES_ENTITY_ACTIONS`, `DEFAULT_LANGUAGE_TEXTS_ENTITY_ACTIONS`
+- `DEFAULT_LANGUAGES_TOOLBAR_ACTIONS`, `DEFAULT_LANGUAGE_TEXTS_TOOLBAR_ACTIONS`
+- `DEFAULT_LANGUAGES_ENTITY_PROPS`
+- `DEFAULT_LANGUAGES_CREATE_FORM_PROPS`, `DEFAULT_LANGUAGES_EDIT_FORM_PROPS`
+- `DEFAULT_LANGUAGE_MANAGEMENT_ENTITY_ACTIONS`, `DEFAULT_LANGUAGE_MANAGEMENT_TOOLBAR_ACTIONS`
+- `DEFAULT_LANGUAGE_MANAGEMENT_ENTITY_PROPS`, `DEFAULT_LANGUAGE_MANAGEMENT_CREATE_FORM_PROPS`, `DEFAULT_LANGUAGE_MANAGEMENT_EDIT_FORM_PROPS`
+- Contributor callback types: `EntityActionContributorCallback<T>`, `ToolbarActionContributorCallback<T>`, etc.
+- Contributor type definitions: `LanguageManagementEntityActionContributors`, `LanguageManagementToolbarActionContributors`, etc.
+- Token symbols: `LANGUAGE_MANAGEMENT_ENTITY_ACTION_CONTRIBUTORS`, `LANGUAGE_MANAGEMENT_TOOLBAR_ACTION_CONTRIBUTORS`, etc.
+
+**Guards Subpackage:**
+- `languageManagementExtensionsGuard()` - Async guard function
+- `useLanguageManagementExtensionsGuard()` - React hook
+- `LanguageManagementExtensionsGuard` - Class-based guard (deprecated)
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -22,10 +196,11 @@ New constants for language management route names (localization keys):
 import { eLanguageManagementRouteNames } from '@abpjs/language-management';
 
 // Available route names:
-// eLanguageManagementRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
 // eLanguageManagementRouteNames.Languages = 'LanguageManagement::Menu:Languages'
 // eLanguageManagementRouteNames.LanguageTexts = 'LanguageManagement::LanguageTexts'
 ```
+
+> **Note:** `Administration` was removed in v3.0.0. Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead.
 
 ### API Changes
 
@@ -114,10 +289,12 @@ import { eLanguageManagementRouteNames } from '@abpjs/language-management';
   - `dispatchGetLanguageResources()` - Fetch available localization resources
 
   **State Getter Methods:**
-  - `getLanguages()` / `getLanguagesTotalCount()` - Access cached languages
+  - `getLanguages()` - Access cached languages
   - `getLanguageTexts()` / `getLanguageTextsTotalCount()` - Access cached language texts
   - `getCultures()` - Access cached cultures
   - `getResources()` - Access cached resources
+
+> **Note:** `getLanguagesTotalCount()` was removed in v3.0.0.
 
 ### Example
 
@@ -131,7 +308,7 @@ const stateService = new LanguageManagementStateService(restService);
 // Fetch languages
 await stateService.dispatchGetLanguages({ maxResultCount: 10 });
 const languages = stateService.getLanguages();
-console.log(`Found ${stateService.getLanguagesTotalCount()} languages`);
+console.log(`Found ${languages.length} languages`);
 
 // Create a new language
 await stateService.dispatchCreateUpdateLanguage({
