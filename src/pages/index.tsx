@@ -25,7 +25,7 @@ const freeModules: ModuleItem[] = [
   { name: 'Permissions', description: 'Permission management modal', image: '/img/modules/identity.svg', link: '/docs/packages/permission-management/overview' },
   { name: 'Settings', description: 'Email and identity settings', image: '/img/modules/setting-management.svg', link: '/docs/packages/setting-management/overview' },
   { name: 'Tenants', description: 'Multi-tenant management', image: '/img/modules/tenant-management.svg', link: '/docs/packages/tenant-management/overview' },
-  { name: 'Theme', description: 'Toasts, confirmations, theming', image: '/img/modules/setting-management.svg', link: '/docs/packages/theme-shared/overview' },
+  { name: 'Theme', description: 'Toasts, confirmations, theming', image: '/img/modules/theme.svg', link: '/docs/packages/theme-shared/overview' },
 ];
 
 const proModules: ModuleItem[] = [

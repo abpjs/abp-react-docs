@@ -1,4 +1,8 @@
-# Text Template Management Module
+---
+sidebar_position: 1
+---
+
+# Text template management Module
 
 The `@abpjs/text-template-management` package provides text template management components for ABP React applications. This is the React equivalent of Angular's `@volo/abp.ng.text-template-management` module.
 

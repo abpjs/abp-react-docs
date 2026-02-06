@@ -4,6 +4,285 @@ sidebar_position: 99
 
 # Release Notes
 
+## v2.9.0
+
+**February 2026**
+
+### New Features
+
+#### Validators Module
+
+New `AbpValidators` collection for form validation, compatible with React Hook Form and similar libraries:
+
+```tsx
+import { AbpValidators } from '@abpjs/core';
+import { useForm } from 'react-hook-form';
+
+function MyForm() {
+  const { register, handleSubmit } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input
+        {...register('email', {
+          validate: AbpValidators.emailAddress(),
+        })}
+      />
+
+      <input
+        {...register('age', {
+          validate: AbpValidators.range({ minimum: 18, maximum: 120 }),
+        })}
+      />
+
+      <input
+        {...register('password', {
+          validate: AbpValidators.stringLength({ minimumLength: 8, maximumLength: 128 }),
+        })}
+      />
+
+      <input
+        {...register('creditCard', {
+          validate: AbpValidators.creditCard(),
+        })}
+      />
+
+      <input
+        {...register('website', {
+          validate: AbpValidators.url(),
+        })}
+      />
+
+      <input
+        {...register('birthDate', {
+          validate: AbpValidators.minAge({ minAge: 18 }),
+        })}
+      />
+    </form>
+  );
+}
+```
+
+Available validators:
+- `AbpValidators.creditCard()` - Luhn algorithm validation
+- `AbpValidators.emailAddress()` - Email format validation
+- `AbpValidators.minAge({ minAge })` - Minimum age from date of birth
+- `AbpValidators.range({ minimum?, maximum? })` - Numeric range validation
+- `AbpValidators.required({ allowEmptyStrings? })` - Required field validation
+- `AbpValidators.stringLength({ minimumLength?, maximumLength? })` - String length validation
+- `AbpValidators.url()` - URL format validation
+
+#### ListService
+
+New service for managing list queries with automatic debouncing:
+
+```tsx
+import { ListService, LIST_QUERY_DEBOUNCE_TIME } from '@abpjs/core';
+import { useEffect, useState, useRef } from 'react';
+
+function UserList() {
+  const listServiceRef = useRef(new ListService());
+  const listService = listServiceRef.current;
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    // Hook to query - automatically debounces filter/page/sort changes
+    listService.hookToQuery(async (query) => {
+      const result = await fetchUsers(query);
+      setUsers(result.items);
+      return result;
+    });
+
+    return () => listService.destroy();
+  }, []);
+
+  return (
+    <div>
+      <input
+        placeholder="Search..."
+        onChange={(e) => {
+          listService.filter = e.target.value; // Auto-debounced
+        }}
+      />
+
+      <select onChange={(e) => {
+        listService.maxResultCount = Number(e.target.value);
+      }}>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+
+      {listService.isLoading ? <Spinner /> : (
+        <Table data={users} />
+      )}
+
+      <Pagination
+        page={listService.page}
+        onPageChange={(page) => { listService.page = page; }}
+      />
+    </div>
+  );
+}
+```
+
+ListService properties:
+- `filter` - Filter string (auto-triggers query with debounce)
+- `page` - Current page number (0-indexed)
+- `maxResultCount` - Items per page
+- `sortKey` - Sort field name
+- `sortOrder` - Sort direction ('asc' or 'desc')
+- `query` - Current query parameters (readonly)
+- `isLoading` - Loading state (readonly)
+
+ListService methods:
+- `hookToQuery(callback)` - Connect data fetching callback
+- `get()` - Trigger immediate query (bypass debounce)
+- `destroy()` - Clean up resources
+
+#### Extensible Entity DTOs
+
+New DTO classes with `extraProperties` support for ABP's object extension system:
+
+```tsx
+import {
+  ExtensibleObject,
+  ExtensibleEntityDto,
+  ExtensibleCreationAuditedEntityDto,
+  ExtensibleAuditedEntityDto,
+  ExtensibleFullAuditedEntityDto,
+} from '@abpjs/core';
+
+// Base extensible object
+interface MyExtensibleData extends ExtensibleObject {
+  name: string;
+  // extraProperties: Record<string, any> is inherited
+}
+
+// Extensible entity with ID
+interface ProductDto extends ExtensibleEntityDto<string> {
+  name: string;
+  price: number;
+}
+
+// With creation audit
+interface OrderDto extends ExtensibleCreationAuditedEntityDto<string> {
+  orderNumber: string;
+  // Includes: id, extraProperties, creationTime, creatorId
+}
+
+// With full audit
+interface DocumentDto extends ExtensibleFullAuditedEntityDto<string> {
+  title: string;
+  // Includes: id, extraProperties, creationTime, creatorId,
+  //           lastModificationTime, lastModifierId,
+  //           isDeleted, deleterId, deletionTime
+}
+
+// With user references
+import {
+  ExtensibleCreationAuditedEntityWithUserDto,
+  ExtensibleAuditedEntityWithUserDto,
+  ExtensibleFullAuditedEntityWithUserDto,
+} from '@abpjs/core';
+```
+
+#### Localization Utilities
+
+New utility functions for working with localization:
+
+```tsx
+import {
+  getLocaleDirection,
+  createLocalizer,
+  createLocalizerWithFallback,
+} from '@abpjs/core';
+
+// Get text direction for a locale
+getLocaleDirection('en');    // 'ltr'
+getLocaleDirection('ar');    // 'rtl'
+getLocaleDirection('he-IL'); // 'rtl'
+
+// Create a localizer function from config
+const localize = createLocalizer(localizationConfig);
+const text = localize('AbpIdentity', 'Users', 'Users');
+
+// Create localizer with fallback across resources
+const localizeWithFallback = createLocalizerWithFallback(localizationConfig);
+const text = localizeWithFallback(
+  ['MyModule', 'AbpIdentity'],  // Try these resources in order
+  ['UserList', 'Users'],        // Try these keys in order
+  'Users'                       // Default value
+);
+```
+
+#### LocalizationService Enhancements
+
+New methods for resource-based localization:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function MyComponent() {
+  const { localizationService } = useAbp();
+
+  // Localize by resource name and key
+  const text = localizationService.localizeSync('AbpIdentity', 'Users', 'Users');
+
+  // Async version
+  const asyncText = await localizationService.localize('AbpIdentity', 'Users', 'Users');
+
+  // With fallback across multiple resources/keys
+  const fallbackText = localizationService.localizeWithFallbackSync(
+    ['MyModule', 'AbpIdentity'],
+    ['UserManagement', 'Users'],
+    'Users'
+  );
+}
+```
+
+#### LazyLoadService.remove()
+
+New method to remove dynamically loaded resources:
+
+```tsx
+import { LazyLoadService, LOADING_STRATEGY } from '@abpjs/core';
+
+const lazyLoadService = new LazyLoadService();
+
+// Load a script
+await lazyLoadService.load(
+  LOADING_STRATEGY.AppendAnonymousScriptToHead('https://cdn.example.com/lib.js')
+);
+
+// Later, remove it from the DOM
+const removed = lazyLoadService.remove('https://cdn.example.com/lib.js');
+console.log(removed); // true if found and removed
+```
+
+### API Changes
+
+- **`ApplicationConfiguration.CurrentUser.email`** - New field for user's email address
+- **`ABP.Root.sendNullsAsQueryParam`** - Option to include null values in query strings
+- **`LazyLoadService.loaded`** - Changed from `Set<unknown>` to `Map<string, HTMLElement>` for element tracking
+- **`LoadingStrategy.element`** - New property containing the created element reference after loading
+
+### Breaking Changes
+
+- **`LazyLoadService.loaded` type changed** - If you were accessing this property directly, note it's now a `Map` instead of `Set`:
+  ```tsx
+  // Before (v2.4.0 - v2.7.0)
+  lazyLoadService.loaded.has(path); // Set method
+
+  // After (v2.9.0) - still works, Map also has .has()
+  lazyLoadService.loaded.has(path); // Map method
+
+  // New: get the element
+  const element = lazyLoadService.loaded.get(path);
+  ```
+
+---
+
 ## v2.7.0
 
 **February 2026**
