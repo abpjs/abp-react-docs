@@ -4,6 +4,101 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `eTenantManagementRouteNames.Administration` removed
+
+The `Administration` key has been removed from `eTenantManagementRouteNames`. Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead:
+
+```tsx
+// Before (v2.7.0)
+import { eTenantManagementRouteNames } from '@abpjs/tenant-management';
+const adminRoute = eTenantManagementRouteNames.Administration;
+
+// After (v3.0.0)
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+const adminRoute = eThemeSharedRouteNames.Administration;
+```
+
+### New Features
+
+#### Route Providers
+
+New route provider system for initializing tenant management routes:
+
+```tsx
+import { initializeTenantManagementRoutes } from '@abpjs/tenant-management';
+
+// Call once during app initialization
+initializeTenantManagementRoutes();
+
+// This registers:
+// - Tenant Management (under Administration)
+// - /tenant-management/tenants
+```
+
+For advanced configuration with a custom RoutesService:
+
+```tsx
+import { configureRoutes, TENANT_MANAGEMENT_ROUTE_PROVIDERS } from '@abpjs/tenant-management';
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const addRoutes = configureRoutes(routesService);
+addRoutes();
+```
+
+#### Policy Names
+
+New constants for tenant management permission policies:
+
+```tsx
+import { eTenantManagementPolicyNames } from '@abpjs/tenant-management';
+
+// Available policies:
+eTenantManagementPolicyNames.TenantManagement  // 'AbpTenantManagement.Tenants'
+eTenantManagementPolicyNames.Tenants           // 'AbpTenantManagement.Tenants'
+
+// Use with permission checking
+import { usePermission } from '@abpjs/core';
+
+function TenantMenu() {
+  const canManageTenants = usePermission(eTenantManagementPolicyNames.TenantManagement);
+
+  if (!canManageTenants) return null;
+  return <TenantManagementLink />;
+}
+```
+
+#### Config Subpackage
+
+The `@abp/ng.tenant-management/config` functionality is now merged into the main package:
+
+```tsx
+// All config exports are available from the main package
+import {
+  configureRoutes,
+  TENANT_MANAGEMENT_ROUTE_PROVIDERS,
+  initializeTenantManagementRoutes,
+  eTenantManagementRouteNames,
+  eTenantManagementPolicyNames,
+} from '@abpjs/tenant-management';
+```
+
+### New Exports
+
+- `initializeTenantManagementRoutes()` - Initialize tenant management routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `TENANT_MANAGEMENT_ROUTE_PROVIDERS` - Route provider configuration object
+- `eTenantManagementPolicyNames` - Constants for tenant management permission policies
+- `TenantManagementPolicyNameKey` - Type for policy name values
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -37,7 +132,6 @@ New constants for tenant management route names (localization keys):
 import { eTenantManagementRouteNames } from '@abpjs/tenant-management';
 
 // Available route names:
-// eTenantManagementRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
 // eTenantManagementRouteNames.TenantManagement = 'AbpTenantManagement::Menu:TenantManagement'
 // eTenantManagementRouteNames.Tenants = 'AbpTenantManagement::Tenants'
 ```
