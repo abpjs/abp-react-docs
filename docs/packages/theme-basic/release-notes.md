@@ -4,6 +4,205 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### New Features
+
+#### CurrentUserComponent
+
+New public API component for the current user nav item:
+
+```tsx
+import { CurrentUserComponent } from '@abpjs/theme-basic';
+
+// Basic usage
+<CurrentUserComponent />
+
+// With custom URLs
+<CurrentUserComponent
+  loginUrl="/login"
+  profileUrl="/profile"
+  changePasswordUrl="/change-password"
+/>
+
+// With custom styling
+<CurrentUserComponent
+  containerStyle={{ padding: '4' }}
+  menuZIndex={1500}
+/>
+```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `smallScreen` | `boolean` | `false` | Mobile mode display |
+| `loginUrl` | `string` | `/account/login` | Login redirect URL |
+| `profileUrl` | `string` | `/account/manage` | Profile page URL |
+| `changePasswordUrl` | `string` | `/account/manage` | Change password URL |
+| `containerStyle` | `SystemStyleObject` | - | Custom container styles |
+| `menuZIndex` | `number` | `1400` | Dropdown z-index |
+
+#### LanguagesComponent
+
+New public API component for the language selector nav item:
+
+```tsx
+import { LanguagesComponent } from '@abpjs/theme-basic';
+
+// Basic usage
+<LanguagesComponent />
+
+// Compact mode (icon only)
+<LanguagesComponent compact />
+
+// With custom styling
+<LanguagesComponent
+  containerStyle={{ padding: '2' }}
+  menuZIndex={1500}
+/>
+```
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `smallScreen` | `boolean` | `false` | Mobile mode display |
+| `compact` | `boolean` | `false` | Icon-only mode |
+| `containerStyle` | `SystemStyleObject` | - | Custom container styles |
+| `menuZIndex` | `number` | `1400` | Dropdown z-index |
+
+#### Nav Item Provider
+
+New provider for initializing default nav items (Languages and CurrentUser):
+
+```tsx
+import { initializeThemeBasicNavItems } from '@abpjs/theme-basic';
+
+// Call once during app initialization
+initializeThemeBasicNavItems();
+
+// This registers:
+// - Languages component (order: 100)
+// - CurrentUser component (order: 200)
+```
+
+For advanced configuration:
+
+```tsx
+import {
+  BASIC_THEME_NAV_ITEM_PROVIDERS,
+  configureNavItems,
+} from '@abpjs/theme-basic';
+import { getNavItemsService } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+configureNavItems(navItemsService)();
+```
+
+#### Styles Provider
+
+New provider for injecting theme-basic global CSS:
+
+```tsx
+import { initializeThemeBasicStyles } from '@abpjs/theme-basic';
+
+// Call once during app initialization
+initializeThemeBasicStyles();
+```
+
+Access raw styles for custom injection:
+
+```tsx
+import { THEME_BASIC_STYLES, injectThemeBasicStyles } from '@abpjs/theme-basic';
+
+// Get raw CSS string
+console.log(THEME_BASIC_STYLES);
+
+// Manual injection
+injectThemeBasicStyles();
+```
+
+#### New Component Keys
+
+New component replacement keys for CurrentUser and Languages:
+
+```tsx
+import { eThemeBasicComponents } from '@abpjs/theme-basic';
+
+// New in v3.0.0:
+eThemeBasicComponents.CurrentUser  // 'Theme.CurrentUserComponent'
+eThemeBasicComponents.Languages    // 'Theme.LanguagesComponent'
+```
+
+### Deprecations
+
+#### eNavigationElementNames
+
+The `eNavigationElementNames` enum is deprecated. Nav items are now managed via `NavItemsService` from `@abpjs/theme-shared`:
+
+```tsx
+// Before (deprecated)
+import { eNavigationElementNames } from '@abpjs/theme-basic';
+
+// After (v3.0.0)
+import { getNavItemsService } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+navItemsService.addItems([
+  { id: 'my-nav-item', component: MyComponent, order: 1 },
+]);
+```
+
+#### LayoutStateService
+
+The `LayoutStateService` and `useLayoutStateService` are deprecated. Use `NavItemsService` from `@abpjs/theme-shared` instead:
+
+```tsx
+// Before (deprecated)
+import { useLayoutStateService } from '@abpjs/theme-basic';
+
+const layoutStateService = useLayoutStateService();
+layoutStateService.dispatchAddNavigationElement({
+  name: 'MyElement',
+  element: <MyNavItem />,
+  order: 1,
+});
+
+// After (v3.0.0)
+import { getNavItemsService } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+navItemsService.addItems([
+  { id: 'MyElement', component: MyNavItem, order: 1 },
+]);
+```
+
+### Style Updates
+
+- Added bordered `.datatable-body-row` styles for bordered table rows
+
+### New Exports
+
+- `CurrentUserComponent` - Current user nav item component
+- `CurrentUserComponentProps` - Props for CurrentUserComponent
+- `LanguagesComponent` - Language selector nav item component
+- `LanguagesComponentProps` - Props for LanguagesComponent
+- `initializeThemeBasicNavItems()` - Initialize default nav items
+- `configureNavItems(navItems)` - Configure nav items with custom service
+- `BASIC_THEME_NAV_ITEM_PROVIDERS` - Nav item provider configuration
+- `initializeThemeBasicStyles()` - Inject theme-basic CSS
+- `injectThemeBasicStyles()` - Manual CSS injection
+- `configureStyles()` - Style configuration function
+- `BASIC_THEME_STYLES_PROVIDERS` - Style provider configuration
+- `THEME_BASIC_STYLES` - Raw CSS string constant
+- `eThemeBasicComponents.CurrentUser` - Component key for CurrentUser
+- `eThemeBasicComponents.Languages` - Component key for Languages
+
+---
+
 ## v2.9.0
 
 **February 2026**
