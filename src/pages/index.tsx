@@ -35,6 +35,7 @@ const proModules: ModuleItem[] = [
   { name: 'Languages', description: 'Language and localization management', image: '/img/modules/language-management.svg', link: '/docs/packages/language-management/overview' },
   { name: 'SaaS', description: 'Tenants, editions, connections', image: '/img/modules/saas.svg', link: '/docs/packages/saas/overview' },
   { name: 'Text Templates', description: 'Text template management', image: '/img/modules/text-template-management.svg', link: '/docs/packages/text-template-management/overview' },
+  { name: 'Chat', description: 'Real-time messaging', image: '/img/modules/chat.svg', link: '/docs/packages/chat/overview' },
 ];
 
 type TechStackItem = {

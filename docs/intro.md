@@ -30,7 +30,7 @@ That's it! You now have a fully configured ABP React project with all dependenci
 
 ## Packages
 
-ABP React consists of 14 packages split between free and pro modules.
+ABP React consists of 15 packages split between free and pro modules.
 
 ### Free Packages
 
@@ -66,7 +66,7 @@ Works with the open-source [ABP Framework](https://abp.io/).
     <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Tenants</span>
   </a>
   <a href="./packages/theme-shared/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
-    <img src="/img/modules/setting-management.svg" alt="Theme Shared" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <img src="/img/modules/theme.svg" alt="Theme Shared" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
     <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Theme</span>
   </a>
 </div>
@@ -87,12 +87,20 @@ Works with the open-source [ABP Framework](https://abp.io/).
     <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Audit Logs</span>
   </a>
   <a href="./packages/language-management/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
-    <img src="/img/modules/text-template-management.svg" alt="Language Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <img src="/img/modules/language-management.svg" alt="Language Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
     <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Languages</span>
   </a>
   <a href="./packages/saas/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
     <img src="/img/modules/saas.svg" alt="SaaS" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
     <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>SaaS</span>
+  </a>
+  <a href="./packages/text-template-management/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/text-template-management.svg" alt="Text Template Management" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Text Templates</span>
+  </a>
+  <a href="./packages/chat/overview" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', borderRadius: '12px', background: 'var(--ifm-card-background-color, #f8f9fa)', border: '1px solid var(--ifm-color-emphasis-200, #e0e0e0)', textDecoration: 'none', transition: 'all 0.2s ease'}}>
+    <img src="/img/modules/chat.svg" alt="Chat" style={{width: '40px', height: '40px', marginBottom: '0.5rem'}} />
+    <span style={{fontWeight: 600, fontSize: '0.85rem', color: 'var(--ifm-font-color-base)', textAlign: 'center'}}>Chat</span>
   </a>
 </div>
 

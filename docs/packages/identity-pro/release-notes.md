@@ -1,5 +1,188 @@
 # Release Notes
 
+## v2.9.0
+
+**February 2026**
+
+### New Features
+
+#### Organization Unit Management
+
+Full support for ABP's organization unit hierarchy:
+
+```tsx
+import { OrganizationUnitService } from '@abpjs/identity-pro';
+import { RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const orgUnitService = new OrganizationUnitService(restService);
+
+// Get all organization units
+const units = await orgUnitService.getListByInput({
+  maxResultCount: 100,
+  skipCount: 0,
+});
+
+// Create a new organization unit
+const newUnit = await orgUnitService.createByInput({
+  displayName: 'Engineering',
+  parentId: null, // Root level
+});
+
+// Create a child unit
+const childUnit = await orgUnitService.createByInput({
+  displayName: 'Frontend Team',
+  parentId: newUnit.id,
+});
+
+// Move an organization unit to a new parent
+await orgUnitService.moveByIdAndInput(
+  { newParentId: anotherUnitId },
+  childUnit.id
+);
+
+// Add members to an organization unit
+await orgUnitService.addMembersByIdAndInput(
+  { userIds: ['user-id-1', 'user-id-2'] },
+  newUnit.id
+);
+
+// Add roles to an organization unit
+await orgUnitService.addRolesByIdAndInput(
+  { roleIds: ['role-id-1'] },
+  newUnit.id
+);
+
+// Get members of an organization unit
+const members = await orgUnitService.getMembersById(
+  { maxResultCount: 10, skipCount: 0 },
+  newUnit.id
+);
+
+// Get roles of an organization unit
+const roles = await orgUnitService.getRolesById(
+  { maxResultCount: 10, skipCount: 0 },
+  newUnit.id
+);
+
+// Remove a member from an organization unit
+await orgUnitService.removeMemberByIdAndMemberId(newUnit.id, 'user-id-1');
+
+// Remove a role from an organization unit
+await orgUnitService.removeRoleByIdAndRoleId(newUnit.id, 'role-id-1');
+
+// Delete an organization unit
+await orgUnitService.deleteById(childUnit.id);
+```
+
+#### TreeAdapter Utility
+
+New utility for converting flat lists into tree structures, useful for rendering organization unit hierarchies:
+
+```tsx
+import { TreeAdapter, TreeNode, BaseNode } from '@abpjs/identity-pro';
+
+// Works with any entity implementing BaseNode interface
+interface MyNode extends BaseNode {
+  id: string;
+  parentId: string | null;
+  displayName: string;
+}
+
+// Create adapter from flat list
+const units = await orgUnitService.getListByInput();
+const adapter = new TreeAdapter(units.items);
+
+// Get tree structure for rendering
+const tree = adapter.getTree(); // Returns TreeNode<OrganizationUnitWithDetailsDto>[]
+
+// Find a specific node
+const node = adapter.getNodeById('some-id');
+
+// Expand/collapse operations
+adapter.expandAll();
+adapter.collapseAll();
+adapter.expandPathToNode('target-node-id'); // Expands all ancestors
+
+// Get expanded keys (useful for controlled tree components)
+const expandedKeys = adapter.getExpandedKeys();
+adapter.setExpandedKeys(['id-1', 'id-2']);
+
+// Handle drag-and-drop
+adapter.handleDrop(droppedNode);
+
+// Handle removal
+adapter.handleRemove(nodeToRemove);
+
+// Custom name resolver
+const adapterWithResolver = new TreeAdapter(units.items, (unit) => {
+  return `${unit.displayName} (${unit.memberCount} members)`;
+});
+```
+
+#### User Organization Units
+
+Users can now be assigned to organization units:
+
+```tsx
+import { IdentityService } from '@abpjs/identity-pro';
+
+const identityService = new IdentityService(restService);
+
+// Get organization units for a user
+const userOrgUnits = await identityService.getUserOrganizationUnits(userId);
+
+// Create/update user with organization unit assignments
+await identityService.createUser({
+  userName: 'john',
+  email: 'john@example.com',
+  password: 'SecurePassword123!',
+  roleNames: ['Manager'],
+  organizationUnitIds: ['org-unit-id-1', 'org-unit-id-2'], // New in v2.9.0
+});
+```
+
+### New Models
+
+| Model | Description |
+|-------|-------------|
+| `OrganizationUnitWithDetailsDto` | Organization unit with member/role counts |
+| `OrganizationUnitCreateDto` | DTO for creating organization units |
+| `OrganizationUnitUpdateDto` | DTO for updating organization units |
+| `OrganizationUnitMoveInput` | Input for moving units in hierarchy |
+| `OrganizationUnitRoleInput` | Input for adding roles to units |
+| `OrganizationUnitUserInput` | Input for adding members to units |
+| `GetOrganizationUnitInput` | Query parameters for listing units |
+
+### New Components
+
+Added to `eIdentityComponents`:
+
+```tsx
+import { eIdentityComponents } from '@abpjs/identity-pro';
+
+eIdentityComponents.OrganizationUnits    // 'Identity.OrganizationUnitsComponent'
+eIdentityComponents.OrganizationMembers  // 'Identity.OrganizationMembersComponent'
+eIdentityComponents.OrganizationRoles    // 'Identity.OrganizationRolesComponent'
+```
+
+### New Route Names
+
+Added to `eIdentityRouteNames`:
+
+```tsx
+import { eIdentityRouteNames } from '@abpjs/identity-pro';
+
+eIdentityRouteNames.OrganizationUnits  // 'AbpIdentity::OrganizationUnits'
+```
+
+### State Updates
+
+- `Identity.State.organizationUnits` - New state property for cached organization units
+- `Identity.UserSaveRequest.organizationUnitIds` - Array of organization unit IDs for user assignment
+
+---
+
 ## v2.7.0
 
 **February 2026**
