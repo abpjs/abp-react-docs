@@ -4,6 +4,120 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### New Features
+
+#### Route Providers
+
+New route provider system for initializing chat routes:
+
+```tsx
+import { initializeChatRoutes } from '@abpjs/chat';
+
+// Call once during app initialization
+const addRoutes = initializeChatRoutes();
+addRoutes();
+
+// This registers:
+// - /chat (invisible route for direct navigation)
+```
+
+For advanced configuration with a custom RoutesService:
+
+```tsx
+import { configureRoutes, CHAT_ROUTE_PROVIDERS } from '@abpjs/chat';
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const addRoutes = configureRoutes(routesService);
+addRoutes();
+```
+
+#### Nav Item Providers
+
+New provider for registering the chat nav item (ChatIcon):
+
+```tsx
+import { initializeChatNavItems } from '@abpjs/chat';
+
+// Call once during app initialization
+const addNavItems = initializeChatNavItems();
+addNavItems();
+
+// This registers the ChatIcon component as a nav item with:
+// - id: 'Chat.ChatIconComponent'
+// - requiredPolicy: 'Chat.Messaging'
+// - order: 99.99
+```
+
+For advanced configuration:
+
+```tsx
+import { configureNavItems, CHAT_NAV_ITEM_PROVIDERS } from '@abpjs/chat';
+import { getNavItemsService } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+const addNavItems = configureNavItems(navItemsService);
+addNavItems();
+```
+
+#### Policy Names
+
+New constants for chat permission policies:
+
+```tsx
+import { eChatPolicyNames } from '@abpjs/chat';
+
+// Available policies:
+eChatPolicyNames.Messaging  // 'Chat.Messaging'
+
+// Use with permission checking
+import { usePermission } from '@abpjs/core';
+
+function ChatNavItem() {
+  const canChat = usePermission(eChatPolicyNames.Messaging);
+
+  if (!canChat) return null;
+  return <ChatIcon />;
+}
+```
+
+#### Config Subpackage
+
+The `@volo/abp.ng.chat/config` functionality is now merged into the main package:
+
+```tsx
+// All config exports are available from the main package
+import {
+  configureRoutes,
+  configureNavItems,
+  CHAT_ROUTE_PROVIDERS,
+  CHAT_NAV_ITEM_PROVIDERS,
+  initializeChatRoutes,
+  initializeChatNavItems,
+  eChatRouteNames,
+  eChatPolicyNames,
+} from '@abpjs/chat';
+```
+
+### New Exports
+
+- `initializeChatRoutes()` - Initialize chat routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `CHAT_ROUTE_PROVIDERS` - Route provider configuration object
+- `initializeChatNavItems()` - Initialize chat nav items
+- `configureNavItems(navItems)` - Configure nav items with custom NavItemsService
+- `CHAT_NAV_ITEM_PROVIDERS` - Nav item provider configuration object
+- `CHAT_NAV_ITEM_CONFIG` - Chat nav item configuration metadata
+- `ChatNavItemConfig` - Interface for nav item config
+- `eChatPolicyNames` - Constants for chat permission policies
+- `ChatPolicyNameKey` - Type for policy name values
+
+---
+
 ## v2.9.0 (Initial Release)
 
 **February 2026**
