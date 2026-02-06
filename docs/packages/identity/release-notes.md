@@ -4,6 +4,122 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `eIdentityRouteNames.Administration` removed
+
+The `Administration` key has been removed from `eIdentityRouteNames`. Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead:
+
+```tsx
+// Before (v2.7.0)
+import { eIdentityRouteNames } from '@abpjs/identity';
+const adminRoute = eIdentityRouteNames.Administration;
+
+// After (v3.0.0)
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+const adminRoute = eThemeSharedRouteNames.Administration;
+```
+
+### New Features
+
+#### Route Providers
+
+New route provider system for initializing identity routes:
+
+```tsx
+import { initializeIdentityRoutes } from '@abpjs/identity';
+
+// Call once during app initialization
+initializeIdentityRoutes();
+
+// This registers:
+// - Identity Management (under Administration)
+// - /identity/roles
+// - /identity/users
+```
+
+For advanced configuration with a custom RoutesService:
+
+```tsx
+import { configureRoutes, IDENTITY_ROUTE_PROVIDERS } from '@abpjs/identity';
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const addRoutes = configureRoutes(routesService);
+addRoutes();
+```
+
+#### Policy Names
+
+New constants for identity permission policies:
+
+```tsx
+import { eIdentityPolicyNames } from '@abpjs/identity';
+
+// Available policies:
+eIdentityPolicyNames.IdentityManagement  // 'AbpIdentity.Roles || AbpIdentity.Users'
+eIdentityPolicyNames.Roles               // 'AbpIdentity.Roles'
+eIdentityPolicyNames.Users               // 'AbpIdentity.Users'
+
+// Use with permission checking
+import { usePermission } from '@abpjs/core';
+
+function IdentityMenu() {
+  const canManageIdentity = usePermission(eIdentityPolicyNames.IdentityManagement);
+
+  if (!canManageIdentity) return null;
+  return <IdentityManagementLink />;
+}
+```
+
+#### `getUserAssignableRoles()` Method
+
+New method on `IdentityService` to get roles that can be assigned to users:
+
+```tsx
+import { useIdentityService } from '@abpjs/identity';
+
+function UserRoleAssignment() {
+  const identityService = useIdentityService();
+
+  const loadAssignableRoles = async () => {
+    const response = await identityService.getUserAssignableRoles();
+    // response.items contains roles available for assignment
+  };
+}
+```
+
+This calls `GET /api/identity/users/assignable-roles` endpoint.
+
+#### Config Subpackage
+
+The `@abp/ng.identity/config` functionality is now merged into the main package:
+
+```tsx
+// All config exports are available from the main package
+import {
+  configureRoutes,
+  IDENTITY_ROUTE_PROVIDERS,
+  initializeIdentityRoutes,
+  eIdentityRouteNames,
+  eIdentityPolicyNames,
+} from '@abpjs/identity';
+```
+
+### New Exports
+
+- `initializeIdentityRoutes()` - Initialize identity routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `IDENTITY_ROUTE_PROVIDERS` - Route provider configuration object
+- `eIdentityPolicyNames` - Constants for identity permission policies
+- `IdentityPolicyNameKey` - Type for policy name values
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -38,7 +154,6 @@ New constants for identity route names (localization keys):
 import { eIdentityRouteNames } from '@abpjs/identity';
 
 // Available route names:
-// eIdentityRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
 // eIdentityRouteNames.IdentityManagement = 'AbpIdentity::Menu:IdentityManagement'
 // eIdentityRouteNames.Roles = 'AbpIdentity::Roles'
 // eIdentityRouteNames.Users = 'AbpIdentity::Users'
