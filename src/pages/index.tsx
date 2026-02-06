@@ -32,8 +32,9 @@ const proModules: ModuleItem[] = [
   { name: 'Account Pro', description: 'Password recovery, 2FA, profiles', image: '/img/modules/account-pro.svg', link: '/docs/packages/account-pro/overview' },
   { name: 'Identity Pro', description: 'Claim types, user/role claims', image: '/img/modules/identity-pro.svg', link: '/docs/packages/identity-pro/overview' },
   { name: 'Audit Logs', description: 'Audit logs with filtering', image: '/img/modules/audit-logging.svg', link: '/docs/packages/audit-logging/overview' },
-  { name: 'Languages', description: 'Language and localization management', image: '/img/modules/text-template-management.svg', link: '/docs/packages/language-management/overview' },
+  { name: 'Languages', description: 'Language and localization management', image: '/img/modules/language-management.svg', link: '/docs/packages/language-management/overview' },
   { name: 'SaaS', description: 'Tenants, editions, connections', image: '/img/modules/saas.svg', link: '/docs/packages/saas/overview' },
+  { name: 'Text Templates', description: 'Text template management', image: '/img/modules/text-template-management.svg', link: '/docs/packages/text-template-management/overview' },
 ];
 
 type TechStackItem = {
