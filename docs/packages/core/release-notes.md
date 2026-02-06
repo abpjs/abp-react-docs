@@ -4,6 +4,296 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### MultiTenancyService
+
+New service for multi-tenancy operations including tenant lookup:
+
+```tsx
+import { MultiTenancyService, RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const multiTenancyService = new MultiTenancyService(restService);
+
+// Find tenant by name
+const result = await multiTenancyService.findTenantByName('myTenant');
+if (result.success) {
+  console.log(`Found tenant: ${result.name}, ID: ${result.tenantId}`);
+}
+
+// Find tenant by ID
+const tenant = await multiTenancyService.findTenantById('tenant-guid');
+
+// Control tenant box visibility
+multiTenancyService.isTenantBoxVisible = false;
+
+// Set domain tenant
+multiTenancyService.domainTenant = { id: 'tenant-id', name: 'Tenant Name' };
+```
+
+#### SubscriptionService
+
+Service for managing multiple subscriptions/cleanups, useful for class components or imperative code:
+
+```tsx
+import { SubscriptionService, useSubscription } from '@abpjs/core';
+
+// Class-based usage
+const subscriptionService = new SubscriptionService();
+
+// Add subscriptions
+const sub = subscriptionService.addOne(() => {
+  const handler = () => console.log('resize');
+  window.addEventListener('resize', handler);
+  return () => window.removeEventListener('resize', handler);
+});
+
+// Close specific subscription
+subscriptionService.closeOne(sub);
+
+// Close all subscriptions
+subscriptionService.closeAll();
+
+// Check if all closed
+if (subscriptionService.isClosed) {
+  console.log('All subscriptions closed');
+}
+```
+
+#### Auth Flow Strategies
+
+New authentication flow strategies for OAuth:
+
+```tsx
+import {
+  AuthFlowStrategy,
+  AuthCodeFlowStrategy,
+  AuthPasswordFlowStrategy,
+  AUTH_FLOW_STRATEGY,
+  getAuthFlowType,
+} from '@abpjs/core';
+
+// Determine flow type from OAuth config
+const flowType = getAuthFlowType({ response_type: 'code' }); // 'Code'
+
+// Create strategy using factory
+const codeStrategy = AUTH_FLOW_STRATEGY.Code({ userManager });
+const passwordStrategy = AUTH_FLOW_STRATEGY.Password({ userManager });
+
+// Initialize and use
+await codeStrategy.init();
+await codeStrategy.login();
+await codeStrategy.logout();
+
+// Check auth type
+if (codeStrategy.isInternalAuth) {
+  // Password flow
+} else {
+  // Authorization code flow (SSO)
+}
+```
+
+#### Remote Environment Configuration
+
+Support for loading environment configuration from a remote source:
+
+```tsx
+import type { Config } from '@abpjs/core';
+
+const environment: Config.Environment = {
+  production: true,
+  oAuthConfig: { /* ... */ },
+  apis: { default: { url: '/api' } },
+  remoteEnv: {
+    url: 'https://config.example.com/environment.json',
+    mergeStrategy: 'deepmerge', // or 'overwrite' or custom function
+    method: 'GET',
+    headers: { 'X-Api-Key': 'secret' },
+  },
+};
+
+// Custom merge function
+const customMerge: Config.customMergeFn = (localEnv, remoteEnv) => {
+  return { ...localEnv, ...remoteEnv };
+};
+```
+
+#### Date Utilities
+
+New date format utilities based on application settings:
+
+```tsx
+import {
+  getShortDateFormat,
+  getShortTimeFormat,
+  getShortDateShortTimeFormat,
+} from '@abpjs/core';
+
+// Get formats from ABP settings
+const dateFormat = getShortDateFormat(configStateService); // 'MM/dd/yyyy'
+const timeFormat = getShortTimeFormat(configStateService); // 'HH:mm'
+const dateTimeFormat = getShortDateShortTimeFormat(configStateService); // 'MM/dd/yyyy HH:mm'
+```
+
+#### String Utilities
+
+New token parser utility:
+
+```tsx
+import { createTokenParser } from '@abpjs/core';
+
+// Create parser for a format
+const parser = createTokenParser('{0}.{1}');
+const result = parser('tenant.user');
+// { '0': ['tenant'], '1': ['user'] }
+
+// Parse route patterns
+const routeParser = createTokenParser('/users/{id}/posts/{postId}');
+const params = routeParser('/users/123/posts/456');
+// { 'id': ['123'], 'postId': ['456'] }
+```
+
+#### Object Utilities
+
+Deep merge utility for objects:
+
+```tsx
+import { deepMerge } from '@abpjs/core';
+
+const target = {
+  settings: { theme: 'dark', notifications: { email: true } },
+  users: ['admin'],
+};
+
+const source = {
+  settings: { notifications: { sms: true } },
+  users: ['guest'],
+};
+
+const result = deepMerge(target, source);
+// {
+//   settings: { theme: 'dark', notifications: { email: true, sms: true } },
+//   users: ['guest'] // Arrays are replaced, not merged
+// }
+```
+
+#### Common Utilities
+
+New type-checking utilities:
+
+```tsx
+import {
+  isNullOrUndefined,
+  exists,
+  isObject,
+  isArray,
+  isObjectAndNotArray,
+} from '@abpjs/core';
+
+isNullOrUndefined(null);     // true
+isNullOrUndefined(undefined); // true
+isNullOrUndefined('');       // false
+
+exists(null);    // false (with type narrowing)
+exists('value'); // true
+
+isObject({});      // true
+isObject([]);      // true
+isObject(null);    // false
+
+isArray([]);      // true
+isArray({});      // false
+
+isObjectAndNotArray({});  // true
+isObjectAndNotArray([]);  // false
+```
+
+#### ConfigStateService.getFeature()
+
+New method to retrieve feature values:
+
+```tsx
+import { ConfigStateService } from '@abpjs/core';
+
+const configStateService = new ConfigStateService();
+
+// Get feature value
+const featureValue = configStateService.getFeature('MyApp.MaxUsers');
+if (featureValue) {
+  console.log(`Max users: ${featureValue}`);
+}
+```
+
+#### Config Model Enhancements
+
+New properties on `Config.Application` and `Config.ApiConfig`:
+
+```tsx
+import type { Config } from '@abpjs/core';
+
+const application: Config.Application = {
+  name: 'My App',
+  baseUrl: 'https://myapp.com', // New in v3.1.0
+  logoUrl: '/logo.png',
+};
+
+const apiConfig: Config.ApiConfig = {
+  url: 'https://api.example.com',
+  rootNamespace: 'MyApp', // New in v3.1.0
+};
+```
+
+#### FindTenantResultDto
+
+New DTO class for tenant lookup results:
+
+```tsx
+import { FindTenantResultDto } from '@abpjs/core';
+
+const result = new FindTenantResultDto({
+  success: true,
+  tenantId: 'guid-here',
+  name: 'My Tenant',
+});
+
+if (result.success) {
+  console.log(result.tenantId, result.name);
+}
+```
+
+### New Exports
+
+**Services:**
+- `MultiTenancyService` - Multi-tenancy operations
+- `SubscriptionService` - Subscription management
+- `useSubscription` - Hook for subscription management
+
+**Strategies:**
+- `AuthFlowStrategy` - Abstract base class
+- `AuthCodeFlowStrategy` - Authorization code flow
+- `AuthPasswordFlowStrategy` - Password flow
+- `AUTH_FLOW_STRATEGY` - Factory object
+- `getAuthFlowType()` - Determine flow type from config
+
+**Utilities:**
+- `isNullOrUndefined()`, `exists()` - Null checking
+- `isObject()`, `isArray()`, `isObjectAndNotArray()` - Type checking
+- `deepMerge()` - Deep object merging
+- `createTokenParser()` - Token parsing
+- `getShortDateFormat()`, `getShortTimeFormat()`, `getShortDateShortTimeFormat()` - Date formats
+
+**Models:**
+- `FindTenantResultDto` - Tenant lookup result
+- `Config.RemoteEnv` - Remote environment configuration
+- `Config.customMergeFn` - Custom merge function type
+
+---
+
 ## v3.0.0
 
 **February 2026**
