@@ -4,6 +4,104 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### AuthenticationFlowGuard
+
+New route guard for checking authentication flow type. Blocks navigation to login/register pages when using external authentication (SSO/OAuth) and initiates the external login flow instead:
+
+```tsx
+import {
+  authenticationFlowGuard,
+  useAuthenticationFlowGuard,
+  AuthenticationFlowGuard,
+} from '@abpjs/account';
+
+// Function-based guard (for route loaders)
+const result = authenticationFlowGuard({
+  isInternalAuth: false, // true for password auth, false for SSO
+  initLogin: () => auth.login(),
+});
+
+if (!result.canActivate) {
+  // Navigation blocked, login initiated
+  console.log(result.reason); // 'external_auth'
+}
+
+// React hook version
+function ProtectedRoute({ children }) {
+  const auth = useAuth();
+  const canActivate = useAuthenticationFlowGuard({
+    isInternalAuth: true,
+    initLogin: auth.login,
+  });
+
+  if (!canActivate) {
+    return null; // Login redirect in progress
+  }
+
+  return children;
+}
+
+// Class-based version
+const guard = new AuthenticationFlowGuard(
+  isInternalAuth,
+  () => auth.login()
+);
+
+if (!guard.canActivate()) {
+  // Navigation blocked
+}
+```
+
+#### ChangePasswordForm: hideCurrentPassword Prop
+
+New `hideCurrentPassword` prop for users who don't have a password (e.g., social login users):
+
+```tsx
+import { ChangePasswordForm } from '@abpjs/account';
+
+// For social login users (no current password needed)
+<ChangePasswordForm hideCurrentPassword={true} />
+
+// When undefined, automatically determined based on user's profile
+<ChangePasswordForm />
+```
+
+#### ManageProfile: hideChangePasswordTab Prop
+
+New `hideChangePasswordTab` prop and automatic handling for external users:
+
+```tsx
+import { ManageProfile } from '@abpjs/account';
+
+// Force hide change password tab
+<ManageProfile hideChangePasswordTab={true} />
+
+// When undefined, automatically hidden for external (social login) users
+<ManageProfile />
+```
+
+The component now:
+- Fetches the user profile on mount to determine external user status
+- Shows a loading state while profile is being fetched
+- Automatically hides the change password tab for external users
+
+### New Exports
+
+**Guards:**
+- `authenticationFlowGuard()` - Function-based guard for route loaders
+- `useAuthenticationFlowGuard()` - React hook version
+- `AuthenticationFlowGuard` - Class-based guard
+- `AuthenticationFlowGuardResult` - Result interface
+- `AuthenticationFlowGuardOptions` - Options interface
+
+---
+
 ## v3.0.0
 
 **February 2026**
