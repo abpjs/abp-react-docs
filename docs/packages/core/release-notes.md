@@ -4,6 +4,298 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Removed `ABP.Root.requirements`
+
+The deprecated `ABP.Root.requirements` property has been removed. Remove any references to this property in your code.
+
+#### Deprecated `ABP.FullRoute`
+
+`ABP.FullRoute` is now deprecated. Use the new `RoutesService` for route management instead.
+
+#### Deprecated `ConfigStateService.getRoute()`
+
+The `getRoute()` method on `ConfigStateService` is deprecated. Use `RoutesService` instead:
+
+```tsx
+// Before (deprecated)
+const route = configStateService.getRoute('/users');
+
+// After (v3.0.0)
+import { getRoutesService, findRoute } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const route = findRoute(routesService, '/users');
+```
+
+### New Features
+
+#### RoutesService
+
+A new service for tree-based route management, replacing the legacy ConfigState route handling:
+
+```tsx
+import { getRoutesService, RoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+
+// Add routes
+routesService.add([
+  { name: 'Dashboard', path: '/dashboard', order: 1 },
+  { name: 'Users', path: '/users', order: 2 },
+  { name: 'UserDetails', path: '/users/:id', parentName: 'Users' },
+]);
+
+// Get flat list of routes
+const allRoutes = routesService.flat;
+
+// Get tree structure
+const routeTree = routesService.tree;
+
+// Get visible routes (filtered by permissions and invisible flag)
+const visibleRoutes = routesService.visible;
+
+// Find a route
+const usersRoute = routesService.find((route) => route.name === 'Users');
+
+// Search by partial properties
+const route = routesService.search({ path: '/dashboard' });
+
+// Patch a route
+routesService.patch('Dashboard', { order: 10 });
+
+// Remove routes
+routesService.remove(['UserDetails']);
+
+// Check for children
+routesService.hasChildren('Users'); // true
+
+// Subscribe to changes
+const unsubscribe = routesService.subscribe(() => {
+  console.log('Routes changed');
+});
+```
+
+#### SettingTabsService
+
+A new service for managing setting page tabs:
+
+```tsx
+import { getSettingTabsService } from '@abpjs/core';
+
+const settingTabsService = getSettingTabsService();
+
+// Add tabs
+settingTabsService.add([
+  { name: 'General', order: 1 },
+  { name: 'Security', order: 2 },
+  { name: 'Notifications', order: 3 },
+]);
+
+// Get visible tabs
+const visibleTabs = settingTabsService.visible;
+```
+
+#### AbstractTreeService and AbstractNavTreeService
+
+Base classes for building tree-based services:
+
+```tsx
+import { AbstractTreeService, AbstractNavTreeService, ABP } from '@abpjs/core';
+
+// For generic tree structures
+class MyTreeService extends AbstractTreeService<MyItem> {
+  readonly id = 'id';
+  readonly parentId = 'parentId';
+  readonly hide = (item) => item.hidden;
+  readonly sort = (a, b) => a.order - b.order;
+}
+
+// For navigation items (routes, tabs, menus)
+class MyNavService extends AbstractNavTreeService<ABP.Nav> {
+  // Inherits id='name', parentId='parentName'
+  // Inherits permission-based filtering
+}
+```
+
+#### Tree Utilities
+
+New utilities for working with tree structures:
+
+```tsx
+import {
+  TreeNode,
+  BaseTreeNode,
+  createTreeFromList,
+  createMapFromList,
+  findInTree,
+  flattenTree,
+  sortTree,
+} from '@abpjs/core';
+
+// TreeNode type
+type TreeNode<T> = T & {
+  children: TreeNode<T>[];
+  isLeaf: boolean;
+  parent?: TreeNode<T>;
+};
+
+// Create tree from flat list
+const items = [
+  { id: '1', parentId: null, name: 'Root' },
+  { id: '2', parentId: '1', name: 'Child' },
+];
+
+const tree = createTreeFromList(
+  items,
+  (item) => item.id,        // keySelector
+  (item) => item.parentId,  // parentKeySelector
+  (item) => item            // valueMapper
+);
+
+// Create map from list
+const map = createMapFromList(
+  items,
+  (item) => item.id,
+  (item) => item.name
+);
+
+// Find in tree
+const found = findInTree(tree, (node) => node.name === 'Child');
+
+// Flatten tree to list
+const flatList = flattenTree(tree);
+
+// Sort tree recursively
+const sorted = sortTree(tree, (a, b) => a.name.localeCompare(b.name));
+```
+
+#### Array Utilities
+
+New utilities for array manipulation:
+
+```tsx
+import { pushValueTo, uniqueBy, groupBy } from '@abpjs/core';
+
+// pushValueTo - functional composition helper
+const items: string[] = [];
+const addItem = pushValueTo(items);
+addItem('first');  // returns ['first']
+addItem('second'); // returns ['first', 'second']
+
+// uniqueBy - remove duplicates
+const users = [
+  { id: 1, name: 'John' },
+  { id: 2, name: 'Jane' },
+  { id: 1, name: 'John Doe' },
+];
+const unique = uniqueBy(users, (user) => user.id);
+// [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]
+
+// Simple deduplication
+const numbers = [1, 2, 2, 3, 3, 3];
+const uniqueNumbers = uniqueBy(numbers);
+// [1, 2, 3]
+
+// groupBy - group items by key
+const grouped = groupBy(users, (user) => user.id);
+// Map { 1 => [{...}, {...}], 2 => [{...}] }
+```
+
+#### Route Utilities
+
+New utilities for route management:
+
+```tsx
+import { findRoute, getRoutePath, getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+
+// Find route by path
+const route = findRoute(routesService, '/users');
+
+// Get clean route path from URL
+getRoutePath('/users?page=1#section');  // '/users'
+getRoutePath('/users/');                 // '/users'
+```
+
+#### Generic ListService
+
+`ListService` now supports generic query parameter types:
+
+```tsx
+import { ListService } from '@abpjs/core';
+
+// Default ABP.PageQueryParams
+const listService = new ListService();
+
+// Custom query params type
+interface MyQueryParams {
+  filter?: string;
+  maxResultCount: number;
+  skipCount: number;
+  sorting?: string;
+  category?: string;
+  status?: number;
+}
+
+const customListService = new ListService<MyQueryParams>();
+
+// Type-safe query access
+const query: MyQueryParams = customListService.query;
+```
+
+#### New Model Types
+
+**`ABP.Nav`** - Base interface for navigation items:
+
+```tsx
+interface Nav {
+  name: string;
+  parentName?: string;
+  order?: number;
+  invisible?: boolean;
+  requiredPolicy?: string;
+}
+```
+
+**`ABP.Tab`** - Interface for tab components:
+
+```tsx
+interface Tab extends Nav {
+  component?: React.ComponentType;
+}
+```
+
+**`ABP.Route`** - Now extends `ABP.Nav`:
+
+```tsx
+interface Route extends Nav {
+  path?: string;
+  // ... other route properties
+}
+```
+
+**`ApplicationConfiguration.CurrentUser.roles`** - New field for user's roles:
+
+```tsx
+const { currentUser } = configStateService.getAll();
+console.log(currentUser.roles); // ['admin', 'manager']
+```
+
+### Deprecations
+
+- **`ABP.FullRoute`** - Use `RoutesService` instead. Will be removed in v4.0.0.
+- **`ConfigStateService.getRoute()`** - Use `RoutesService` instead. Will be removed in v4.0.0.
+- **`organizeRoutes()`** - Use `RoutesService` instead. Will be removed in v4.0.0.
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -700,7 +992,7 @@ const doNothing = noop();
 
 ### Deprecations
 
-- **`ABP.Root.requirements`** - Deprecated and now optional. Will be removed in v3.0.
+- **`ABP.Root.requirements`** - Deprecated and now optional. Removed in v3.0.0.
 
 ---
 
