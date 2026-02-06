@@ -4,6 +4,79 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### New Features
+
+#### Route Providers
+
+New route provider system for initializing account routes:
+
+```tsx
+import { initializeAccountRoutes } from '@abpjs/account';
+
+// Call once during app initialization
+initializeAccountRoutes();
+
+// This registers:
+// - /account (parent route, invisible)
+// - /account/login
+// - /account/register
+// - /account/manage-profile
+```
+
+For advanced configuration with a custom RoutesService:
+
+```tsx
+import { configureRoutes, ACCOUNT_ROUTE_PROVIDERS } from '@abpjs/account';
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const addRoutes = configureRoutes(routesService);
+addRoutes();
+```
+
+#### Account Options Factory
+
+New factory function for creating account options with defaults:
+
+```tsx
+import { accountOptionsFactory } from '@abpjs/account';
+
+// With custom redirect URL
+const options = accountOptionsFactory({ redirectUrl: '/dashboard' });
+// { redirectUrl: '/dashboard' }
+
+// With defaults
+const defaultOptions = accountOptionsFactory({});
+// { redirectUrl: '/' }
+```
+
+#### Config Subpackage
+
+The `@abp/ng.account/config` functionality is now merged into the main package:
+
+```tsx
+// All config exports are available from the main package
+import {
+  configureRoutes,
+  ACCOUNT_ROUTE_PROVIDERS,
+  initializeAccountRoutes,
+  eAccountRouteNames,
+} from '@abpjs/account';
+```
+
+### New Exports
+
+- `initializeAccountRoutes()` - Initialize account routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `ACCOUNT_ROUTE_PROVIDERS` - Route provider configuration object
+- `accountOptionsFactory(options)` - Create account options with defaults
+
+---
+
 ## v2.9.0
 
 **February 2026**
