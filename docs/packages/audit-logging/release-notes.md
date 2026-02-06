@@ -4,6 +4,262 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `eAuditLoggingRouteNames.Administration` removed
+
+The `Administration` key has been removed from `eAuditLoggingRouteNames`. Use `eThemeSharedRouteNames.Administration` from `@abpjs/theme-shared` instead:
+
+```tsx
+// Before (v2.7.0)
+import { eAuditLoggingRouteNames } from '@abpjs/audit-logging';
+const adminRoute = eAuditLoggingRouteNames.Administration;
+
+// After (v3.0.0)
+import { eThemeSharedRouteNames } from '@abpjs/theme-shared';
+const adminRoute = eThemeSharedRouteNames.Administration;
+```
+
+### New Features
+
+#### Route Providers
+
+New route provider system for initializing audit logging routes:
+
+```tsx
+import { initializeAuditLoggingRoutes } from '@abpjs/audit-logging';
+
+// Call once during app initialization
+initializeAuditLoggingRoutes();
+
+// This registers:
+// - Audit Logging (under Administration)
+// - /audit-logging
+```
+
+For advanced configuration with a custom RoutesService:
+
+```tsx
+import { configureRoutes, AUDIT_LOGGING_ROUTE_PROVIDERS } from '@abpjs/audit-logging';
+import { getRoutesService } from '@abpjs/core';
+
+const routesService = getRoutesService();
+const addRoutes = configureRoutes(routesService);
+addRoutes();
+```
+
+#### Policy Names
+
+New constants for audit logging permission policies:
+
+```tsx
+import { eAuditLoggingPolicyNames } from '@abpjs/audit-logging';
+
+// Available policies:
+eAuditLoggingPolicyNames.AuditLogging  // 'AuditLogging.AuditLogs'
+
+// Use with permission checking
+import { usePermission } from '@abpjs/core';
+
+function AuditLoggingMenu() {
+  const canViewAuditLogs = usePermission(eAuditLoggingPolicyNames.AuditLogging);
+
+  if (!canViewAuditLogs) return null;
+  return <AuditLoggingLink />;
+}
+```
+
+#### EntityChangeModalService
+
+New service for displaying entity change details and history in modals:
+
+```tsx
+import { EntityChangeModalService, EntityChangeService } from '@abpjs/audit-logging';
+import { RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const entityChangeService = new EntityChangeService(restService);
+const modalService = new EntityChangeModalService(entityChangeService);
+
+// Register callbacks for modal display
+modalService.onShowDetails((data) => {
+  // Handle showing entity change details
+  console.log('Show details:', data);
+});
+
+modalService.onShowHistory((data) => {
+  // Handle showing entity change history
+  console.log('Show history:', data);
+});
+
+// Trigger modal display
+await modalService.showDetails('entity-change-id');
+await modalService.showHistory('entity-id', 'MyApp.Domain.Entities.Product');
+```
+
+#### Entity Details and History Providers
+
+New providers for registering entity details and history display:
+
+```tsx
+import {
+  ENTITY_DETAILS_PROVIDERS,
+  ENTITY_HISTORY_PROVIDERS,
+  SHOW_ENTITY_DETAILS,
+  SHOW_ENTITY_HISTORY,
+} from '@abpjs/audit-logging';
+
+// These tokens can be used to provide custom implementations
+// for showing entity details and history
+```
+
+#### Extensions System
+
+New extensibility system for customizing audit logging components:
+
+```tsx
+import {
+  EntityAction,
+  EntityProp,
+  ToolbarAction,
+  DEFAULT_AUDIT_LOGGING_ENTITY_ACTIONS,
+  DEFAULT_AUDIT_LOGGING_TOOLBAR_ACTIONS,
+  DEFAULT_AUDIT_LOGGING_ENTITY_PROPS,
+} from '@abpjs/audit-logging';
+
+// Define custom entity action
+const customAction: EntityAction<AuditLogging.Log> = {
+  text: 'Export',
+  action: ({ record }) => exportLog(record),
+  permission: 'AuditLogging.Export',
+  icon: 'bi bi-download',
+};
+
+// Define custom entity property
+const customProp: EntityProp<AuditLogging.Log> = {
+  type: 'string',
+  name: 'customField',
+  displayName: 'Custom Field',
+  sortable: true,
+  valueResolver: ({ record }) => record.extraProperties?.customField,
+};
+
+// Define custom toolbar action
+const customToolbarAction: ToolbarAction<AuditLogging.Log[]> = {
+  text: 'Export All',
+  action: ({ records }) => exportAll(records),
+  permission: 'AuditLogging.Export',
+  icon: 'bi bi-download',
+};
+```
+
+#### Config Options
+
+New configuration options for the audit logging module:
+
+```tsx
+import {
+  AuditLoggingConfigOptions,
+  DEFAULT_AUDIT_LOGGING_CONFIG_OPTIONS,
+} from '@abpjs/audit-logging';
+
+const config: AuditLoggingConfigOptions = {
+  entityActionContributors: {
+    'AuditLogging.AuditLogsComponent': (actions) => [
+      ...actions,
+      { text: 'Custom', action: () => {} },
+    ],
+  },
+  toolbarActionContributors: {
+    'AuditLogging.AuditLogsComponent': (actions) => [
+      ...actions,
+      { text: 'Export', action: () => {} },
+    ],
+  },
+  entityPropContributors: {
+    'AuditLogging.AuditLogsComponent': (props) => [
+      ...props,
+      { type: 'string', name: 'custom', displayName: 'Custom' },
+    ],
+  },
+};
+```
+
+#### Extensions Guard
+
+New guard for protecting routes with extensions:
+
+```tsx
+import { AuditLoggingExtensionsGuard } from '@abpjs/audit-logging';
+
+// Use in route configuration to ensure extensions are loaded
+```
+
+#### Config Subpackage
+
+The `@volo/abp.ng.audit-logging/config` functionality is now merged into the main package:
+
+```tsx
+// All config exports are available from the main package
+import {
+  configureRoutes,
+  AUDIT_LOGGING_ROUTE_PROVIDERS,
+  initializeAuditLoggingRoutes,
+  eAuditLoggingRouteNames,
+  eAuditLoggingPolicyNames,
+  EntityChangeModalService,
+  ENTITY_DETAILS_PROVIDERS,
+  ENTITY_HISTORY_PROVIDERS,
+} from '@abpjs/audit-logging';
+```
+
+### New Exports
+
+**Route and Policy:**
+- `initializeAuditLoggingRoutes()` - Initialize audit logging routes
+- `configureRoutes(routes)` - Configure routes with custom RoutesService
+- `AUDIT_LOGGING_ROUTE_PROVIDERS` - Route provider configuration object
+- `eAuditLoggingPolicyNames` - Constants for audit logging permission policies
+- `AuditLoggingPolicyNameKey` - Type for policy name values
+
+**Modal Service:**
+- `EntityChangeModalService` - Service for entity change modals
+- `EntityChangeDetailsCallback` - Callback type for details display
+- `EntityChangeHistoryCallback` - Callback type for history display
+
+**Entity Providers:**
+- `ENTITY_DETAILS_PROVIDERS` - Provider for entity details display
+- `ENTITY_HISTORY_PROVIDERS` - Provider for entity history display
+- `SHOW_ENTITY_DETAILS` - Token for entity details display
+- `SHOW_ENTITY_HISTORY` - Token for entity history display
+
+**Extensions:**
+- `EntityAction<T>` - Interface for entity actions
+- `EntityProp<T>` - Interface for entity properties
+- `ToolbarAction<T>` - Interface for toolbar actions
+- `EntityActionContributorCallback<T>` - Callback type for entity action contributors
+- `EntityPropContributorCallback<T>` - Callback type for entity prop contributors
+- `ToolbarActionContributorCallback<T>` - Callback type for toolbar action contributors
+- `DEFAULT_AUDIT_LOGGING_ENTITY_ACTIONS` - Default entity actions
+- `DEFAULT_AUDIT_LOGGING_TOOLBAR_ACTIONS` - Default toolbar actions
+- `DEFAULT_AUDIT_LOGGING_ENTITY_PROPS` - Default entity properties
+- `AuditLoggingEntityActionContributors` - Type for entity action contributors
+- `AuditLoggingToolbarActionContributors` - Type for toolbar action contributors
+- `AuditLoggingEntityPropContributors` - Type for entity prop contributors
+
+**Config:**
+- `AuditLoggingConfigOptions` - Interface for module configuration
+- `DEFAULT_AUDIT_LOGGING_CONFIG_OPTIONS` - Default configuration options
+
+**Guards:**
+- `AuditLoggingExtensionsGuard` - Guard for extensions loading
+
+---
+
 ## v2.9.0
 
 **February 2026**
@@ -105,7 +361,6 @@ New constants for audit logging route names (localization keys):
 import { eAuditLoggingRouteNames } from '@abpjs/audit-logging';
 
 // Available route names:
-// eAuditLoggingRouteNames.Administration = 'AbpUiNavigation::Menu:Administration'
 // eAuditLoggingRouteNames.AuditLogging = 'AbpAuditLogging::Menu:AuditLogging'
 ```
 
