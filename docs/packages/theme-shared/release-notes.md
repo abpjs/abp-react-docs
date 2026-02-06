@@ -4,6 +4,92 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### NavItem Class with Visible Callback
+
+`NavItem` has been changed from an interface to a class with constructor support and a new `visible` callback:
+
+```tsx
+import { NavItem, NavItemProps } from '@abpjs/theme-shared';
+
+// Create NavItem using class constructor
+const navItem = new NavItem({
+  id: 'my-item',
+  order: 1,
+  requiredPolicy: 'MyPermission',
+  visible: () => {
+    // Dynamic visibility based on conditions
+    return someCondition;
+  },
+});
+
+// Or use NavItemProps interface for type checking
+const props: NavItemProps = {
+  id: 'my-item',
+  order: 1,
+  visible: () => isFeatureEnabled,
+};
+const item = new NavItem(props);
+```
+
+#### NavItemsService Accepts NavItemProps
+
+`NavItemsService.addItems()` now accepts both `NavItem` instances and plain `NavItemProps` objects:
+
+```tsx
+import { getNavItemsService, NavItem } from '@abpjs/theme-shared';
+
+const navItemsService = getNavItemsService();
+
+// Add using NavItemProps (plain object) - automatically converted to NavItem
+navItemsService.addItems([
+  { id: 'item-1', order: 1 },
+  { id: 'item-2', order: 2, visible: () => true },
+]);
+
+// Add using NavItem instances
+navItemsService.addItems([
+  new NavItem({ id: 'item-3', order: 3 }),
+]);
+```
+
+#### Error Localizations Export
+
+New `DEFAULT_ERROR_LOCALIZATIONS` constant for error messages with title and details:
+
+```tsx
+import { DEFAULT_ERROR_LOCALIZATIONS, DEFAULT_ERROR_MESSAGES } from '@abpjs/theme-shared';
+
+// Access localization keys for different error types
+const error401 = DEFAULT_ERROR_LOCALIZATIONS.defaultError401;
+console.log(error401.title);   // 'AbpUi::DefaultErrorMessage401'
+console.log(error401.details); // 'AbpUi::DefaultErrorMessage401Detail'
+
+// Available error localizations:
+// - defaultError (general error)
+// - defaultError401 (unauthorized)
+// - defaultError403 (forbidden)
+// - defaultError404 (not found)
+// - defaultError500 (server error)
+
+// DEFAULT_ERROR_MESSAGES is now exported as well
+console.log(DEFAULT_ERROR_MESSAGES[404]); // 'AbpUi::DefaultErrorMessage404'
+```
+
+### New Exports
+
+- `NavItem` - Class for navigation items (was interface)
+- `NavItemProps` - Interface for nav item properties
+- `DEFAULT_ERROR_LOCALIZATIONS` - Error localization keys with title and details
+- `DEFAULT_ERROR_MESSAGES` - Error messages by HTTP status code (now exported)
+
+---
+
 ## v3.0.0
 
 **February 2026**
