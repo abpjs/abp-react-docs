@@ -4,6 +4,52 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `RegisterResponse.twoFactorEnabled` Removed
+
+The `twoFactorEnabled` property has been removed from the `RegisterResponse` interface:
+
+```tsx
+// Before (v3.1.0)
+interface RegisterResponse {
+  // ...
+  twoFactorEnabled: boolean;  // ❌ Removed
+  // ...
+}
+
+// After (v3.2.0)
+interface RegisterResponse {
+  tenantId: string;
+  userName: string;
+  name: string;
+  surname: string;
+  email: string;
+  emailConfirmed: boolean;
+  phoneNumber: string;
+  phoneNumberConfirmed: boolean;
+  lockoutEnabled: boolean;
+  lockoutEnd: string;
+  concurrencyStamp: string;
+  isDeleted: boolean;
+  deleterId: string;
+  deletionTime: string;
+  lastModificationTime: string;
+  lastModifierId: string;
+  creationTime: string;
+  creatorId: string;
+  id: string;
+}
+```
+
+If you were using `twoFactorEnabled` from the registration response, you will need to fetch this information separately from the user's profile or settings.
+
+---
+
 ## v3.1.0
 
 **February 2026**
