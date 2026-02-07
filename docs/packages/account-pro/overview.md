@@ -27,6 +27,7 @@ yarn add @abpjs/account-pro
 - **OAuth Integration** - Resource Owner Password Credentials (ROPC) flow support
 - **Two-Factor Authentication** - Optional 2FA support (Pro feature)
 - **Social Logins** - Optional social login providers (Pro feature)
+- **Admin Settings** - Account administration (general, LDAP, 2FA, captcha, external providers) (v4.0.0)
 
 ## Setup
 
@@ -345,8 +346,10 @@ import type {
 | Profile Management | ✗ | ✓ |
 | Two-Factor Auth | ✗ | ✓ |
 | Social Logins | ✗ | ✓ |
+| Admin Settings | ✗ | ✓ (v4.0.0) |
 
 ## See Also
 
 - [Core Module](../core/overview)
 - [Theme Shared](../theme-shared/overview)
+- [Release Notes](./release-notes) - Version history

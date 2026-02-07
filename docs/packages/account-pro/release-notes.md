@@ -4,6 +4,113 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### New Features
+
+#### Admin Module
+
+A new admin submodule providing account administration services, hooks, and models for managing account settings (general, LDAP, 2FA, captcha, external providers).
+
+##### Admin Services
+
+Five services for managing different account setting areas:
+
+```tsx
+import {
+  AccountSettingsService,
+  AccountLdapService,
+  AccountTwoFactorSettingService,
+  AccountCaptchaService,
+  AccountExternalProviderService,
+} from '@abpjs/account-pro';
+import { useRestService } from '@abpjs/core';
+
+const restService = useRestService();
+
+// General account settings
+const settingsService = new AccountSettingsService(restService);
+const settings = await settingsService.getSettings();
+await settingsService.updateSettings({ isSelfRegistrationEnabled: false });
+
+// Captcha settings (v4.0.0)
+const captchaService = new AccountCaptchaService(restService);
+const captcha = await captchaService.getSettings();
+await captchaService.updateSettings({ useCaptchaOnLogin: true });
+
+// External provider settings (v4.0.0)
+const externalService = new AccountExternalProviderService(restService);
+const providers = await externalService.getSettings();
+```
+
+All admin services extend `AbstractAccountSettingsService<Type, SubmitType>` which provides `getSettings()` and `updateSettings(body)` methods.
+
+##### Admin Hooks
+
+Hooks for building account settings UIs:
+
+```tsx
+import {
+  useAccountSettings,
+  useAccountSettingsComponent,
+  useAccountSettingsCaptcha,
+  useAccountSettingsExternalProvider,
+  useAccountSettingsTwoFactor,
+} from '@abpjs/account-pro';
+
+// Main settings component hook
+const { isLdapSettingsEnabled, isCaptchaEnabled, isExternalProviderEnabled, isTenant } =
+  useAccountSettingsComponent({
+    isLdapSettingsEnabled: true,
+    isCaptchaEnabled: true,
+    isExternalProviderEnabled: true,
+    isTenant: false,
+  });
+
+// Captcha settings hook (v4.0.0)
+const { settings, loading, submit } = useAccountSettingsCaptcha({
+  service: captchaService,
+  isTenant: false,
+});
+
+// External provider settings hook (v4.0.0)
+const { settings: providerSettings, submit: submitProviders } =
+  useAccountSettingsExternalProvider({
+    service: externalProviderService,
+    isTenant: false,
+  });
+```
+
+The hooks support tenant-aware settings mapping — when `isTenant` is `true`, settings are automatically filtered to tenant-specific fields before submission.
+
+##### Admin Models
+
+New TypeScript interfaces for captcha and external provider settings:
+
+| Type | Description |
+|------|-------------|
+| `AccountCaptchaSettings` | Captcha configuration (login/registration flags, siteKey, siteSecret, version) |
+| `AccountExternalProviderSetting` | Single external provider config (name, enabled, properties, secretProperties, useHostSettings) |
+| `AccountExternalProviderSettings` | Collection of external provider settings |
+| `AccountSettingsDto` | General account settings (isSelfRegistrationEnabled, enableLocalLogin) |
+| `AccountLdapSettingsDto` | LDAP settings (enableLdapLogin) |
+
+### Deprecations
+
+The following exports are deprecated and will be removed in v5.0:
+
+| Deprecated Export | Notes |
+|-------------------|-------|
+| `eAccountComponents` | Removed from Angular public-api in v4.0.0 |
+| `eAccountRouteNames` (from `enums/`) | Removed from Angular public-api in v4.0.0 |
+| `eAccountManageProfileTabNames` (from `config/enums`) | Removed from Angular config/enums in v4.0.0 |
+| `ManageProfileTabsService` | Removed from Angular config/services in v4.0.0 |
+| Route provider from `config/providers` | Route configuration moved; direct import still available |
+
+---
+
 ## v3.2.0
 
 **February 2026**
