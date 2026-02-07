@@ -4,6 +4,32 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### Changes
+
+#### Loading Overlay Opacity Reduced
+
+The `.abp-loading` overlay background opacity has been reduced from `0.1` to `0.05` for a better user experience. The loading overlay is now more subtle and less obtrusive:
+
+```css
+/* Before (v3.1.0) */
+.abp-loading {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* After (v3.2.0) */
+.abp-loading {
+  background: rgba(0, 0, 0, 0.05);
+}
+```
+
+This change is automatically applied when using `THEME_BASIC_STYLES` from `@abpjs/theme-basic`.
+
+---
+
 ## v3.1.0
 
 **February 2026**
