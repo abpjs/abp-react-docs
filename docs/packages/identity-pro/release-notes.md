@@ -1,5 +1,297 @@
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### Proxy Services
+
+New typed proxy services for all identity operations:
+
+**IdentityRoleService (Proxy):**
+
+```tsx
+import { IdentityRoleService } from '@abpjs/identity-pro';
+import { useRestService } from '@abpjs/core';
+
+const restService = useRestService();
+const roleService = new IdentityRoleService(restService);
+
+// CRUD operations
+const roles = await roleService.getList({ maxResultCount: 10 });
+const allRoles = await roleService.getAllList();
+const role = await roleService.get(roleId);
+const created = await roleService.create({ name: 'Editor', isDefault: false, isPublic: true });
+const updated = await roleService.update(roleId, { name: 'Senior Editor' });
+await roleService.delete(roleId);
+
+// Claims
+const claims = await roleService.getClaims(roleId);
+await roleService.updateClaims(roleId, claims);
+```
+
+**IdentityUserService (Proxy):**
+
+```tsx
+import { IdentityUserService } from '@abpjs/identity-pro';
+
+const userService = new IdentityUserService(restService);
+
+// CRUD operations
+const users = await userService.getList({ filter: 'john', maxResultCount: 10 });
+const user = await userService.get(userId);
+await userService.create({ userName: 'john', email: 'john@example.com', password: '...' });
+await userService.update(userId, { ...user, email: 'new@example.com' });
+await userService.delete(userId);
+
+// Roles
+const userRoles = await userService.getRoles(userId);
+await userService.updateRoles(userId, { roleNames: ['Admin'] });
+const assignableRoles = await userService.getAssignableRoles();
+
+// Claims
+const claims = await userService.getClaims(userId);
+await userService.updateClaims(userId, claims);
+
+// Organization units
+const orgUnits = await userService.getOrganizationUnits(userId);
+const availableOrgUnits = await userService.getAvailableOrganizationUnits();
+
+// Lookups
+const byUsername = await userService.findByUsername('john');
+const byEmail = await userService.findByEmail('john@example.com');
+
+// Claim types
+const claimTypes = await userService.getAvailableClaimTypes();
+
+// Two-factor
+await userService.setTwoFactorEnabled(userId, true);
+
+// Lock
+await userService.lock(userId, 3600); // Lock for 1 hour
+await userService.unlock(userId);
+```
+
+**IdentityUserLookupService (Proxy):**
+
+```tsx
+import { IdentityUserLookupService } from '@abpjs/identity-pro';
+
+const lookupService = new IdentityUserLookupService(restService);
+
+const user = await lookupService.findById(userId);
+const user2 = await lookupService.findByUserName('john');
+const users = await lookupService.search({ filter: 'john', maxResultCount: 10 });
+const count = await lookupService.getCount({ filter: 'john' });
+```
+
+**IdentityClaimTypeService (Proxy):**
+
+```tsx
+import { IdentityClaimTypeService } from '@abpjs/identity-pro';
+
+const claimTypeService = new IdentityClaimTypeService(restService);
+
+const claimTypes = await claimTypeService.getList({ maxResultCount: 10 });
+const claimType = await claimTypeService.get(claimTypeId);
+const created = await claimTypeService.create({ name: 'department', valueType: IdentityClaimValueType.String });
+await claimTypeService.update(claimTypeId, { ...claimType, description: 'User department' });
+await claimTypeService.delete(claimTypeId);
+```
+
+**IdentitySecurityLogService (Proxy):**
+
+```tsx
+import { IdentitySecurityLogService } from '@abpjs/identity-pro';
+
+const securityLogService = new IdentitySecurityLogService(restService);
+
+// Admin operations (requires AbpIdentity.SecurityLogs)
+const logs = await securityLogService.getList({
+  startTime: '2026-01-01',
+  endTime: '2026-02-01',
+  action: 'LoginSucceeded',
+});
+const log = await securityLogService.get(logId);
+
+// Current user operations (no special permission)
+const myLogs = await securityLogService.getMyList({ maxResultCount: 10 });
+const myLog = await securityLogService.getMySecurityLog(logId);
+```
+
+**IdentitySettingsService (Proxy):**
+
+```tsx
+import { IdentitySettingsService } from '@abpjs/identity-pro';
+
+const settingsService = new IdentitySettingsService(restService);
+
+const settings = await settingsService.get();
+await settingsService.update({
+  password: { requiredLength: 8, requireDigit: true },
+  lockout: { maxFailedAccessAttempts: 5 },
+});
+```
+
+**OrganizationUnitService (Proxy):**
+
+```tsx
+import { OrganizationUnitService } from '@abpjs/identity-pro';
+
+const orgUnitService = new OrganizationUnitService(restService);
+
+// CRUD
+const units = await orgUnitService.getList({ maxResultCount: 100 });
+const allUnits = await orgUnitService.getAllList();
+const unit = await orgUnitService.get(unitId);
+const created = await orgUnitService.create({ displayName: 'Engineering', parentId: null });
+await orgUnitService.update(unitId, { displayName: 'Engineering Team' });
+await orgUnitService.delete(unitId);
+
+// Hierarchy
+await orgUnitService.move({ id: unitId, newParentId: parentId });
+const children = await orgUnitService.getChildren(parentId, recursive);
+
+// Members
+const members = await orgUnitService.getMembers(unitId, { maxResultCount: 10 });
+const availableUsers = await orgUnitService.getAvailableUsers(unitId, { filter: '' });
+await orgUnitService.addMembers(unitId, { userIds: ['user-1', 'user-2'] });
+await orgUnitService.removeMember(unitId, memberId);
+
+// Roles
+const roles = await orgUnitService.getRoles(unitId, { maxResultCount: 10 });
+const availableRoles = await orgUnitService.getAvailableRoles(unitId, { filter: '' });
+await orgUnitService.addRoles(unitId, { roleIds: ['role-1'] });
+await orgUnitService.removeRole(unitId, roleId);
+```
+
+**ProfileService (Proxy):**
+
+```tsx
+import { ProfileService } from '@abpjs/identity-pro';
+
+const profileService = new ProfileService(restService);
+
+const profile = await profileService.get();
+await profileService.update({ userName: 'john', email: 'john@example.com' });
+await profileService.changePassword({ currentPassword: '...', newPassword: '...' });
+```
+
+#### eIdentityTwoFactorBehaviour Enum
+
+New enum for two-factor authentication behaviour:
+
+```tsx
+import { eIdentityTwoFactorBehaviour, identityTwoFactorBehaviourOptions } from '@abpjs/identity-pro';
+
+// Available values:
+eIdentityTwoFactorBehaviour.Optional // 0 - Users can choose
+eIdentityTwoFactorBehaviour.Disabled // 1 - 2FA disabled
+eIdentityTwoFactorBehaviour.Forced   // 2 - 2FA required
+
+// For select components
+<select>
+  {identityTwoFactorBehaviourOptions.map(opt => (
+    <option key={opt.value} value={opt.value}>{opt.label}</option>
+  ))}
+</select>
+```
+
+#### IdentityClaimValueType Enum
+
+New enum for claim value types:
+
+```tsx
+import { IdentityClaimValueType, identityClaimValueTypeOptions } from '@abpjs/identity-pro';
+
+// Available values:
+IdentityClaimValueType.String   // 0
+IdentityClaimValueType.Int      // 1
+IdentityClaimValueType.Boolean  // 2
+IdentityClaimValueType.DateTime // 3
+
+// For select components
+<select>
+  {identityClaimValueTypeOptions.map(opt => (
+    <option key={opt.value} value={opt.value}>{opt.label}</option>
+  ))}
+</select>
+```
+
+#### New Proxy Models
+
+Typed DTOs for all identity operations:
+
+```tsx
+import type {
+  // Role DTOs
+  IdentityRoleDto,
+  IdentityRoleCreateDto,
+  IdentityRoleUpdateDto,
+  GetIdentityRolesInput,
+  // User DTOs
+  IdentityUserDto,
+  IdentityUserCreateDto,
+  IdentityUserUpdateDto,
+  IdentityUserUpdateRolesDto,
+  GetIdentityUsersInput,
+  // Claim Type DTOs
+  ClaimTypeDto,
+  CreateClaimTypeDto,
+  UpdateClaimTypeDto,
+  GetIdentityClaimTypesInput,
+  // Security Log DTOs
+  IdentitySecurityLogDto,
+  GetIdentitySecurityLogListInput,
+  // Settings DTOs
+  IdentitySettingsDto,
+  IdentityPasswordSettingsDto,
+  IdentityLockoutSettingsDto,
+  IdentitySignInSettingsDto,
+  IdentityUserSettingsDto,
+  IdentityTwoFactorSettingsDto,
+  // Organization Unit DTOs
+  OrganizationUnitDto,
+  OrganizationUnitCreateDto,
+  OrganizationUnitUpdateDto,
+  OrganizationUnitMoveInput,
+  OrganizationUnitAddRoleInput,
+  OrganizationUnitAddUserInput,
+  // Profile DTOs
+  ProfileDto,
+  UpdateProfileDto,
+  ChangePasswordInput,
+  // User Data
+  UserData,
+} from '@abpjs/identity-pro';
+```
+
+### New Exports
+
+**Services:**
+- `IdentityRoleService` - Role management proxy service
+- `IdentityUserService` - User management proxy service
+- `IdentityUserLookupService` - User lookup proxy service
+- `IdentityClaimTypeService` - Claim type management proxy service
+- `IdentitySecurityLogService` - Security log proxy service
+- `IdentitySettingsService` - Identity settings proxy service
+- `OrganizationUnitService` - Organization unit proxy service (updated)
+- `ProfileService` - Profile management proxy service
+
+**Enums:**
+- `eIdentityTwoFactorBehaviour` - Two-factor behaviour options
+- `identityTwoFactorBehaviourOptions` - Select options for 2FA behaviour
+- `IdentityClaimValueType` - Claim value type options
+- `identityClaimValueTypeOptions` - Select options for claim value types
+
+**Types:**
+- All proxy DTOs listed above
+- `UserData` - User data from lookup service
+
+---
+
 ## v3.1.0
 
 **February 2026**
