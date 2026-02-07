@@ -1,5 +1,198 @@
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### LanguageService (Proxy Service)
+
+A new typed proxy service for language management operations:
+
+```tsx
+import { LanguageService } from '@abpjs/language-management';
+import { useRestService } from '@abpjs/core';
+
+function useLanguages() {
+  const restService = useRestService();
+  const languageService = new LanguageService(restService);
+
+  // Get all languages
+  const allLanguages = await languageService.getAllList();
+
+  // Get languages with filtering
+  const languages = await languageService.getList({ filter: 'english' });
+
+  // Get a single language
+  const language = await languageService.get(languageId);
+
+  // Create a new language
+  const newLang = await languageService.create({
+    displayName: 'French',
+    cultureName: 'fr-FR',
+    uiCultureName: 'fr-FR',
+    flagIcon: 'fr',
+    isEnabled: true,
+  });
+
+  // Update a language
+  const updated = await languageService.update(languageId, {
+    displayName: 'Français',
+    flagIcon: 'fr',
+    isEnabled: true,
+  });
+
+  // Set as default language
+  await languageService.setAsDefault(languageId);
+
+  // Delete a language
+  await languageService.delete(languageId);
+
+  // Get available cultures
+  const cultures = await languageService.getCulturelist();
+
+  // Get localization resources
+  const resources = await languageService.getResources();
+}
+```
+
+#### LanguageTextService (Proxy Service)
+
+A new typed proxy service for language text (localization) operations:
+
+```tsx
+import { LanguageTextService } from '@abpjs/language-management';
+
+const languageTextService = new LanguageTextService(restService);
+
+// Get language texts with filtering
+const texts = await languageTextService.getList({
+  resourceName: 'AbpAccount',
+  baseCultureName: 'en',
+  targetCultureName: 'fr',
+  getOnlyEmptyValues: true,
+  maxResultCount: 50,
+});
+
+// Update a language text
+await languageTextService.update({
+  resourceName: 'AbpAccount',
+  cultureName: 'fr',
+  name: 'Login',
+  value: 'Connexion',
+});
+
+// Restore a language text to default value
+await languageTextService.restoreToDefault({
+  resourceName: 'AbpAccount',
+  cultureName: 'fr',
+  name: 'Login',
+});
+```
+
+#### New Proxy Models
+
+Typed DTOs for all language management operations:
+
+```tsx
+import type {
+  // Language DTOs
+  LanguageDto,
+  CreateLanguageDto,
+  UpdateLanguageDto,
+  // Language Text DTOs
+  LanguageTextDto,
+  GetLanguagesTextsInput,
+  // Other DTOs
+  CultureInfoDto,
+  LanguageResourceDto,
+} from '@abpjs/language-management';
+
+// LanguageDto
+interface LanguageDto {
+  id: string;
+  cultureName: string;
+  uiCultureName: string;
+  displayName: string;
+  flagIcon: string;
+  isEnabled: boolean;
+  isDefaultLanguage: boolean;
+  creationTime?: string | Date;
+  creatorId?: string;
+  extraProperties?: Record<string, unknown>;
+}
+
+// LanguageTextDto
+interface LanguageTextDto {
+  resourceName: string;
+  cultureName: string;
+  baseCultureName: string;
+  baseValue: string;
+  name: string;
+  value: string;
+}
+
+// CultureInfoDto
+interface CultureInfoDto {
+  displayName: string;
+  name: string;
+}
+
+// LanguageResourceDto
+interface LanguageResourceDto {
+  name: string;
+}
+```
+
+#### Updated State Interface
+
+The `LanguageManagement.State` interface now uses the new proxy DTOs:
+
+```tsx
+import type { LanguageManagement, LanguageDto, LanguageTextDto } from '@abpjs/language-management';
+import type { ListResultDto, PagedResultDto } from '@abpjs/core';
+
+interface State {
+  languages: ListResultDto<LanguageDto>;
+  languageTexts: PagedResultDto<LanguageTextDto>;
+  cultures: CultureInfoDto[];
+  resources: LanguageResourceDto[];
+}
+```
+
+### Deprecations
+
+The following legacy types are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `LanguageManagement.Language` | `LanguageDto` |
+| `LanguageManagement.LanguageResponse` | `ListResultDto<LanguageDto>` |
+| `LanguageManagement.CreateLanguageInput` | `CreateLanguageDto` |
+| `LanguageManagement.UpdateLanguageInput` | `UpdateLanguageDto` |
+| `LanguageManagement.LanguageText` | `LanguageTextDto` |
+| `LanguageManagement.LanguageTextResponse` | `PagedResultDto<LanguageTextDto>` |
+| `LanguageManagement.Culture` | `CultureInfoDto` |
+| `LanguageManagement.Resource` | `LanguageResourceDto` |
+
+### New Exports
+
+**Services:**
+- `LanguageService` - Typed proxy service for language operations
+- `LanguageTextService` - Typed proxy service for language text operations
+
+**Types:**
+- `LanguageDto` - Language data transfer object
+- `CreateLanguageDto` - DTO for creating languages
+- `UpdateLanguageDto` - DTO for updating languages
+- `LanguageTextDto` - Language text data transfer object
+- `GetLanguagesTextsInput` - Input for querying language texts
+- `CultureInfoDto` - Culture information DTO
+- `LanguageResourceDto` - Language resource DTO
+
+---
+
 ## v3.1.0
 
 **February 2026**
