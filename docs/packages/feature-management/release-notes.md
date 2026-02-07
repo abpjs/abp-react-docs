@@ -4,6 +4,81 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Removed Deprecated Legacy Models
+
+The following deprecated types from the `FeatureManagement` namespace have been removed (deprecated in v3.2.0):
+
+| Removed | Replacement |
+|---------|-------------|
+| `FeatureManagement.State` | `GetFeatureListResultDto` |
+| `FeatureManagement.ValueType` | `IStringValueType` |
+| `FeatureManagement.Feature` | `FeatureDto` |
+| `FeatureManagement.Features` | `UpdateFeaturesDto` |
+| `FeatureManagement.Provider` | `FeatureProviderDto` |
+
+```tsx
+// Before (v3.2.0)
+import { FeatureManagement } from '@abpjs/feature-management';
+const feature: FeatureManagement.Feature = { name: '...', value: '...' };
+
+// After (v4.0.0)
+import type { FeatureDto } from '@abpjs/feature-management';
+const feature: FeatureDto = { name: '...', value: '...' };
+```
+
+#### Removed `FeatureManagementService`
+
+The deprecated `FeatureManagementService` has been removed. Use `FeaturesService` (added in v3.2.0) instead:
+
+```tsx
+// Before (v3.2.0)
+import { FeatureManagementService } from '@abpjs/feature-management';
+const service = new FeatureManagementService(restService);
+const result = await service.getFeatures({ providerKey, providerName });
+
+// After (v4.0.0)
+import { FeaturesService } from '@abpjs/feature-management';
+const service = new FeaturesService(restService);
+const result = await service.get(providerName, providerKey);
+```
+
+#### `useFeatureManagement` Hook Changes
+
+The hook now uses `FeaturesService` internally and returns grouped features:
+
+```tsx
+// Before (v3.2.0)
+const { features, fetchFeatures, saveFeatures } = useFeatureManagement();
+// features: FeatureManagement.Feature[]
+
+// After (v4.0.0)
+const { groups, features, fetchFeatures, saveFeatures } = useFeatureManagement();
+// groups: FeatureGroupDto[]    ← NEW: features organized by group
+// features: FeatureDto[]       ← still available as flat list
+```
+
+**New return property:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `groups` | `FeatureGroupDto[]` | Features organized by group |
+
+**Changed return type:**
+
+| Property | Before | After |
+|----------|--------|-------|
+| `features` | `FeatureManagement.Feature[]` | `FeatureDto[]` |
+
+The `FeatureDto` type includes additional fields like `depth`, `parentName`, `description`, `displayName`, and `provider` compared to the old `Feature` type, but the core `name` and `value` fields are the same.
+
+---
+
 ## v3.2.0
 
 **February 2026**

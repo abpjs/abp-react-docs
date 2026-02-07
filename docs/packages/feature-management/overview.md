@@ -56,15 +56,16 @@ In ABP Framework, **Features** are a way to enable/disable or configure function
 
 | Service | Description |
 |---------|-------------|
-| `FeatureManagementService` | Direct API interaction |
+| `FeaturesService` | Proxy service for feature management API (v3.2.0+) |
 
 ### Models
 
 | Model | Description |
 |-------|-------------|
-| `FeatureManagement.Feature` | Feature definition |
-| `FeatureManagement.Provider` | Provider info (name and key) |
-| `FeatureManagement.ValueType` | Feature value type definition |
+| `FeatureDto` | Feature definition (v3.2.0+) |
+| `FeatureGroupDto` | Feature group with nested features (v3.2.0+) |
+| `FeatureProviderDto` | Provider info (name and key) (v3.2.0+) |
+| `GetFeatureListResultDto` | Result of fetching features (v3.2.0+) |
 
 ## Feature Providers
 
