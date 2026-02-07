@@ -52,7 +52,9 @@ npm install @abpjs/core @abpjs/theme-shared @chakra-ui/react
 
 | Service | Description |
 |---------|-------------|
-| `AuditLoggingService` | API service for audit log operations |
+| `AuditLogsService` | Proxy service for audit logging API (v3.2.0+) |
+| `AuditLoggingStateService` | State management with dispatch methods (v2.0.0) |
+| `EntityChangeModalService` | Entity change detail/history modals (v3.0.0) |
 
 ### Constants
 
@@ -123,19 +125,19 @@ function CustomAuditLogs() {
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `auditLogs` | `AuditLogging.Log[]` | List of audit logs |
+| `auditLogs` | `AuditLogDto[]` | List of audit logs |
 | `totalCount` | `number` | Total count for pagination |
-| `selectedLog` | `AuditLogging.Log \| null` | Currently selected log |
+| `selectedLog` | `AuditLogDto \| null` | Currently selected log |
 | `isLoading` | `boolean` | Loading state |
 | `error` | `string \| null` | Error message |
-| `averageExecutionStats` | `Statistics.Data` | Execution duration statistics |
-| `errorRateStats` | `Statistics.Data` | Error rate statistics |
+| `averageExecutionStats` | `Record<string, number>` | Execution duration statistics |
+| `errorRateStats` | `Record<string, number>` | Error rate statistics |
 | `sortKey` | `string` | Current sort field |
 | `sortOrder` | `'asc' \| 'desc' \| ''` | Sort direction |
-| `fetchAuditLogs` | `function` | Fetch audit logs with params |
-| `getAuditLogById` | `function` | Get single log by ID |
-| `fetchAverageExecutionStats` | `function` | Fetch execution stats |
-| `fetchErrorRateStats` | `function` | Fetch error rate stats |
+| `fetchAuditLogs` | `(params?: GetAuditLogListDto) => Promise` | Fetch audit logs with params |
+| `getAuditLogById` | `(id: string) => Promise` | Get single log by ID |
+| `fetchAverageExecutionStats` | `(params: GetAverageExecutionDurationPerDayInput) => Promise` | Fetch execution stats |
+| `fetchErrorRateStats` | `(params: GetErrorRateFilter) => Promise` | Fetch error rate stats |
 | `setSelectedLog` | `function` | Set selected log |
 | `setSortKey` | `function` | Update sort field |
 | `setSortOrder` | `function` | Update sort direction |
@@ -143,69 +145,45 @@ function CustomAuditLogs() {
 
 ## Service Methods
 
-The `AuditLoggingService` provides the following methods:
+The `AuditLogsService` provides the following methods:
 
 | Method | Parameters | Returns | Description |
 |--------|------------|---------|-------------|
-| `getAuditLogs` | `params?: AuditLogsQueryParams` | `Promise<Response>` | Get paginated audit logs |
-| `getAuditLogById` | `id: string` | `Promise<Log>` | Get single audit log |
-| `getAverageExecutionDurationPerDayStatistics` | `params?: Filter` | `Promise<Statistics.Response>` | Get execution duration stats |
-| `getErrorRateStatistics` | `params?: Filter` | `Promise<Statistics.Response>` | Get error rate stats |
+| `getList` | `params?: GetAuditLogListDto` | `Promise<PagedResultDto<AuditLogDto>>` | Get paginated audit logs |
+| `get` | `id: string` | `Promise<AuditLogDto>` | Get single audit log |
+| `getAverageExecutionDurationPerDay` | `params: GetAverageExecutionDurationPerDayInput` | `Promise<GetAverageExecutionDurationPerDayOutput>` | Get execution duration stats |
+| `getErrorRate` | `params: GetErrorRateFilter` | `Promise<GetErrorRateOutput>` | Get error rate stats |
+| `getEntityChange` | `id: string` | `Promise<EntityChangeDto>` | Get single entity change |
+| `getEntityChangeWithUsername` | `id: string` | `Promise<EntityChangeWithUsernameDto>` | Get entity change with username |
+| `getEntityChanges` | `params: GetEntityChangesDto` | `Promise<PagedResultDto<EntityChangeDto>>` | Get paginated entity changes |
+| `getEntityChangesWithUsername` | `params: EntityChangeFilter` | `Promise<EntityChangeWithUsernameDto[]>` | Get entity changes with username |
 
 ## Query Parameters
 
-Filter audit logs with these parameters:
+Filter audit logs with `GetAuditLogListDto`:
 
 ```tsx
-interface AuditLogsQueryParams {
+import type { GetAuditLogListDto } from '@abpjs/audit-logging';
+
+const params: GetAuditLogListDto = {
   // Pagination
-  skipCount?: number;
-  maxResultCount?: number;
-  sorting?: string;
+  skipCount: 0,
+  maxResultCount: 10,
+  sorting: 'executionTime desc',
 
   // Filters
-  url?: string;
-  userName?: string;
-  applicationName?: string;
-  correlationId?: string;
-  httpMethod?: string;
-  httpStatusCode?: number;
-  minExecutionDuration?: number;
-  maxExecutionDuration?: number;
-  hasException?: boolean;
-  startTime?: string;
-  endTime?: string;
-}
-```
-
-## Audit Log Structure
-
-Each audit log contains:
-
-```tsx
-interface Log {
-  id: string;
-  userId: string;
-  userName: string;
-  tenantId: string;
-  impersonatorUserId: string;
-  impersonatorTenantId: string;
-  executionTime: string;
-  executionDuration: number;
-  clientIpAddress: string;
-  clientName: string;
-  browserInfo: string;
-  httpMethod: string;
-  url: string;
-  exceptions: string;
-  comments: string;
-  httpStatusCode: number;
-  applicationName: string;
-  correlationId: string;
-  extraProperties: Record<string, unknown>;
-  entityChanges: EntityChange[];
-  actions: AuditLogAction[];
-}
+  url: '/api/users',
+  userName: 'admin',
+  applicationName: 'MyApp',
+  correlationId: 'abc-123',
+  httpMethod: 'POST',
+  httpStatusCode: 200,
+  minExecutionDuration: 100,
+  maxExecutionDuration: 5000,
+  hasException: false,
+  startTime: '2026-01-01T00:00:00Z',
+  endTime: '2026-01-31T23:59:59Z',
+};
 ```
 
 ## Routes
@@ -231,24 +209,25 @@ import { HTTP_METHODS, HTTP_STATUS_CODES } from '@abpjs/audit-logging';
 
 ```tsx
 import type {
-  AuditLogging,
-  Statistics,
+  // Audit Log DTOs
+  AuditLogDto,
+  AuditLogActionDto,
+  GetAuditLogListDto,
+  // Entity Change DTOs
+  EntityChangeDto,
+  EntityChangeWithUsernameDto,
+  EntityPropertyChangeDto,
+  GetEntityChangesDto,
+  EntityChangeFilter,
+  // Statistics DTOs
+  GetAverageExecutionDurationPerDayInput,
+  GetAverageExecutionDurationPerDayOutput,
+  GetErrorRateFilter,
+  GetErrorRateOutput,
+  // State
+  AuditLogging,  // AuditLogging.State
   HttpStatusCode,
 } from '@abpjs/audit-logging';
-
-// AuditLogging namespace contains:
-// - AuditLogging.State
-// - AuditLogging.Response
-// - AuditLogging.Log
-// - AuditLogging.EntityChange
-// - AuditLogging.PropertyChange
-// - AuditLogging.AuditLogAction
-// - AuditLogging.AuditLogsQueryParams
-
-// Statistics namespace contains:
-// - Statistics.Filter
-// - Statistics.Data
-// - Statistics.Response
 ```
 
 ## Required Policies
@@ -269,3 +248,4 @@ The audit logging module requires the following ABP policies:
 
 - [Core Module](../core/overview)
 - [Theme Shared](../theme-shared/overview)
+- [Release Notes](./release-notes) - Version history

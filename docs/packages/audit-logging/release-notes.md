@@ -4,6 +4,124 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Removed: `AuditLoggingService`
+
+The deprecated `AuditLoggingService` has been deleted. Use `AuditLogsService` (proxy service) instead:
+
+```diff
+- import { AuditLoggingService } from '@abpjs/audit-logging';
++ import { AuditLogsService } from '@abpjs/audit-logging';
+
+- const service = new AuditLoggingService(restService);
+- await service.getAuditLogs(params);
+- await service.getAuditLogById(id);
+- await service.getAverageExecutionDurationPerDayStatistics(params);
+- await service.getErrorRateStatistics(params);
++ const service = new AuditLogsService(restService);
++ await service.getList(params);
++ await service.get(id);
++ await service.getAverageExecutionDurationPerDay(params);
++ await service.getErrorRate(params);
+```
+
+#### Removed: `EntityChangeService`
+
+The deprecated `EntityChangeService` has been deleted. Use `AuditLogsService` methods instead:
+
+```diff
+- import { EntityChangeService } from '@abpjs/audit-logging';
++ import { AuditLogsService } from '@abpjs/audit-logging';
+
+- const service = new EntityChangeService(restService);
+- await service.getEntityChangeWithUserNameById(id);
+- await service.getEntityChangesWithUserName(entityId, entityTypeFullName);
++ const service = new AuditLogsService(restService);
++ await service.getEntityChangeWithUsername(id);
++ await service.getEntityChangesWithUsername({ entityId, entityTypeFullName });
+```
+
+#### Removed: Legacy Types
+
+The following deprecated types have been removed:
+
+| Removed Type | Replacement |
+|-------------|-------------|
+| `AuditLogging.Response` | `PagedResultDto<AuditLogDto>` from `@abpjs/core` |
+| `AuditLogging.AuditLogsQueryParams` | `GetAuditLogListDto` |
+| `AuditLogging.Log` | `AuditLogDto` |
+| `AuditLogging.EntityChange` | `EntityChangeDto` |
+| `AuditLogging.PropertyChange` | `EntityPropertyChangeDto` |
+| `AuditLogging.AuditLogAction` | `AuditLogActionDto` |
+| `Statistics.Filter` | `GetAverageExecutionDurationPerDayInput` / `GetErrorRateFilter` |
+| `Statistics.Data` | `Record<string, number>` |
+| `Statistics.Response` | `GetAverageExecutionDurationPerDayOutput` / `GetErrorRateOutput` |
+| `EntityChange` namespace (all types) | Proxy DTOs (`EntityChangeDto`, `EntityChangeWithUsernameDto`, etc.) |
+
+#### Changed: `useAuditLogs` Hook Types
+
+All types in the hook's interface now use proxy DTOs:
+
+| Property / Method | Old Type | New Type |
+|-------------------|----------|----------|
+| `auditLogs` | `AuditLogging.Log[]` | `AuditLogDto[]` |
+| `selectedLog` | `AuditLogging.Log \| null` | `AuditLogDto \| null` |
+| `averageExecutionStats` | `Statistics.Data` | `Record<string, number>` |
+| `errorRateStats` | `Statistics.Data` | `Record<string, number>` |
+| `fetchAuditLogs()` | `AuditLogging.AuditLogsQueryParams` | `GetAuditLogListDto` |
+| `getAuditLogById()` returns | `AuditLogging.Log` | `AuditLogDto` |
+| `fetchAverageExecutionStats()` | `Statistics.Filter` (optional) | `GetAverageExecutionDurationPerDayInput` (required) |
+| `fetchErrorRateStats()` | `Statistics.Filter` (optional) | `GetErrorRateFilter` (required) |
+
+Note: `fetchAverageExecutionStats` and `fetchErrorRateStats` parameters are now **required** instead of optional.
+
+#### Changed: `AuditLoggingStateService`
+
+The state service now uses `AuditLogsService` internally. Method signatures updated:
+
+- `dispatchGetAuditLogs()` — accepts `GetAuditLogListDto`, returns `PagedResultDto<AuditLogDto>`
+- `dispatchGetAverageExecutionDurationPerDay()` — accepts `GetAverageExecutionDurationPerDayInput` (required), returns `GetAverageExecutionDurationPerDayOutput`
+- `dispatchGetErrorRate()` — accepts `GetErrorRateFilter` (required), returns `GetErrorRateOutput`
+- `getResult()` — returns `PagedResultDto<AuditLogDto>`
+- `getAverageExecutionStatistics()` / `getErrorRateStatistics()` — return `Record<string, number>`
+
+#### Changed: `EntityChangeModalService`
+
+The constructor now accepts `AuditLogsService` instead of `EntityChangeService`:
+
+```diff
+- import { EntityChangeModalService, EntityChangeService } from '@abpjs/audit-logging';
++ import { EntityChangeModalService, AuditLogsService } from '@abpjs/audit-logging';
+
+- const entityChangeService = new EntityChangeService(restService);
+- const modalService = new EntityChangeModalService(entityChangeService);
++ const auditLogsService = new AuditLogsService(restService);
++ const modalService = new EntityChangeModalService(auditLogsService);
+```
+
+Callback types updated:
+- `EntityChangeDetailsCallback` — uses `EntityChangeWithUsernameDto` instead of `EntityChange.ItemWithUserName`
+- `EntityChangeHistoryCallback` — uses `EntityChangeWithUsernameDto[]` instead of `EntityChange.ItemWithUserName[]`
+
+#### Changed: Extension Token Types
+
+All extension type references updated from namespace types to proxy DTOs:
+
+| Token/Type | Old | New |
+|------------|-----|-----|
+| Entity actions (AuditLogs) | `EntityAction<AuditLogging.Log>` | `EntityAction<AuditLogDto>` |
+| Entity actions (EntityChanges) | `EntityAction<EntityChange.Item>` | `EntityAction<EntityChangeDto>` |
+| Toolbar actions | `ToolbarAction<AuditLogging.Log[]>` | `ToolbarAction<AuditLogDto[]>` |
+| Entity props | `EntityProp<AuditLogging.Log>` | `EntityProp<AuditLogDto>` |
+| Contributor callbacks | `AuditLogging.Log` / `EntityChange.Item` | `AuditLogDto` / `EntityChangeDto` |
+
+---
+
 ## v3.2.0
 
 **February 2026**
