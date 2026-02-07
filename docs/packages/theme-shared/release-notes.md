@@ -4,6 +4,150 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### New Features
+
+#### Suppress Unsaved Changes Warning
+
+New token, context, and hook for controlling unsaved changes warnings in modals:
+
+```tsx
+import {
+  SUPPRESS_UNSAVED_CHANGES_WARNING,
+  SuppressUnsavedChangesWarningContext,
+  useSuppressUnsavedChangesWarning,
+} from '@abpjs/theme-shared';
+
+// Use the hook to check the current value
+function MyForm() {
+  const suppressWarning = useSuppressUnsavedChangesWarning();
+
+  if (suppressWarning) {
+    // Skip unsaved changes check
+  }
+}
+
+// Provide the context to suppress warnings for a section
+function MyPage() {
+  return (
+    <SuppressUnsavedChangesWarningContext.Provider value={true}>
+      <MyForm />
+    </SuppressUnsavedChangesWarningContext.Provider>
+  );
+}
+```
+
+#### Modal `suppressUnsavedChangesWarning` Prop
+
+The Modal component now supports a `suppressUnsavedChangesWarning` prop:
+
+```tsx
+import { Modal } from '@abpjs/theme-shared';
+
+<Modal
+  isOpen={isOpen}
+  onClose={onClose}
+  suppressUnsavedChangesWarning={true} // Close without prompting
+>
+  <p>Form content...</p>
+</Modal>
+```
+
+#### `Toaster.ToasterId` Type
+
+New type for toast identifiers that accepts both string and number:
+
+```tsx
+import { Toaster } from '@abpjs/theme-shared';
+
+const id: Toaster.ToasterId = toaster.info('Hello'); // string | number
+```
+
+#### `Toaster.Service` Interface
+
+New contract interface for toaster service implementations:
+
+```tsx
+import { Toaster } from '@abpjs/theme-shared';
+
+// Toaster.Service defines the public API that any toaster implementation must satisfy
+const service: Toaster.Service = {
+  show: (message, title, severity, options) => { /* ... */ },
+  info: (message, title?, options?) => { /* ... */ },
+  success: (message, title?, options?) => { /* ... */ },
+  warn: (message, title?, options?) => { /* ... */ },
+  error: (message, title?, options?) => { /* ... */ },
+  remove: (id) => { /* ... */ },
+  clear: (containerKey?) => { /* ... */ },
+};
+```
+
+#### Enhanced Form Validation Styles
+
+`DEFAULT_STYLES` now includes an error icon SVG for `.is-invalid .form-control` inputs, providing visual feedback on invalid form fields without additional code.
+
+#### Typeahead Dropdown Styles
+
+New `.abp-typeahead-window` CSS class in `DEFAULT_STYLES` for full-width typeahead dropdowns.
+
+### API Changes
+
+#### Toaster Methods Return `Toaster.ToasterId`
+
+All toaster methods (`info`, `success`, `warn`, `error`, `show`) now return `Toaster.ToasterId` (which is `string | number`) instead of just `number`:
+
+```tsx
+// Before (v3.2.0)
+const id: number = toaster.info('Hello');
+
+// After (v4.0.0)
+const id: Toaster.ToasterId = toaster.info('Hello'); // string | number
+```
+
+#### `clear()` Parameter Renamed
+
+The `clear()` method parameter has been renamed from `key` to `containerKey`:
+
+```tsx
+// Before (v3.2.0)
+toaster.clear('my-container'); // parameter was named 'key'
+
+// After (v4.0.0)
+toaster.clear('my-container'); // parameter is now named 'containerKey'
+```
+
+This is a naming-only change; the behavior is identical.
+
+#### `LocalizationParam` Import Change
+
+All service method signatures now use the standalone `LocalizationParam` type instead of `Config.LocalizationParam`. The type itself is identical — this only affects users who were importing `Config.LocalizationParam` for type annotations:
+
+```tsx
+// Before (v3.2.0)
+import type { Config } from '@abpjs/core';
+const message: Config.LocalizationParam = 'Hello';
+
+// After (v4.0.0) - standalone import is preferred
+import type { LocalizationParam } from '@abpjs/core';
+const message: LocalizationParam = 'Hello';
+```
+
+`Config.LocalizationParam` still works as a type alias but is deprecated.
+
+### New Exports
+
+- `SUPPRESS_UNSAVED_CHANGES_WARNING` - Token name constant
+- `SuppressUnsavedChangesWarningContext` - React context for suppress flag
+- `useSuppressUnsavedChangesWarning()` - Hook to read the suppress flag
+- `Toaster.ToasterId` - Type for toast identifiers (`string | number`)
+- `Toaster.Service` - Contract interface for toaster implementations
+- `ToasterContract` - `Strict<ToasterService, Toaster.Service>` type
+
+---
+
 ## v3.2.0
 
 **February 2026**

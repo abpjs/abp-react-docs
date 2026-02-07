@@ -49,13 +49,17 @@ function DeleteButton() {
 
 ```tsx
 interface ConfirmationOptions {
-  yesText?: Config.LocalizationParam;    // Default: 'Yes' (localized)
-  cancelText?: Config.LocalizationParam; // Default: 'Cancel' (localized)
+  yesText?: LocalizationParam;    // Default: 'Yes' (localized)
+  cancelText?: LocalizationParam; // Default: 'Cancel' (localized)
   hideYesBtn?: boolean;    // Hide confirm button
   hideCancelBtn?: boolean; // Hide cancel button
-  closable?: boolean;      // Allow dismiss via escape/click outside (v2.0.0)
+  dismissible?: boolean;   // Allow dismiss via escape/click outside
 }
 ```
+
+:::note v4.0.0
+`yesText` and `cancelText` now use the standalone `LocalizationParam` type from `@abpjs/core` instead of `Config.LocalizationParam`. The type is identical.
+:::
 
 :::warning Breaking Change (v2.0.0)
 The deprecated `yesCopy` and `cancelCopy` properties have been removed. Use `yesText` and `cancelText` instead.
@@ -308,7 +312,7 @@ function BulkActions({ selectedItems }) {
 
 ## Localization Support (v1.1.0)
 
-Button text now accepts `Config.LocalizationParam` for automatic localization:
+Button text accepts `LocalizationParam` for automatic localization (v4.0.0: use `LocalizationParam` from `@abpjs/core`):
 
 ```tsx
 const status = await confirmation.warn(

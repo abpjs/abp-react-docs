@@ -39,17 +39,21 @@ function NotificationExample() {
 
 | Method | Parameters | Returns | Description |
 |--------|------------|---------|-------------|
-| `success` | `(message, title?, options?)` | `number` | Show success toast |
-| `error` | `(message, title?, options?)` | `number` | Show error toast |
-| `warn` | `(message, title?, options?)` | `number` | Show warning toast |
-| `info` | `(message, title?, options?)` | `number` | Show info toast |
-| `show` | `(message, title?, severity?, options?)` | `number` | Show toast with specified severity (v2.0.0) |
+| `success` | `(message, title?, options?)` | `Toaster.ToasterId` | Show success toast |
+| `error` | `(message, title?, options?)` | `Toaster.ToasterId` | Show error toast |
+| `warn` | `(message, title?, options?)` | `Toaster.ToasterId` | Show warning toast |
+| `info` | `(message, title?, options?)` | `Toaster.ToasterId` | Show info toast |
+| `show` | `(message, title?, severity?, options?)` | `Toaster.ToasterId` | Show toast with specified severity (v2.0.0) |
 | `clear` | `(containerKey?: string)` | `void` | Clear all toasts (or by container key) |
 | `remove` | `(id: number)` | `void` | Remove specific toast |
 | `subscribe` | `(callback)` | `() => void` | Subscribe to toast updates (v2.0.0) |
 
 :::note
-Since v1.1.0, `message` and `title` accept `Config.LocalizationParam` (string or `{ key, defaultValue }`).
+`message` and `title` accept `LocalizationParam` (string or `{ key, defaultValue }`). Since v4.0.0 use the standalone `LocalizationParam` import from `@abpjs/core` instead of `Config.LocalizationParam`.
+:::
+
+:::note v4.0.0
+Methods now return `Toaster.ToasterId` (`string | number`) instead of `number`. Existing code using `number` will continue to work.
 :::
 
 :::warning Breaking Change (v2.0.0)
@@ -239,7 +243,7 @@ function Form() {
 
 ## Localization Support (v1.1.0)
 
-Toast messages and titles now accept `Config.LocalizationParam` for automatic localization:
+Toast messages and titles accept `LocalizationParam` for automatic localization (v4.0.0: use `LocalizationParam` from `@abpjs/core`):
 
 ```tsx
 import { useToaster } from '@abpjs/theme-shared';
