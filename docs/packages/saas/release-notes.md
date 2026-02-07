@@ -1,5 +1,205 @@
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### TenantService (Proxy Service)
+
+A new typed proxy service for tenant management operations:
+
+```tsx
+import { TenantService } from '@abpjs/saas';
+import { useRestService } from '@abpjs/core';
+
+function useTenants() {
+  const restService = useRestService();
+  const tenantService = new TenantService(restService);
+
+  // Get paginated list of tenants
+  const tenants = await tenantService.getList({
+    filter: 'acme',
+    getEditionNames: true,
+    skipCount: 0,
+    maxResultCount: 10,
+  });
+
+  // Get a single tenant
+  const tenant = await tenantService.get(tenantId);
+
+  // Create a new tenant
+  const newTenant = await tenantService.create({
+    name: 'Acme Corp',
+    editionId: 'edition-id',
+    adminEmailAddress: 'admin@acme.com',
+    adminPassword: 'SecurePassword123!',
+  });
+
+  // Update a tenant
+  const updated = await tenantService.update(tenantId, {
+    name: 'Acme Corporation',
+    editionId: 'new-edition-id',
+  });
+
+  // Delete a tenant
+  await tenantService.delete(tenantId);
+
+  // Connection string management
+  const connStr = await tenantService.getDefaultConnectionString(tenantId);
+  await tenantService.updateDefaultConnectionString(tenantId, 'Server=...;Database=TenantDb');
+  await tenantService.deleteDefaultConnectionString(tenantId);
+}
+```
+
+#### EditionService (Proxy Service)
+
+A new typed proxy service for edition management operations:
+
+```tsx
+import { EditionService } from '@abpjs/saas';
+
+const editionService = new EditionService(restService);
+
+// Get paginated list of editions
+const editions = await editionService.getList({
+  filter: 'standard',
+  skipCount: 0,
+  maxResultCount: 10,
+});
+
+// Get a single edition
+const edition = await editionService.get(editionId);
+
+// Create a new edition
+const newEdition = await editionService.create({
+  displayName: 'Standard Plan',
+});
+
+// Update an edition
+const updated = await editionService.update(editionId, {
+  displayName: 'Premium Plan',
+});
+
+// Delete an edition
+await editionService.delete(editionId);
+
+// Get usage statistics
+const stats = await editionService.getUsageStatistics();
+// Returns: { data: { 'Edition1': 10, 'Edition2': 25, ... } }
+```
+
+#### New Proxy Models
+
+Typed DTOs for all SaaS operations:
+
+```tsx
+import type {
+  // Edition DTOs
+  EditionDto,
+  EditionCreateDto,
+  EditionUpdateDto,
+  EditionCreateOrUpdateDtoBase,
+  GetEditionsInput,
+  // Tenant DTOs
+  SaasTenantDto,
+  SaasTenantCreateDto,
+  SaasTenantUpdateDto,
+  SaasTenantCreateOrUpdateDtoBase,
+  GetTenantsInput,
+  // Statistics
+  GetEditionUsageStatisticsResult,
+} from '@abpjs/saas';
+
+// EditionDto
+interface EditionDto {
+  id: string;
+  displayName: string;
+  concurrencyStamp?: string;
+  creationTime?: string | Date;
+  creatorId?: string;
+  extraProperties?: Record<string, unknown>;
+}
+
+// SaasTenantDto
+interface SaasTenantDto {
+  id: string;
+  name: string;
+  editionId?: string;
+  editionName?: string;
+  concurrencyStamp?: string;
+  creationTime?: string | Date;
+  creatorId?: string;
+  extraProperties?: Record<string, unknown>;
+}
+
+// SaasTenantCreateDto
+interface SaasTenantCreateDto {
+  name: string;
+  editionId?: string;
+  adminEmailAddress: string;
+  adminPassword: string;
+  extraProperties?: Record<string, unknown>;
+}
+```
+
+#### Updated State Interface
+
+The `Saas.State` interface now uses the new proxy DTOs:
+
+```tsx
+import type { Saas, EditionDto, SaasTenantDto } from '@abpjs/saas';
+import type { PagedResultDto } from '@abpjs/core';
+
+interface State {
+  tenants: PagedResultDto<SaasTenantDto>;
+  editions: PagedResultDto<EditionDto>;
+  latestTenants: SaasTenantDto[];
+  usageStatistics: GetEditionUsageStatisticsResult;
+}
+```
+
+### Deprecations
+
+The following legacy types are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `Saas.Tenant` | `SaasTenantDto` |
+| `Saas.TenantsResponse` | `PagedResultDto<SaasTenantDto>` |
+| `Saas.CreateTenantRequest` | `SaasTenantCreateDto` |
+| `Saas.UpdateTenantRequest` | `SaasTenantUpdateDto` |
+| `Saas.Edition` | `EditionDto` |
+| `Saas.EditionsResponse` | `PagedResultDto<EditionDto>` |
+| `Saas.CreateEditionRequest` | `EditionCreateDto` |
+| `Saas.UpdateEditionRequest` | `EditionUpdateDto` |
+
+### New Exports
+
+**Services:**
+- `TenantService` - Typed proxy service for tenant operations
+- `EditionService` - Typed proxy service for edition operations
+
+**Edition Types:**
+- `EditionDto` - Edition data transfer object
+- `EditionCreateDto` - DTO for creating editions
+- `EditionUpdateDto` - DTO for updating editions
+- `EditionCreateOrUpdateDtoBase` - Base DTO for edition operations
+- `GetEditionsInput` - Input for querying editions
+
+**Tenant Types:**
+- `SaasTenantDto` - Tenant data transfer object
+- `SaasTenantCreateDto` - DTO for creating tenants
+- `SaasTenantUpdateDto` - DTO for updating tenants
+- `SaasTenantCreateOrUpdateDtoBase` - Base DTO for tenant operations
+- `GetTenantsInput` - Input for querying tenants
+
+**Statistics Types:**
+- `GetEditionUsageStatisticsResult` - Result type for usage statistics
+
+---
+
 ## v3.1.0
 
 **February 2026**
