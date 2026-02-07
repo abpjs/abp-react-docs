@@ -4,6 +4,155 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### TenantService (Proxy Service)
+
+A new typed proxy service for tenant management API operations:
+
+```tsx
+import { TenantService } from '@abpjs/tenant-management';
+import { useRestService } from '@abpjs/core';
+
+function useTenants() {
+  const restService = useRestService();
+  const tenantService = new TenantService(restService);
+
+  // Get paginated list of tenants
+  const tenants = await tenantService.getList({
+    filter: 'acme',
+    skipCount: 0,
+    maxResultCount: 10,
+  });
+
+  // Create a new tenant
+  const tenant = await tenantService.create({
+    name: 'Acme Corp',
+    adminEmailAddress: 'admin@acme.com',
+    adminPassword: 'SecurePassword123!',
+  });
+
+  // Get a tenant by ID
+  const existingTenant = await tenantService.get(tenantId);
+
+  // Update a tenant
+  const updated = await tenantService.update(tenantId, {
+    name: 'Acme Corporation',
+  });
+
+  // Delete a tenant
+  await tenantService.delete(tenantId);
+}
+```
+
+#### Connection String Management
+
+The `TenantService` includes methods for managing tenant connection strings:
+
+```tsx
+import { TenantService } from '@abpjs/tenant-management';
+
+const tenantService = new TenantService(restService);
+
+// Get the default connection string for a tenant
+const connectionString = await tenantService.getDefaultConnectionString(tenantId);
+
+// Update the default connection string (separate database)
+await tenantService.updateDefaultConnectionString(
+  tenantId,
+  'Server=myserver;Database=TenantDb;...'
+);
+
+// Delete the default connection string (use shared database)
+await tenantService.deleteDefaultConnectionString(tenantId);
+```
+
+#### New Proxy Models
+
+Typed DTOs for all tenant operations:
+
+```tsx
+import type {
+  TenantDto,
+  TenantCreateDto,
+  TenantUpdateDto,
+  GetTenantsInput,
+} from '@abpjs/tenant-management';
+
+// TenantDto - extends ExtensibleEntityDto<string>
+interface TenantDto {
+  id: string;
+  name: string;
+  extraProperties?: Record<string, unknown>;
+}
+
+// TenantCreateDto - includes admin credentials
+interface TenantCreateDto {
+  name: string;
+  adminEmailAddress: string;
+  adminPassword: string;
+  extraProperties?: Record<string, unknown>;
+}
+
+// TenantUpdateDto - only name is updatable
+interface TenantUpdateDto {
+  name: string;
+  extraProperties?: Record<string, unknown>;
+}
+
+// GetTenantsInput - includes filter and pagination
+interface GetTenantsInput {
+  filter: string;
+  skipCount?: number;
+  maxResultCount?: number;
+  sorting?: string;
+}
+```
+
+#### Updated State Interface
+
+The `TenantManagement.State` interface now uses the new proxy DTOs:
+
+```tsx
+import type { TenantManagement, TenantDto } from '@abpjs/tenant-management';
+import type { PagedResultDto } from '@abpjs/core';
+
+interface State {
+  result: PagedResultDto<TenantDto>;
+  selectedItem: TenantDto;
+}
+```
+
+### Deprecations
+
+The following legacy types are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `TenantManagement.Response` | `PagedResultDto<TenantDto>` |
+| `TenantManagement.Item` | `TenantDto` |
+| `TenantManagement.AddRequest` | `TenantCreateDto` |
+| `TenantManagement.UpdateRequest` | `TenantUpdateDto` |
+| `TenantManagement.DefaultConnectionStringRequest` | `TenantService.updateDefaultConnectionString()` |
+
+### New Exports
+
+**Services:**
+- `TenantService` - Typed proxy service for tenant management API
+
+**Types:**
+- `TenantDto` - Tenant data transfer object
+- `TenantCreateDto` - DTO for creating tenants
+- `TenantUpdateDto` - DTO for updating tenants
+- `TenantCreateOrUpdateDtoBase` - Base DTO for tenant operations
+- `GetTenantsInput` - Input for getting tenants with filtering
+
+---
+
 ## v3.1.0
 
 **February 2026**
