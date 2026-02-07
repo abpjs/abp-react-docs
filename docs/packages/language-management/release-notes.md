@@ -1,5 +1,44 @@
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `LanguageService.getList()` return type changed
+
+`LanguageService.getList()` now returns `PagedResultDto<LanguageDto>` instead of `ListResultDto<LanguageDto>`. The response now includes a `totalCount` property:
+
+```tsx
+// Before (v3.2.0)
+const result = await languageService.getList(); // ListResultDto<LanguageDto>
+// result.items ✅
+// result.totalCount ❌ not available
+
+// After (v4.0.0)
+const result = await languageService.getList(); // PagedResultDto<LanguageDto>
+// result.items ✅
+// result.totalCount ✅ now available
+```
+
+#### `LanguageManagement.State.languageResponse` type changed
+
+The `languageResponse` field in `LanguageManagement.State` changed from `ListResultDto<LanguageDto>` to `PagedResultDto<LanguageDto>` to match the updated service return type.
+
+### Restored
+
+- **`getLanguagesTotalCount()`** restored on `LanguageManagementStateService` — This method was removed in v3.0.0 and has been brought back now that `LanguageService.getList()` returns `PagedResultDto` with `totalCount`.
+
+### Deprecations
+
+The following are now formally deprecated and will be removed in v5.0:
+
+- **`LanguageManagementService`** — Use proxy services instead: `LanguageService`, `LanguageTextService`
+- **All `LanguageManagement` namespace types** — Deprecation timeline extended from v4.0 to v5.0
+
+---
+
 ## v3.2.0
 
 **February 2026**
@@ -163,7 +202,7 @@ interface State {
 
 ### Deprecations
 
-The following legacy types are deprecated and will be removed in v4.0:
+The following legacy types are deprecated and will be removed in v5.0:
 
 | Deprecated | Replacement |
 |------------|-------------|
@@ -495,7 +534,7 @@ import { eLanguageManagementRouteNames } from '@abpjs/language-management';
   - `getCultures()` - Access cached cultures
   - `getResources()` - Access cached resources
 
-> **Note:** `getLanguagesTotalCount()` was removed in v3.0.0.
+> **Note:** `getLanguagesTotalCount()` was removed in v3.0.0 and restored in v4.0.0.
 
 ### Example
 

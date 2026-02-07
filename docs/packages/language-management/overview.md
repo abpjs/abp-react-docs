@@ -175,31 +175,37 @@ function MyLanguageTextsComponent() {
 
 ## Services
 
-### LanguageManagementService
+### LanguageService (Proxy)
 
-Service class for language management API operations.
-
-**Language Methods:**
+Typed proxy service for language operations (v3.2.0+):
 
 | Method | Parameters | Returns | Description |
 |--------|------------|---------|-------------|
-| `getLanguages` | `params?: PageQueryParams` | `Promise<LanguageResponse>` | Get paginated languages |
-| `getLanguageById` | `id: string` | `Promise<Language>` | Get language by ID |
-| `createLanguage` | `body: CreateLanguageInput` | `Promise<Language>` | Create language |
-| `updateLanguage` | `id: string, body: UpdateLanguageInput` | `Promise<Language>` | Update language |
-| `deleteLanguage` | `id: string` | `Promise<void>` | Delete language |
-| `setAsDefaultLanguage` | `id: string` | `Promise<void>` | Set as default |
-| `getCultures` | - | `Promise<Culture[]>` | Get available cultures |
+| `getList` | `input?: GetLanguagesTextsInput` | `Promise<PagedResultDto<LanguageDto>>` | Get languages (paginated since v4.0.0) |
+| `getAllList` | - | `Promise<ListResultDto<LanguageDto>>` | Get all languages |
+| `get` | `id: string` | `Promise<LanguageDto>` | Get language by ID |
+| `create` | `input: CreateLanguageDto` | `Promise<LanguageDto>` | Create language |
+| `update` | `id: string, input: UpdateLanguageDto` | `Promise<LanguageDto>` | Update language |
+| `delete` | `id: string` | `Promise<void>` | Delete language |
+| `setAsDefault` | `id: string` | `Promise<void>` | Set as default |
+| `getCulturelist` | - | `Promise<CultureInfoDto[]>` | Get available cultures |
+| `getResources` | - | `Promise<LanguageResourceDto[]>` | Get localization resources |
 
-**Language Text Methods:**
+### LanguageTextService (Proxy)
+
+Typed proxy service for language text operations (v3.2.0+):
 
 | Method | Parameters | Returns | Description |
 |--------|------------|---------|-------------|
-| `getResources` | - | `Promise<Resource[]>` | Get localization resources |
-| `getLanguageTexts` | `params: LanguageTextQueryParams` | `Promise<LanguageTextResponse>` | Get texts with filters |
-| `getLanguageTextByName` | `params: LanguageTextRequestByNameParams` | `Promise<LanguageText>` | Get text by name |
-| `updateLanguageTextByName` | `params: LanguageTextUpdateByNameParams` | `Promise<LanguageText>` | Update translation |
-| `restoreLanguageTextByName` | `params: LanguageTextRequestByNameParams` | `Promise<void>` | Restore to default |
+| `getList` | `input: GetLanguagesTextsInput` | `Promise<PagedResultDto<LanguageTextDto>>` | Get texts with filters |
+| `update` | `params` | `Promise<void>` | Update translation |
+| `restoreToDefault` | `params` | `Promise<void>` | Restore to default |
+
+### LanguageManagementService (Deprecated)
+
+:::caution Deprecated
+`LanguageManagementService` is deprecated and will be removed in v5.0. Use `LanguageService` and `LanguageTextService` instead.
+:::
 
 ## Routes
 
@@ -216,41 +222,33 @@ import { LANGUAGE_MANAGEMENT_ROUTES } from '@abpjs/language-management';
 
 ## TypeScript Support
 
-The package exports all TypeScript interfaces under the `LanguageManagement` namespace:
+Since v3.2.0, prefer using proxy DTOs instead of the legacy `LanguageManagement` namespace types:
 
 ```tsx
-import { LanguageManagement } from '@abpjs/language-management';
-
-// Types
-const language: LanguageManagement.Language = { ... };
-const text: LanguageManagement.LanguageText = { ... };
-const culture: LanguageManagement.Culture = { ... };
-const resource: LanguageManagement.Resource = { ... };
-
-// Input types
-const createInput: LanguageManagement.CreateLanguageInput = { ... };
-const updateInput: LanguageManagement.UpdateLanguageInput = { ... };
-
-// Query types
-const textQuery: LanguageManagement.LanguageTextQueryParams = {
-  baseCultureName: 'en',
-  targetCultureName: 'fr',
-  getOnlyEmptyValues: false,
-  resourceName: 'MyResource',
-};
+import type {
+  LanguageDto,
+  CreateLanguageDto,
+  UpdateLanguageDto,
+  LanguageTextDto,
+  GetLanguagesTextsInput,
+  CultureInfoDto,
+  LanguageResourceDto,
+} from '@abpjs/language-management';
 ```
 
-**Key Types:**
+**Proxy DTOs (recommended):**
 
 | Type | Description |
 |------|-------------|
-| `Language` | Language entity with id, cultureName, displayName, flagIcon, isEnabled, isDefaultLanguage |
-| `CreateLanguageInput` | Input for creating languages (cultureName, uiCultureName, displayName, flagIcon, isEnabled) |
-| `UpdateLanguageInput` | Input for updating languages (displayName, flagIcon, isEnabled) |
-| `LanguageText` | Localization string with resourceName, cultureName, name, value, baseValue |
-| `LanguageTextQueryParams` | Query params for texts (baseCultureName, targetCultureName, getOnlyEmptyValues, resourceName) |
-| `Culture` | Culture info (name, displayName) |
-| `Resource` | Localization resource (name) |
+| `LanguageDto` | Language entity (replaces `LanguageManagement.Language`) |
+| `CreateLanguageDto` | Create language input (replaces `LanguageManagement.CreateLanguageInput`) |
+| `UpdateLanguageDto` | Update language input (replaces `LanguageManagement.UpdateLanguageInput`) |
+| `LanguageTextDto` | Localization string (replaces `LanguageManagement.LanguageText`) |
+| `GetLanguagesTextsInput` | Query params for texts (replaces `LanguageManagement.LanguageTextQueryParams`) |
+| `CultureInfoDto` | Culture info (replaces `LanguageManagement.Culture`) |
+| `LanguageResourceDto` | Localization resource (replaces `LanguageManagement.Resource`) |
+
+The legacy `LanguageManagement` namespace types are still exported for backward compatibility but are deprecated and will be removed in v5.0.
 
 ## Dependencies
 
@@ -260,3 +258,4 @@ const textQuery: LanguageManagement.LanguageTextQueryParams = {
 
 - [Core Module](../core/overview)
 - [Setting Management](../setting-management/overview)
+- [Release Notes](./release-notes) - Version history
