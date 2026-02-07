@@ -4,6 +4,44 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### `shouldFetchAppConfig()` Method
+
+New method on `usePermissionManagement` hook to determine whether the app configuration should be refreshed after saving permissions:
+
+```tsx
+import { usePermissionManagement } from '@abpjs/permission-management';
+
+function PermissionEditor({ providerKey, providerName }) {
+  const { shouldFetchAppConfig, save } = usePermissionManagement();
+
+  const handleSave = async () => {
+    await save();
+
+    // Refresh app config if permissions affect the current user
+    if (shouldFetchAppConfig(providerKey, providerName)) {
+      // Trigger app config refresh to update current user's permissions
+      await refreshAppConfig();
+    }
+  };
+
+  return <button onClick={handleSave}>Save Permissions</button>;
+}
+```
+
+Returns `true` if:
+- The provider is a role (`'R'`) that the current user belongs to
+- The provider is the current user (`'U'`)
+
+This is useful for refreshing the application configuration when permission changes affect the currently logged-in user.
+
+---
+
 ## v3.0.0
 
 **February 2026**
