@@ -44,7 +44,8 @@ npm install @abpjs/core @abpjs/theme-shared
 
 | Service | Description |
 |---------|-------------|
-| `PermissionManagementService` | Direct API interaction |
+| `PermissionsService` | Proxy service for permission management API (v3.2.0+) |
+| `PermissionManagementStateService` | State management with dispatch methods (v2.0.0) |
 
 ## Permission Providers
 
@@ -86,4 +87,5 @@ View on npm: [@abpjs/permission-management](https://www.npmjs.com/package/@abpjs
 
 ## Documentation
 
-- [Permission Modal](/docs/packages/permission-management/modal) - Using the permission modal
+- [Permission Modal](./modal) - Using the permission modal
+- [Release Notes](./release-notes) - Version history

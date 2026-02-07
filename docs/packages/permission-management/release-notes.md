@@ -4,6 +4,103 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Removed: `PermissionManagementService`
+
+The deprecated `PermissionManagementService` has been deleted. Use `PermissionsService` (proxy service) instead:
+
+```diff
+- import { PermissionManagementService } from '@abpjs/permission-management';
++ import { PermissionsService } from '@abpjs/permission-management';
+
+- const service = new PermissionManagementService(restService);
+- await service.getPermissions({ providerKey: 'admin', providerName: 'R' });
+- await service.updatePermissions({ providerKey: 'admin', providerName: 'R', permissions: [...] });
++ const service = new PermissionsService(restService);
++ await service.get('R', 'admin');
++ await service.update('R', 'admin', { permissions: [...] });
+```
+
+#### Removed: Legacy `PermissionManagement` Namespace Types
+
+The following deprecated types have been removed from the `PermissionManagement` namespace:
+
+| Removed Type | Replacement |
+|-------------|-------------|
+| `PermissionManagement.Response` | `GetPermissionListResultDto` |
+| `PermissionManagement.Group` | `PermissionGroupDto` |
+| `PermissionManagement.Permission` | `PermissionGrantInfoDto` |
+| `PermissionManagement.MinimumPermission` | `UpdatePermissionDto` |
+| `PermissionManagement.GrantedProvider` | `ProviderInfoDto` |
+| `PermissionManagement.UpdateRequest` | `ProviderInfoDto & UpdatePermissionsDto` |
+| `PermissionManagement.GetPermissionsParams` | `ProviderInfoDto` |
+
+#### Changed: `PermissionManagementStateService`
+
+The state service now uses `PermissionsService` instead of `PermissionManagementService`:
+
+```diff
+- import { PermissionManagementStateService, PermissionManagementService } from '@abpjs/permission-management';
++ import { PermissionManagementStateService, PermissionsService } from '@abpjs/permission-management';
+
+- const service = new PermissionManagementService(rest);
++ const service = new PermissionsService(rest);
+  const stateService = new PermissionManagementStateService(service);
+```
+
+Method signatures updated:
+- `dispatchGetPermissions()` — accepts `ProviderInfoDto`, returns `GetPermissionListResultDto`
+- `dispatchUpdatePermissions()` — accepts `ProviderInfoDto & UpdatePermissionsDto`
+- `getPermissionGroups()` — returns `PermissionGroupDto[]`
+
+#### Changed: `usePermissionManagement` Hook Types
+
+All types in the hook's interface now use proxy DTOs:
+
+| Property / Method | Old Type | New Type |
+|-------------------|----------|----------|
+| `groups` | `PermissionManagement.Group[]` | `PermissionGroupDto[]` |
+| `selectedGroup` | `PermissionManagement.Group \| null` | `PermissionGroupDto \| null` |
+| `permissions` | `PermissionManagement.MinimumPermission[]` | `UpdatePermissionDto[]` |
+| `setSelectedGroup()` | `PermissionManagement.Group` | `PermissionGroupDto` |
+| `togglePermission()` | `PermissionManagement.Permission` | `PermissionGrantInfoDto` |
+| `isGrantedByOtherProviderName()` | `PermissionManagement.GrantedProvider[]` | `ProviderInfoDto[]` |
+| `isGrantedByRole()` | `PermissionManagement.GrantedProvider[]` | `ProviderInfoDto[]` |
+
+#### Changed: `PermissionWithStyle` / `PermissionWithMargin`
+
+These interfaces now extend `PermissionGrantInfoDto` instead of `PermissionManagement.Permission`.
+
+### New Features
+
+#### `toggleSelectThisTab()` Method
+
+New method on `usePermissionManagement` hook to toggle all permissions within the currently selected group/tab:
+
+```tsx
+const { toggleSelectThisTab, selectThisTab } = usePermissionManagement();
+
+// Check current tab state
+console.log(selectThisTab); // true if all permissions in current tab are granted
+
+// Toggle all permissions in current tab
+toggleSelectThisTab();
+```
+
+#### Parent/Child Permission Cascading
+
+The `togglePermission()` method now handles parent/child relationships:
+
+- **Unchecking a parent** automatically unchecks all child permissions
+- **Checking a child** automatically checks the parent permission
+
+---
+
 ## v3.2.0
 
 **February 2026**
