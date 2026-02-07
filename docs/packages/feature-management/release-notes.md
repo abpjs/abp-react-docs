@@ -4,6 +4,41 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### Feature.displayName Property
+
+The `Feature` interface now includes a `displayName` property for user-friendly feature names:
+
+```tsx
+import type { FeatureManagement } from '@abpjs/feature-management';
+
+function FeatureItem({ feature }: { feature: FeatureManagement.Feature }) {
+  return (
+    <div>
+      <label>{feature.displayName}</label>
+      <input value={feature.value} />
+      {feature.description && <p>{feature.description}</p>}
+    </div>
+  );
+}
+```
+
+The `Feature` interface now includes:
+- `name` - Feature identifier
+- `displayName` - User-friendly display name (new in v3.1.0)
+- `value` - Feature value
+- `description` - Optional description
+- `valueType` - Value type definition
+- `depth` - Hierarchy depth level
+- `parentName` - Parent feature name for hierarchy
+
+---
+
 ## v3.0.0
 
 **February 2026**
