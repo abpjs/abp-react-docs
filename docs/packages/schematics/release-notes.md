@@ -4,6 +4,30 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### Changes
+
+#### Updated PROXY_WARNING Message
+
+The `PROXY_WARNING` constant now includes an important notice about npm module publishing:
+
+```tsx
+import { PROXY_WARNING } from '@abpjs/schematics';
+
+// The warning now includes guidance for publishing modules to npm:
+// > **Important Notice:** If you are building a module and are planning to publish to npm,
+// > some of the generated proxies are likely to be exported from public-api.ts file. In such a case,
+// > please make sure you export files directly and not from barrel exports. In other words,
+// > do not include index.ts exports in your public-api.ts exports.
+```
+
+This helps developers avoid common issues when publishing ABP modules with generated proxies to npm.
+
+---
+
 ## v3.1.0 (Initial Release)
 
 **February 2026**
