@@ -4,6 +4,260 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### ReplaceableComponentsService
+
+New service for managing replaceable components, replacing the deprecated `AddReplaceableComponent` action:
+
+```tsx
+import {
+  ReplaceableComponentsService,
+  replaceableComponentsService,
+  useReplaceableComponent,
+} from '@abpjs/core';
+
+// Add or replace a component
+replaceableComponentsService.add({
+  key: 'Identity.UsersComponent',
+  component: MyCustomUsersComponent,
+});
+
+// Get a component by key
+const component = replaceableComponentsService.getComponent('Identity.UsersComponent');
+
+// Subscribe to changes
+const unsubscribe = replaceableComponentsService.onUpdate((components) => {
+  console.log('Components updated:', components);
+});
+
+// Remove a component
+replaceableComponentsService.remove('Identity.UsersComponent');
+
+// React hook for using replaceable components
+function MyFeature() {
+  const UsersComponent = useReplaceableComponent(
+    'Identity.UsersComponent',
+    DefaultUsersComponent
+  );
+
+  return <UsersComponent />;
+}
+```
+
+#### ApplicationConfiguration.CurrentUser Fields
+
+New fields added to `CurrentUser` for additional user information:
+
+```tsx
+import { ApplicationConfiguration } from '@abpjs/core';
+
+const currentUser: ApplicationConfiguration.CurrentUser = {
+  id: 'user-id',
+  userName: 'john.doe',
+  email: 'john@example.com',
+  emailVerified: true,        // New in v3.2.0
+  name: 'John',               // New in v3.2.0
+  surName: 'Doe',             // New in v3.2.0
+  phoneNumber: '+1234567890', // New in v3.2.0
+  phoneNumberVerified: true,  // New in v3.2.0
+  roles: ['admin'],
+  tenantId: 'tenant-id',
+  isAuthenticated: true,
+};
+```
+
+#### InternalStore Class
+
+New lightweight state management class for internal use:
+
+```tsx
+import { InternalStore } from '@abpjs/core';
+
+interface MyState {
+  count: number;
+  user: { name: string };
+}
+
+const store = new InternalStore<MyState>({
+  count: 0,
+  user: { name: 'Guest' },
+});
+
+// Get current state
+console.log(store.state.count);
+
+// Subscribe to state changes
+const unsubscribe = store.subscribe((state) => {
+  console.log('State updated:', state);
+});
+
+// Patch state (deep merge)
+store.patch({ count: 1 });
+store.patch({ user: { name: 'John' } });
+
+// Slice state with selector
+const countSlice = store.sliceState((state) => state.count);
+countSlice.subscribe((count) => console.log('Count:', count));
+
+// Reset to initial state
+store.reset();
+```
+
+#### File Utilities
+
+New utility for downloading blobs as files:
+
+```tsx
+import { downloadBlob } from '@abpjs/core';
+
+// Download a blob as a file
+const response = await fetch('/api/reports/export');
+const blob = await response.blob();
+downloadBlob(blob, 'report.xlsx');
+```
+
+#### String Utilities: interpolate()
+
+New function for parameter substitution in strings:
+
+```tsx
+import { interpolate } from '@abpjs/core';
+
+const message = interpolate('Hello {0}, you have {1} messages', ['John', '5']);
+// Returns: 'Hello John, you have 5 messages'
+
+const greeting = interpolate('Welcome to {0}!', ['ABP React']);
+// Returns: 'Welcome to ABP React!'
+```
+
+#### Route Utilities: reloadRoute()
+
+New function to reload the current route:
+
+```tsx
+import { reloadRoute } from '@abpjs/core';
+
+// Reload the current page/route
+reloadRoute();
+```
+
+#### OAuth Storage Management
+
+New utilities for managing OAuth storage:
+
+```tsx
+import { oAuthStorage, clearOAuthStorage } from '@abpjs/core';
+
+// Access the OAuth storage (sessionStorage by default)
+const token = oAuthStorage.getItem('access_token');
+
+// Clear all OAuth-related items
+clearOAuthStorage();
+
+// Clear from custom storage
+clearOAuthStorage(localStorage);
+```
+
+#### LocalizationService.getResource()
+
+New method to get an entire localization resource:
+
+```tsx
+import { useLocalizationService } from '@abpjs/core';
+
+function MyComponent() {
+  const localizationService = useLocalizationService();
+
+  // Get all localizations for a resource
+  const identityTexts = localizationService.getResource('AbpIdentity');
+  // Returns: { 'Users': 'Users', 'Roles': 'Roles', ... }
+}
+```
+
+#### ConfigStateService.getLocalizationResource()
+
+New method on ConfigStateService to get localization resources:
+
+```tsx
+import { useConfigStateService } from '@abpjs/core';
+
+function MyComponent() {
+  const configStateService = useConfigStateService();
+
+  const accountTexts = configStateService.getLocalizationResource('AbpAccount');
+  // Returns: { 'Login': 'Login', 'Register': 'Register', ... }
+}
+```
+
+#### DeepPartial Type
+
+New utility type for deep partial objects:
+
+```tsx
+import { DeepPartial } from '@abpjs/core';
+
+interface Config {
+  api: {
+    url: string;
+    timeout: number;
+  };
+  auth: {
+    clientId: string;
+  };
+}
+
+// All properties are optional recursively
+const partialConfig: DeepPartial<Config> = {
+  api: { timeout: 5000 },
+  // url and auth are optional
+};
+```
+
+### Deprecations
+
+#### AddReplaceableComponent Action
+
+The `AddReplaceableComponent` action is deprecated. Use `ReplaceableComponentsService` instead:
+
+```tsx
+// Deprecated
+dispatch(AddReplaceableComponent({ key: 'MyComponent', component: MyComponent }));
+
+// Recommended
+replaceableComponentsService.add({ key: 'MyComponent', component: MyComponent });
+```
+
+#### ReplaceableComponentsState
+
+The `ReplaceableComponentsState` slice is deprecated. Use `ReplaceableComponentsService` instead.
+
+### New Exports
+
+- `ReplaceableComponentsService` - Service for managing replaceable components
+- `replaceableComponentsService` - Singleton instance of ReplaceableComponentsService
+- `useReplaceableComponent(key, defaultComponent)` - React hook for replaceable components
+- `InternalStore<State>` - Lightweight internal state management class
+- `DeepPartial<T>` - Utility type for deep partial objects
+- `downloadBlob(blob, filename)` - Download blob as file
+- `interpolate(text, params)` - String parameter substitution
+- `reloadRoute()` - Reload current route
+- `oAuthStorage` - OAuth storage instance
+- `clearOAuthStorage(storage?)` - Clear OAuth storage
+- `LocalizationService.getResource(resourceName)` - Get localization resource
+- `ConfigStateService.getLocalizationResource(resourceName)` - Get localization resource
+- `ApplicationConfiguration.CurrentUser.emailVerified` - Email verification status
+- `ApplicationConfiguration.CurrentUser.name` - User's first name
+- `ApplicationConfiguration.CurrentUser.surName` - User's surname
+- `ApplicationConfiguration.CurrentUser.phoneNumber` - User's phone number
+- `ApplicationConfiguration.CurrentUser.phoneNumberVerified` - Phone verification status
+
+---
+
 ## v3.1.0
 
 **February 2026**
