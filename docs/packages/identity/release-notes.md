@@ -4,6 +4,206 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### Proxy Services
+
+New typed proxy services for identity API operations:
+
+**IdentityRoleService** - Role management:
+
+```tsx
+import { IdentityRoleService } from '@abpjs/identity';
+import { useRestService } from '@abpjs/core';
+
+function useRoles() {
+  const restService = useRestService();
+  const roleService = new IdentityRoleService(restService);
+
+  // Get all roles (unpaginated)
+  const allRoles = await roleService.getAllList();
+
+  // Get paginated roles
+  const pagedRoles = await roleService.getList({ skipCount: 0, maxResultCount: 10 });
+
+  // CRUD operations
+  const newRole = await roleService.create({ name: 'Editor', isDefault: false, isPublic: true });
+  const role = await roleService.get(roleId);
+  const updated = await roleService.update(roleId, { ...role, name: 'Senior Editor' });
+  await roleService.delete(roleId);
+}
+```
+
+**IdentityUserService** - User management:
+
+```tsx
+import { IdentityUserService } from '@abpjs/identity';
+
+const userService = new IdentityUserService(restService);
+
+// Get users with filter
+const users = await userService.getList({ filter: 'john', skipCount: 0, maxResultCount: 10 });
+
+// Get user roles
+const userRoles = await userService.getRoles(userId);
+
+// Update user roles
+await userService.updateRoles(userId, { roleNames: ['Admin', 'Editor'] });
+
+// Find by username/email
+const user = await userService.findByUsername('john.doe');
+const user2 = await userService.findByEmail('john@example.com');
+
+// Get assignable roles
+const assignableRoles = await userService.getAssignableRoles();
+```
+
+**IdentityUserLookupService** - User lookup operations:
+
+```tsx
+import { IdentityUserLookupService } from '@abpjs/identity';
+
+const lookupService = new IdentityUserLookupService(restService);
+
+// Find user by ID
+const user = await lookupService.findById(userId);
+
+// Find by username
+const user2 = await lookupService.findByUserName('john.doe');
+
+// Search users
+const users = await lookupService.search({
+  filter: 'john',
+  skipCount: 0,
+  maxResultCount: 10,
+});
+
+// Get count
+const count = await lookupService.getCount({ filter: 'john' });
+```
+
+**ProfileService** - Current user profile:
+
+```tsx
+import { ProfileService } from '@abpjs/identity';
+
+const profileService = new ProfileService(restService);
+
+// Get current user profile
+const profile = await profileService.get();
+
+// Update profile
+await profileService.update({
+  userName: profile.userName,
+  email: 'newemail@example.com',
+  name: 'John',
+  surname: 'Doe',
+  phoneNumber: '+1234567890',
+});
+
+// Change password
+await profileService.changePassword({
+  currentPassword: 'oldPassword',
+  newPassword: 'newPassword',
+});
+```
+
+#### New Proxy Models
+
+Typed DTOs for all identity operations:
+
+```tsx
+import type {
+  // Role DTOs
+  IdentityRoleDto,
+  IdentityRoleCreateDto,
+  IdentityRoleUpdateDto,
+  // User DTOs
+  IdentityUserDto,
+  IdentityUserCreateDto,
+  IdentityUserUpdateDto,
+  IdentityUserUpdateRolesDto,
+  GetIdentityUsersInput,
+  // Profile DTOs
+  ProfileDto,
+  UpdateProfileDto,
+  ChangePasswordInput,
+  // Lookup DTOs
+  UserLookupCountInputDto,
+  UserLookupSearchInputDto,
+  // User data
+  UserData,
+} from '@abpjs/identity';
+```
+
+#### Updated State Interface
+
+The `Identity.State` interface now uses the new proxy DTOs:
+
+```tsx
+import { Identity, PagedResultDto, IdentityRoleDto, IdentityUserDto } from '@abpjs/identity';
+
+interface State {
+  roles: PagedResultDto<IdentityRoleDto>;
+  users: PagedResultDto<IdentityUserDto>;
+  selectedRole: IdentityRoleDto;
+  selectedUser: IdentityUserDto;
+  selectedUserRoles: IdentityRoleDto[];
+}
+```
+
+### Deprecations
+
+The following legacy types are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `Identity.RoleResponse` | `PagedResultDto<IdentityRoleDto>` |
+| `Identity.RoleItem` | `IdentityRoleDto` |
+| `Identity.RoleSaveRequest` | `IdentityRoleCreateDto` / `IdentityRoleUpdateDto` |
+| `Identity.UserResponse` | `PagedResultDto<IdentityUserDto>` |
+| `Identity.UserItem` | `IdentityUserDto` |
+| `Identity.User` | `IdentityUserCreateOrUpdateDtoBase` |
+| `Identity.UserSaveRequest` | `IdentityUserCreateDto` / `IdentityUserUpdateDto` |
+
+### New Exports
+
+**Services:**
+- `IdentityRoleService` - Role management proxy service
+- `IdentityUserService` - User management proxy service
+- `IdentityUserLookupService` - User lookup proxy service
+- `ProfileService` - Profile management proxy service
+
+**Role Types:**
+- `IdentityRoleDto` - Role data transfer object
+- `IdentityRoleCreateDto` - DTO for creating roles
+- `IdentityRoleUpdateDto` - DTO for updating roles
+- `IdentityRoleCreateOrUpdateDtoBase` - Base DTO for role operations
+
+**User Types:**
+- `IdentityUserDto` - User data transfer object
+- `IdentityUserCreateDto` - DTO for creating users
+- `IdentityUserUpdateDto` - DTO for updating users
+- `IdentityUserUpdateRolesDto` - DTO for updating user roles
+- `IdentityUserCreateOrUpdateDtoBase` - Base DTO for user operations
+- `GetIdentityUsersInput` - Input for getting users with filtering
+
+**Profile Types:**
+- `ProfileDto` - Profile data transfer object
+- `UpdateProfileDto` - DTO for updating profile
+- `ChangePasswordInput` - Input for changing password
+
+**Lookup Types:**
+- `UserData` - User data from lookup service
+- `UserLookupCountInputDto` - Input for counting users
+- `UserLookupSearchInputDto` - Input for searching users
+
+---
+
 ## v3.1.0
 
 **February 2026**
