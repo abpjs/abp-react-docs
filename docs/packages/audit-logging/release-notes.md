@@ -4,6 +4,182 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### AuditLogsService (Proxy Service)
+
+A new typed proxy service for audit logging API operations:
+
+```tsx
+import { AuditLogsService } from '@abpjs/audit-logging';
+import { useRestService } from '@abpjs/core';
+
+function useAuditLogs() {
+  const restService = useRestService();
+  const auditLogsService = new AuditLogsService(restService);
+
+  // Get a single audit log by ID
+  const log = await auditLogsService.get('log-id');
+
+  // Get paginated list of audit logs
+  const logs = await auditLogsService.getList({
+    userName: 'admin',
+    httpMethod: 'POST',
+    hasException: false,
+    maxResultCount: 10,
+    skipCount: 0,
+  });
+
+  // Get a single entity change
+  const entityChange = await auditLogsService.getEntityChange('entity-change-id');
+
+  // Get entity change with username
+  const changeWithUser = await auditLogsService.getEntityChangeWithUsername('entity-change-id');
+
+  // Get paginated entity changes
+  const entityChanges = await auditLogsService.getEntityChanges({
+    entityTypeFullName: 'MyApp.Domain.Product',
+    changeType: EntityChangeType.Updated,
+    maxResultCount: 10,
+  });
+
+  // Get entity changes with username for a specific entity
+  const changesWithUser = await auditLogsService.getEntityChangesWithUsername({
+    entityId: 'entity-id',
+    entityTypeFullName: 'MyApp.Domain.Product',
+  });
+}
+```
+
+#### Statistics Methods
+
+New methods for retrieving audit log statistics:
+
+```tsx
+import { AuditLogsService } from '@abpjs/audit-logging';
+
+const auditLogsService = new AuditLogsService(restService);
+
+// Get average execution duration per day
+const avgDuration = await auditLogsService.getAverageExecutionDurationPerDay({
+  startDate: '2026-01-01',
+  endDate: '2026-01-31',
+});
+// Returns: { data: { '2026-01-01': 150, '2026-01-02': 200, ... } }
+
+// Get error rate statistics
+const errorRate = await auditLogsService.getErrorRate({
+  startDate: '2026-01-01',
+  endDate: '2026-01-31',
+});
+// Returns: { data: { '2026-01-01': 5, '2026-01-02': 3, ... } }
+```
+
+#### EntityChangeType Enum
+
+New enum for entity change types in proxy DTOs:
+
+```tsx
+import { EntityChangeType, entityChangeTypeOptions } from '@abpjs/audit-logging';
+
+// Available values:
+EntityChangeType.Created // 0
+EntityChangeType.Updated // 1
+EntityChangeType.Deleted // 2
+
+// Use in select components
+<select>
+  {entityChangeTypeOptions.map(opt => (
+    <option key={opt.value} value={opt.value}>{opt.label}</option>
+  ))}
+</select>
+```
+
+#### New Proxy Models
+
+Typed DTOs for all audit logging operations:
+
+```tsx
+import type {
+  // Audit Log DTOs
+  AuditLogDto,
+  AuditLogActionDto,
+  GetAuditLogListDto,
+  // Entity Change DTOs
+  EntityChangeDto,
+  EntityChangeWithUsernameDto,
+  EntityPropertyChangeDto,
+  GetEntityChangesDto,
+  EntityChangeFilter,
+  // Statistics DTOs
+  GetAverageExecutionDurationPerDayInput,
+  GetAverageExecutionDurationPerDayOutput,
+  GetErrorRateFilter,
+  GetErrorRateOutput,
+} from '@abpjs/audit-logging';
+```
+
+#### Updated State Interface
+
+The `AuditLogging.State` interface now uses the new proxy DTOs:
+
+```tsx
+import type { AuditLogging, AuditLogDto } from '@abpjs/audit-logging';
+import type { PagedResultDto } from '@abpjs/core';
+
+interface State {
+  result: PagedResultDto<AuditLogDto>;
+  averageExecutionStatistics: Record<string, number>;
+  errorRateStatistics: Record<string, number>;
+}
+```
+
+### Deprecations
+
+The following legacy types are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `AuditLogging.Response` | `PagedResultDto<AuditLogDto>` |
+| `AuditLogging.Log` | `AuditLogDto` |
+| `AuditLogging.AuditLogsQueryParams` | `GetAuditLogListDto` |
+| `AuditLogging.EntityChange` | `EntityChangeDto` |
+| `AuditLogging.PropertyChange` | `EntityPropertyChangeDto` |
+| `Statistics.Data` | `Record<string, number>` |
+
+### New Exports
+
+**Services:**
+- `AuditLogsService` - Typed proxy service for audit logging API
+
+**Enums:**
+- `EntityChangeType` - Entity change type enum (proxy version)
+- `entityChangeTypeOptions` - Label/value options for select components
+
+**Audit Log Types:**
+- `AuditLogDto` - Audit log data transfer object
+- `AuditLogActionDto` - Audit log action data transfer object
+- `GetAuditLogListDto` - Input for getting audit logs with filtering
+
+**Entity Change Types:**
+- `EntityChangeDto` - Entity change data transfer object
+- `EntityChangeWithUsernameDto` - Entity change with username
+- `EntityPropertyChangeDto` - Property change data transfer object
+- `GetEntityChangesDto` - Input for getting entity changes
+- `EntityChangeFilter` - Filter for entity changes by ID and type
+
+**Statistics Types:**
+- `GetAverageExecutionDurationPerDayInput` - Input for avg duration stats
+- `GetAverageExecutionDurationPerDayOutput` - Output with date-to-duration map
+- `GetErrorRateFilter` - Input for error rate stats
+- `GetErrorRateOutput` - Output with date-to-error-count map
+
+---
+
 ## v3.1.0
 
 **February 2026**
