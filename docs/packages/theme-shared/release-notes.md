@@ -4,6 +4,27 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### Datatable Scroll CSS Fix
+
+Added `.datatable-scroll` CSS styles to `DEFAULT_STYLES` for fixing horizontal scroll issues in datatables:
+
+```css
+.datatable-scroll {
+  margin-bottom: 5px !important;
+  width: unset !important;
+}
+```
+
+This style is automatically applied when using `DEFAULT_STYLES` from `@abpjs/theme-shared`.
+
+---
+
 ## v3.1.0
 
 **February 2026**
