@@ -4,6 +4,53 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### `GetTemplateDefinitionListInput` Interface
+
+New typed interface for template definition list queries:
+
+```tsx
+import {
+  GetTemplateDefinitionListInput,
+  createGetTemplateDefinitionListInput,
+} from '@abpjs/text-template-management';
+
+// Using the interface directly
+const params: GetTemplateDefinitionListInput = {
+  filterText: 'email',
+  skipCount: 0,
+  maxResultCount: 10,
+  sorting: 'name asc',
+};
+
+// Using the factory function with defaults
+const params = createGetTemplateDefinitionListInput({
+  filterText: 'email',
+});
+// Result: { filterText: 'email', skipCount: 0, maxResultCount: 10, sorting: undefined }
+```
+
+**Properties:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `filterText` | `string` | - | Filter text for searching templates |
+| `skipCount` | `number` | `0` | Number of items to skip (pagination) |
+| `maxResultCount` | `number` | `10` | Maximum items to return |
+| `sorting` | `string` | - | Sort expression (e.g., `'name asc'`) |
+
+### New Exports
+
+- `GetTemplateDefinitionListInput` - Interface for template list queries
+- `createGetTemplateDefinitionListInput(initialValues?)` - Factory function with defaults
+
+---
+
 ## v3.0.0
 
 **February 2026**
