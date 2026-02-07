@@ -178,38 +178,39 @@ function MyEditionsComponent() {
 
 ## Services
 
-### SaasService
+### TenantService (Proxy)
 
-Service class for SaaS-related API operations.
-
-**Tenant Methods:**
+Typed proxy service for tenant operations (v3.2.0+):
 
 | Method | Parameters | Returns | Description |
 |--------|------------|---------|-------------|
-| `getTenants` | `params?: TenantsQueryParams` | `Promise<TenantsResponse>` | Get paginated tenants |
-| `getTenantById` | `id: string` | `Promise<Tenant>` | Get tenant by ID |
-| `createTenant` | `body: CreateTenantRequest` | `Promise<Tenant>` | Create tenant |
-| `updateTenant` | `body: UpdateTenantRequest` | `Promise<Tenant>` | Update tenant |
-| `deleteTenant` | `id: string` | `Promise<void>` | Delete tenant |
-
-**Connection String Methods:**
-
-| Method | Parameters | Returns | Description |
-|--------|------------|---------|-------------|
+| `getList` | `input?: GetTenantsInput` | `Promise<PagedResultDto<SaasTenantDto>>` | Get paginated tenants |
+| `get` | `id: string` | `Promise<SaasTenantDto>` | Get tenant by ID |
+| `create` | `input: SaasTenantCreateDto` | `Promise<SaasTenantDto>` | Create tenant |
+| `update` | `id: string, input: SaasTenantUpdateDto` | `Promise<SaasTenantDto>` | Update tenant |
+| `delete` | `id: string` | `Promise<void>` | Delete tenant |
 | `getDefaultConnectionString` | `id: string` | `Promise<string>` | Get connection string |
-| `updateDefaultConnectionString` | `payload: DefaultConnectionStringRequest` | `Promise<void>` | Update connection string |
+| `updateDefaultConnectionString` | `id: string, connectionString: string` | `Promise<void>` | Update connection string |
 | `deleteDefaultConnectionString` | `id: string` | `Promise<void>` | Delete (use shared DB) |
 
-**Edition Methods:**
+### EditionService (Proxy)
+
+Typed proxy service for edition operations (v3.2.0+):
 
 | Method | Parameters | Returns | Description |
 |--------|------------|---------|-------------|
-| `getEditions` | `params?: EditionsQueryParams` | `Promise<EditionsResponse>` | Get paginated editions |
-| `getEditionById` | `id: string` | `Promise<Edition>` | Get edition by ID |
-| `createEdition` | `body: CreateEditionRequest` | `Promise<Edition>` | Create edition |
-| `updateEdition` | `body: UpdateEditionRequest` | `Promise<Edition>` | Update edition |
-| `deleteEdition` | `id: string` | `Promise<void>` | Delete edition |
-| `getUsageStatistics` | - | `Promise<UsageStatisticsResponse>` | Get usage stats |
+| `getList` | `input?: GetEditionsInput` | `Promise<PagedResultDto<EditionDto>>` | Get paginated editions |
+| `get` | `id: string` | `Promise<EditionDto>` | Get edition by ID |
+| `create` | `input: EditionCreateDto` | `Promise<EditionDto>` | Create edition |
+| `update` | `id: string, input: EditionUpdateDto` | `Promise<EditionDto>` | Update edition |
+| `delete` | `id: string` | `Promise<void>` | Delete edition |
+| `getUsageStatistics` | - | `Promise<GetEditionUsageStatisticsResult>` | Get usage stats |
+
+### SaasService (Deprecated)
+
+:::caution Deprecated
+`SaasService` is deprecated and will be removed in v5.0. Use `TenantService` and `EditionService` instead.
+:::
 
 ## Routes
 
@@ -226,55 +227,37 @@ import { SAAS_ROUTES } from '@abpjs/saas';
 
 ## TypeScript Support
 
-The package exports all TypeScript interfaces under the `Saas` namespace:
+Since v3.2.0, prefer using proxy DTOs instead of the legacy `Saas` namespace types:
 
 ```tsx
-import { Saas } from '@abpjs/saas';
-
-// Types
-const tenant: Saas.Tenant = {
-  id: '...',
-  name: 'MyTenant',
-  editionId: '...',
-  editionName: 'Standard',
-};
-
-const edition: Saas.Edition = {
-  id: '...',
-  displayName: 'Standard Edition',
-};
-
-// Request types
-const createTenant: Saas.CreateTenantRequest = {
-  name: 'NewTenant',
-  editionId: '...',
-  adminEmailAddress: 'admin@tenant.com',
-  adminPassword: 'SecurePassword123!',
-};
-
-// Query types
-const query: Saas.TenantsQueryParams = {
-  filter: 'searchTerm',
-  editionId: '...',
-  getEditionNames: true,
-  maxResultCount: 10,
-  skipCount: 0,
-};
+import type {
+  SaasTenantDto,
+  SaasTenantCreateDto,
+  SaasTenantUpdateDto,
+  GetTenantsInput,
+  EditionDto,
+  EditionCreateDto,
+  EditionUpdateDto,
+  GetEditionsInput,
+  GetEditionUsageStatisticsResult,
+} from '@abpjs/saas';
 ```
 
-**Key Types:**
+**Proxy DTOs (recommended):**
 
 | Type | Description |
 |------|-------------|
-| `Tenant` | Tenant entity with id, name, editionId, editionName |
-| `Edition` | Edition entity with id, displayName |
-| `CreateTenantRequest` | Input for creating tenant with admin credentials |
-| `UpdateTenantRequest` | Input for updating tenant |
-| `CreateEditionRequest` | Input for creating edition |
-| `UpdateEditionRequest` | Input for updating edition |
-| `TenantsQueryParams` | Query params with filter, editionId, getEditionNames |
-| `EditionsQueryParams` | Query params with filter |
-| `DefaultConnectionStringRequest` | Connection string update payload |
+| `SaasTenantDto` | Tenant entity (replaces `Saas.Tenant`) |
+| `SaasTenantCreateDto` | Create tenant input (replaces `Saas.CreateTenantRequest`) |
+| `SaasTenantUpdateDto` | Update tenant input (replaces `Saas.UpdateTenantRequest`) |
+| `GetTenantsInput` | Tenant query params (replaces `Saas.TenantsQueryParams`) |
+| `EditionDto` | Edition entity (replaces `Saas.Edition`) |
+| `EditionCreateDto` | Create edition input (replaces `Saas.CreateEditionRequest`) |
+| `EditionUpdateDto` | Update edition input (replaces `Saas.UpdateEditionRequest`) |
+| `GetEditionsInput` | Edition query params (replaces `Saas.EditionsQueryParams`) |
+| `GetEditionUsageStatisticsResult` | Usage statistics (replaces `Saas.UsageStatisticsResponse`) |
+
+The legacy `Saas` namespace types are still exported for backward compatibility but are deprecated and will be removed in v5.0.
 
 ## Dependencies
 
@@ -298,3 +281,4 @@ Use `@abpjs/saas` for full SaaS functionality with editions and per-tenant datab
 - [Core Module](../core/overview)
 - [Tenant Management](../tenant-management/overview)
 - [Feature Management](../feature-management/overview)
+- [Release Notes](./release-notes) - Version history

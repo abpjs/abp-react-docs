@@ -1,5 +1,43 @@
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Extension contributor types now use proxy DTOs
+
+All extension contributor types now reference `EditionDto` and `SaasTenantDto` instead of `Saas.Edition` and `Saas.Tenant`. This affects custom extension callbacks:
+
+```tsx
+// Before (v3.x)
+import type { Saas } from '@abpjs/saas';
+
+const myAction: EntityActionContributorCallback<Saas.Tenant> = (actions) => [...actions];
+
+// After (v4.0.0)
+import type { SaasTenantDto } from '@abpjs/saas';
+
+const myAction: EntityActionContributorCallback<SaasTenantDto> = (actions) => [...actions];
+```
+
+**Affected types:**
+- `SaasEntityActionContributors` — `Saas.Edition` → `EditionDto`, `Saas.Tenant` → `SaasTenantDto`
+- `SaasToolbarActionContributors` — `Saas.Edition[]` → `EditionDto[]`, `Saas.Tenant[]` → `SaasTenantDto[]`
+- `SaasEntityPropContributors` — same pattern
+- `SaasCreateFormPropContributors` — same pattern
+- `SaasEditFormPropContributors` — same pattern
+
+### Deprecations
+
+The following are now formally deprecated and will be removed in v5.0:
+
+- **`SaasService`** — Use proxy services instead: `TenantService`, `EditionService`
+- **All `Saas` namespace types** — Deprecation timeline extended from v4.0 to v5.0
+
+---
+
 ## v3.2.0
 
 **February 2026**
@@ -162,7 +200,7 @@ interface State {
 
 ### Deprecations
 
-The following legacy types are deprecated and will be removed in v4.0:
+The following legacy types are deprecated and will be removed in v5.0:
 
 | Deprecated | Replacement |
 |------------|-------------|
