@@ -8,6 +8,32 @@ sidebar_position: 99
 
 **February 2026**
 
+### New Features
+
+#### CLI Proxy Generation
+
+The package now includes a full CLI tool (`abpjs`) for generating typed proxy code from a running ABP backend. See [Overview](./overview) and [CLI Reference](./cli-reference) for full documentation.
+
+- `proxy-add` — Generate proxy services, hooks, models, and enums for a backend module
+- `proxy-refresh` — Regenerate all previously generated modules after backend changes
+- `proxy-remove` — Remove a generated module
+
+#### React Query Hook Generation
+
+Each generated service now comes with a companion React Query hook file:
+
+- GET endpoints become `useQuery` hooks with automatic query key management
+- POST/PUT/DELETE endpoints become `useMutation` hooks with automatic cache invalidation
+- Query key factory pattern for fine-grained cache control
+
+#### EJS Template Engine
+
+Code generation is powered by EJS templates for services, hooks, models, and enums. Generated code uses `RestService` and `useRestService` from `@abpjs/core`.
+
+#### Utility Functions
+
+New utility modules for text transforms (`camel`, `pascal`, `kebab`), barrel file generation, .NET-to-TypeScript type mapping, namespace resolution, and import tracking.
+
 ### Changes
 
 #### Updated PROXY_WARNING Message
