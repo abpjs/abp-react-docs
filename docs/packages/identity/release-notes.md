@@ -4,6 +4,143 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Removed `IdentityService`
+
+The deprecated `IdentityService` has been removed. Use the typed proxy services added in v3.2.0:
+
+```tsx
+// Before (v3.2.0)
+import { IdentityService } from '@abpjs/identity';
+const service = new IdentityService(restService);
+await service.getRoles(params);
+await service.createRole(role);
+await service.getUsers(params);
+await service.createUser(user);
+
+// After (v4.0.0)
+import { IdentityRoleService, IdentityUserService } from '@abpjs/identity';
+const roleService = new IdentityRoleService(restService);
+await roleService.getList(params);
+await roleService.create(role);
+
+const userService = new IdentityUserService(restService);
+await userService.getList(params);
+await userService.create(user);
+```
+
+#### Removed Deprecated Legacy Types
+
+The following deprecated types from the `Identity` namespace have been removed (deprecated in v3.2.0):
+
+| Removed | Replacement |
+|---------|-------------|
+| `Identity.RoleResponse` | `PagedResultDto<IdentityRoleDto>` |
+| `Identity.RoleSaveRequest` | `IdentityRoleCreateDto` / `IdentityRoleUpdateDto` |
+| `Identity.RoleItem` | `IdentityRoleDto` |
+| `Identity.UserResponse` | `PagedResultDto<IdentityUserDto>` |
+| `Identity.User` | `IdentityUserCreateOrUpdateDtoBase` |
+| `Identity.UserItem` | `IdentityUserDto` |
+| `Identity.UserSaveRequest` | `IdentityUserCreateDto` / `IdentityUserUpdateDto` |
+
+#### `useRoles` Hook Type Changes
+
+The `useRoles` hook now uses proxy DTOs:
+
+```tsx
+// Before (v3.2.0)
+const { roles, createRole, updateRole, selectedRole } = useRoles();
+// roles: Identity.RoleItem[]
+// createRole: (role: Identity.RoleSaveRequest) => Promise<...>
+// selectedRole: Identity.RoleItem | null
+
+// After (v4.0.0)
+const { roles, createRole, updateRole, selectedRole } = useRoles();
+// roles: IdentityRoleDto[]
+// createRole: (role: IdentityRoleCreateDto) => Promise<...>
+// updateRole: (id, role: IdentityRoleUpdateDto) => Promise<...>
+// selectedRole: IdentityRoleDto | null
+```
+
+| Property/Method | Before | After |
+|-----------------|--------|-------|
+| `roles` | `Identity.RoleItem[]` | `IdentityRoleDto[]` |
+| `selectedRole` | `Identity.RoleItem \| null` | `IdentityRoleDto \| null` |
+| `fetchRoles(params?)` | `ABP.PageQueryParams` | `PagedAndSortedResultRequestDto` |
+| `createRole(role)` | `Identity.RoleSaveRequest` | `IdentityRoleCreateDto` |
+| `updateRole(id, role)` | `Identity.RoleSaveRequest` | `IdentityRoleUpdateDto` |
+
+#### `useUsers` Hook Type Changes
+
+The `useUsers` hook now uses proxy DTOs:
+
+```tsx
+// Before (v3.2.0)
+const { users, createUser, updateUser, pageQuery } = useUsers();
+// users: Identity.UserItem[]
+// createUser: (user: Identity.UserSaveRequest) => Promise<...>
+// pageQuery: ABP.PageQueryParams
+
+// After (v4.0.0)
+const { users, createUser, updateUser, pageQuery } = useUsers();
+// users: IdentityUserDto[]
+// createUser: (user: IdentityUserCreateDto) => Promise<...>
+// pageQuery: GetIdentityUsersInput
+```
+
+| Property/Method | Before | After |
+|-----------------|--------|-------|
+| `users` | `Identity.UserItem[]` | `IdentityUserDto[]` |
+| `selectedUser` | `Identity.UserItem \| null` | `IdentityUserDto \| null` |
+| `selectedUserRoles` | `Identity.RoleItem[]` | `IdentityRoleDto[]` |
+| `pageQuery` | `ABP.PageQueryParams` | `GetIdentityUsersInput` |
+| `fetchUsers(params?)` | `ABP.PageQueryParams` | `GetIdentityUsersInput` |
+| `createUser(user)` | `Identity.UserSaveRequest` | `IdentityUserCreateDto` |
+| `updateUser(id, user)` | `Identity.UserSaveRequest` | `IdentityUserUpdateDto` |
+
+`GetIdentityUsersInput` extends `PagedAndSortedResultRequestDto` with an additional `filter` field.
+
+#### Component Callback Type Changes
+
+Component interface callbacks now use proxy DTOs:
+
+```tsx
+// Before (v3.2.0)
+interface RolesComponentInputs {
+  onRoleCreated?: (role: Identity.RoleItem) => void;
+  onRoleUpdated?: (role: Identity.RoleItem) => void;
+}
+
+// After (v4.0.0)
+interface RolesComponentInputs {
+  onRoleCreated?: (role: IdentityRoleDto) => void;
+  onRoleUpdated?: (role: IdentityRoleDto) => void;
+}
+```
+
+Similarly, `UsersComponentInputs` callbacks now use `IdentityUserDto` instead of `Identity.UserItem`.
+
+### Other Changes
+
+#### Route Provider Parameter Renamed
+
+The `configureRoutes` function parameter has been renamed from `routes` to `routesService`. This is a naming-only change; no behavior change:
+
+```tsx
+// Before (v3.2.0)
+const addRoutes = configureRoutes(routes);
+
+// After (v4.0.0)
+const addRoutes = configureRoutes(routesService);
+```
+
+---
+
 ## v3.2.0
 
 **February 2026**

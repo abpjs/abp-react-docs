@@ -48,7 +48,10 @@ npm install @abpjs/core @abpjs/theme-shared @abpjs/permission-management
 
 | Service | Description |
 |---------|-------------|
-| `IdentityService` | Direct API interaction for identity operations |
+| `IdentityRoleService` | Proxy service for role management API (v3.2.0+) |
+| `IdentityUserService` | Proxy service for user management API (v3.2.0+) |
+| `IdentityUserLookupService` | Proxy service for user lookup API (v3.2.0+) |
+| `ProfileService` | Proxy service for profile API (v3.2.0+) |
 | `IdentityStateService` | State management with dispatch methods (v2.0.0) |
 
 ## Quick Example
@@ -123,5 +126,6 @@ View on npm: [@abpjs/identity](https://www.npmjs.com/package/@abpjs/identity)
 
 ## Documentation
 
-- [Users](/docs/packages/identity/users) - User management
-- [Roles](/docs/packages/identity/roles) - Role management
+- [Users](./users) - User management
+- [Roles](./roles) - Role management
+- [Release Notes](./release-notes) - Version history
