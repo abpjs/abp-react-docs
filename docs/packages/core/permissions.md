@@ -142,7 +142,40 @@ function PermissionGuard({
 </PermissionGuard>
 ```
 
+## PermissionService (v4.0.0)
+
+The `PermissionService` provides a service-based API for checking granted policies, with support for complex `&&`, `||`, `!`, and parenthesized conditions:
+
+```tsx
+import { PermissionService } from '@abpjs/core';
+
+const permissionService = new PermissionService(getState);
+
+// Simple check
+permissionService.getGrantedPolicy('AbpIdentity.Users'); // true/false
+
+// AND condition
+permissionService.getGrantedPolicy('AbpIdentity.Users.Create && AbpIdentity.Users.Update');
+
+// OR condition
+permissionService.getGrantedPolicy('AbpIdentity.Users || AbpIdentity.Roles');
+
+// Complex with parentheses and negation
+permissionService.getGrantedPolicy(
+  '(AbpIdentity.Users || AbpIdentity.Roles) && !AbpIdentity.Users.Delete'
+);
+
+// Empty key returns true
+permissionService.getGrantedPolicy(''); // true
+```
+
+### PermissionService Methods
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `getGrantedPolicy` | `key?: string` | `boolean` | Check if a policy is granted. Supports `&&`, `\|\|`, `!`, and `()` operators |
+
 ## Related
 
-- [Permission Management](/docs/packages/permission-management/overview) - Manage permissions UI
-- [Identity](/docs/packages/identity/overview) - User and role management
+- [Permission Management](../permission-management/overview) - Manage permissions UI
+- [Identity](../identity/overview) - User and role management

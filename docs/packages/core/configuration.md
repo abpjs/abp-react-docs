@@ -254,6 +254,37 @@ function RouteManager() {
 
 The `addRoute` action automatically computes the full URL based on the parent route hierarchy.
 
+## EnvironmentService (v4.0.0)
+
+The `EnvironmentService` provides a dedicated service for managing environment configuration:
+
+```tsx
+import { EnvironmentService } from '@abpjs/core';
+
+const envService = new EnvironmentService(getState, dispatch);
+
+// Get the full environment configuration
+const env = envService.getEnvironment();
+
+// Get the API URL for a specific key (defaults to 'default')
+const apiUrl = envService.getApiUrl('default');
+
+// Set the environment state
+envService.setState({
+  production: true,
+  apis: { default: { url: 'https://api.example.com' } },
+  oAuthConfig: { /* ... */ },
+});
+```
+
+### EnvironmentService Methods
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `getEnvironment()` | - | `Partial<Environment>` | Get the full environment configuration |
+| `getApiUrl()` | `key?: string` | `string` | Get the API URL for a given key (default: `'default'`) |
+| `setState()` | `environment: Environment` | `void` | Set the environment state (requires dispatch) |
+
 ## Related
 
 - [Localization](./localization) - Multi-language support

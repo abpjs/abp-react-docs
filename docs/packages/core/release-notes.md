@@ -4,6 +4,346 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `Session.State.tenant` Type Changed
+
+The `tenant` property in session state now uses `CurrentTenantDto` instead of `ABP.BasicItem`:
+
+```tsx
+// Before (v3.2.0)
+import type { ABP } from '@abpjs/core';
+const tenant: ABP.BasicItem = session.tenant;
+console.log(tenant.id, tenant.name);
+
+// After (v4.0.0)
+import type { CurrentTenantDto } from '@abpjs/core';
+const tenant: CurrentTenantDto = session.tenant;
+console.log(tenant.id, tenant.name, tenant.isAvailable);
+```
+
+#### `MultiTenancyService.domainTenant` Type Changed
+
+The `domainTenant` property now uses `CurrentTenantDto` instead of `ABP.BasicItem`:
+
+```tsx
+// Before (v3.2.0)
+multiTenancyService.domainTenant = { id: 'tenant-1', name: 'Default' };
+
+// After (v4.0.0)
+multiTenancyService.domainTenant = { id: 'tenant-1', name: 'Default', isAvailable: true };
+```
+
+#### `ABP.Root.cultureNameLocaleFileMap` Removed
+
+Replaced by `registerLocaleFn` - a function for registering locale data dynamically:
+
+```tsx
+// Before (v3.2.0)
+const root: ABP.Root = {
+  environment: { ... },
+  cultureNameLocaleFileMap: { 'zh-Hans': 'zh' },
+};
+
+// After (v4.0.0)
+const root: ABP.Root = {
+  environment: { ... },
+  registerLocaleFn: async (locale: string) => {
+    const module = await import(`./locales/${locale}.ts`);
+    return module.default;
+  },
+};
+```
+
+#### `ABP.Root.registerLocaleFn` Required
+
+The `registerLocaleFn` property is now required on `ABP.Root`. It must be a function that takes a locale string and returns a Promise.
+
+### New Features
+
+#### EnvironmentService
+
+New service for managing environment configuration:
+
+```tsx
+import { EnvironmentService } from '@abpjs/core';
+
+const envService = new EnvironmentService(getState, dispatch);
+
+// Get the full environment configuration
+const env = envService.getEnvironment();
+
+// Get the API URL for a specific key
+const apiUrl = envService.getApiUrl('default');
+
+// Set the environment state
+envService.setState({
+  production: true,
+  apis: { default: { url: 'https://api.example.com' } },
+  oAuthConfig: { /* ... */ },
+});
+```
+
+#### PermissionService
+
+New service for checking granted policies with support for complex `&&` and `||` conditions:
+
+```tsx
+import { PermissionService } from '@abpjs/core';
+
+const permissionService = new PermissionService(getState);
+
+// Simple policy check
+const canViewUsers = permissionService.getGrantedPolicy('AbpIdentity.Users');
+
+// Complex condition with && and ||
+const canManage = permissionService.getGrantedPolicy(
+  'AbpIdentity.Users.Create && AbpIdentity.Users.Update'
+);
+
+const canViewAny = permissionService.getGrantedPolicy(
+  'AbpIdentity.Users || AbpIdentity.Roles'
+);
+
+// Supports parentheses and negation
+const complexCheck = permissionService.getGrantedPolicy(
+  '(AbpIdentity.Users || AbpIdentity.Roles) && !AbpIdentity.Users.Delete'
+);
+```
+
+#### SessionStateService: setTenant() and setLanguage()
+
+New setter methods for updating session state:
+
+```tsx
+import { useAbp } from '@abpjs/core';
+
+function SessionManager() {
+  const { sessionStateService } = useAbp();
+
+  // Set the current tenant
+  sessionStateService.setTenant({ id: 'tenant-1', name: 'Acme', isAvailable: true });
+
+  // Set the current language
+  sessionStateService.setLanguage('tr');
+}
+```
+
+#### Standalone Environment Interface
+
+The `Environment` interface is now a standalone export, extracted from the `Config` namespace:
+
+```tsx
+import type { Environment, ApplicationInfo, ApiConfig, Apis } from '@abpjs/core';
+
+const env: Environment = {
+  apis: { default: { url: 'https://api.example.com' } },
+  application: { name: 'My App', baseUrl: 'https://myapp.com' },
+  oAuthConfig: { /* ... */ },
+  production: true,
+  test: false, // New in v4.0.0
+};
+```
+
+#### Standalone Localization Types
+
+`LocalizationWithDefault` and `LocalizationParam` are now standalone exports:
+
+```tsx
+import type { LocalizationWithDefault, LocalizationParam } from '@abpjs/core';
+
+const param: LocalizationParam = { key: 'Hello', defaultValue: 'Hello!' };
+```
+
+#### Proxy DTOs
+
+Comprehensive typed proxy models matching ABP backend API structures:
+
+**Application Configuration:**
+
+```tsx
+import type {
+  ApplicationConfigurationDto,
+  ApplicationAuthConfigurationDto,
+  ApplicationLocalizationConfigurationDto,
+  ApplicationSettingConfigurationDto,
+  ApplicationFeatureConfigurationDto,
+  CurrentUserDto,
+  CurrentCultureDto,
+  DateTimeFormatDto,
+  TimingDto,
+  ClockDto,
+  TimeZone,
+  IanaTimeZone,
+  WindowsTimeZone,
+} from '@abpjs/core';
+```
+
+**Multi-Tenancy:**
+
+```tsx
+import type {
+  CurrentTenantDto,
+  FindTenantResultDto,
+  MultiTenancyInfoDto,
+} from '@abpjs/core';
+```
+
+**HTTP Modeling** (for API description/proxy generation):
+
+```tsx
+import type {
+  ApplicationApiDescriptionModel,
+  ModuleApiDescriptionModel,
+  ControllerApiDescriptionModel,
+  ActionApiDescriptionModel,
+  TypeApiDescriptionModel,
+  PropertyApiDescriptionModel,
+  ParameterApiDescriptionModel,
+} from '@abpjs/core';
+```
+
+**Object Extensions:**
+
+```tsx
+import type {
+  ObjectExtensionsDto,
+  ModuleExtensionDto,
+  EntityExtensionDto,
+  ExtensionPropertyDto,
+  ExtensionEnumDto,
+  LocalizableStringDto,
+} from '@abpjs/core';
+```
+
+**Common:**
+
+```tsx
+import type { NameValue, LanguageInfo } from '@abpjs/core';
+```
+
+#### currentTenant in Config State
+
+The Redux config state now includes `currentTenant` from the ABP application configuration:
+
+```tsx
+import { useConfig } from '@abpjs/core';
+
+function TenantInfo() {
+  const { currentTenant } = useConfig();
+
+  return (
+    <div>
+      <p>Tenant: {currentTenant?.name || 'Host'}</p>
+      <p>Available: {currentTenant?.isAvailable ? 'Yes' : 'No'}</p>
+    </div>
+  );
+}
+```
+
+#### Strict Utility Type
+
+New utility type for ensuring class implementations match contracts exactly:
+
+```tsx
+import type { Strict } from '@abpjs/core';
+
+interface Contract {
+  name: string;
+  execute(): void;
+}
+
+class MyClass implements Contract {
+  name = 'test';
+  execute() { /* ... */ }
+  extraMethod() { /* ... */ } // This key becomes `never` with Strict
+}
+
+type StrictClass = Strict<MyClass, Contract>;
+// { name: string; execute: () => void; extraMethod: never }
+```
+
+#### Utility Functions
+
+New DOM-checking utilities:
+
+```tsx
+import { isNode, isObjectAndNotArrayNotNode } from '@abpjs/core';
+
+isNode(document.createElement('div')); // true
+isNode({}); // false
+
+isObjectAndNotArrayNotNode({ key: 'value' }); // true
+isObjectAndNotArrayNotNode([]); // false
+isObjectAndNotArrayNotNode(document.body); // false
+```
+
+### Deprecations
+
+#### ApplicationConfiguration Namespace Types
+
+All types in the `ApplicationConfiguration` namespace are deprecated. Use the new proxy DTOs:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `ApplicationConfiguration.Response` | `ApplicationConfigurationDto` |
+| `ApplicationConfiguration.Localization` | `ApplicationLocalizationConfigurationDto` |
+| `ApplicationConfiguration.CurrentCulture` | `CurrentCultureDto` |
+| `ApplicationConfiguration.DateTimeFormat` | `DateTimeFormatDto` |
+| `ApplicationConfiguration.CurrentUser` | `CurrentUserDto` |
+| `ApplicationConfiguration.CurrentTenant` | `CurrentTenantDto` |
+| `ApplicationConfiguration.Auth` | `ApplicationAuthConfigurationDto` |
+| `ApplicationConfiguration.Language` | `LanguageInfo` |
+| `ApplicationConfiguration.LocalizationValue` | `Record<string, Record<string, string>>` |
+| `ApplicationConfiguration.Policy` | `Record<string, boolean>` |
+| `ApplicationConfiguration.Value` | `ApplicationSettingConfigurationDto` |
+
+#### Config Namespace Types
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `Config.Environment` | `Environment` (standalone) |
+| `Config.Application` | `ApplicationInfo` |
+| `Config.ApiConfig` | `ApiConfig` (standalone) |
+| `Config.Apis` | `Apis` (standalone) |
+| `Config.RemoteEnv` | `RemoteEnv` (standalone) |
+| `Config.State` | `ApplicationConfiguration.Response & ABP.Root` |
+
+#### MultiTenancyService Methods
+
+- `MultiTenancyService.findTenantByName()` - Use `AbpTenantService.findTenantByName` instead
+- `MultiTenancyService.findTenantById()` - Use `AbpTenantService.findTenantById` instead
+
+### New Exports
+
+**Services:**
+- `EnvironmentService` - Environment configuration management
+- `PermissionService` - Policy checking with complex conditions
+
+**Proxy DTOs:**
+- `ApplicationConfigurationDto`, `ApplicationAuthConfigurationDto`, `ApplicationLocalizationConfigurationDto`, `ApplicationSettingConfigurationDto`, `ApplicationFeatureConfigurationDto`
+- `CurrentUserDto`, `CurrentCultureDto`, `DateTimeFormatDto`
+- `CurrentTenantDto`, `FindTenantResultDto`, `MultiTenancyInfoDto`
+- `TimingDto`, `ClockDto`, `TimeZone`, `IanaTimeZone`, `WindowsTimeZone`
+- `ObjectExtensionsDto`, `ModuleExtensionDto`, `EntityExtensionDto`, `ExtensionPropertyDto`, `ExtensionEnumDto`, `LocalizableStringDto`
+- `ApplicationApiDescriptionModel`, `ModuleApiDescriptionModel`, `ControllerApiDescriptionModel`, `ActionApiDescriptionModel`, `TypeApiDescriptionModel`, `PropertyApiDescriptionModel`, `ParameterApiDescriptionModel`
+- `NameValue<T>`, `LanguageInfo`
+
+**Models:**
+- `Environment`, `ApplicationInfo`, `ApiConfig`, `Apis`, `RemoteEnv`, `customMergeFn` (standalone)
+- `LocalizationWithDefault`, `LocalizationParam` (standalone)
+- `Strict<Class, Contract>` utility type
+
+**Utilities:**
+- `isNode(obj)` - Check if a value is a DOM Node
+- `isObjectAndNotArrayNotNode(obj)` - Check if a value is a plain object (not array, not Node)
+
+---
+
 ## v3.2.0
 
 **February 2026**

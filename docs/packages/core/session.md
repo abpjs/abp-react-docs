@@ -135,8 +135,10 @@ function SessionExample() {
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `getLanguage()` | `string` | Get current language/culture |
-| `getTenant()` | `Tenant \| undefined` | Get current tenant info |
+| `getTenant()` | `CurrentTenantDto` | Get current tenant info (v4.0.0: returns `CurrentTenantDto` instead of `ABP.BasicItem`) |
 | `getSessionDetail()` | `SessionDetail` | Get session detail info (v2.0.0) |
+| `setTenant(tenant)` | `void` | Set the current tenant (v4.0.0) |
+| `setLanguage(language)` | `void` | Set the current language (v4.0.0) |
 
 ## ProfileStateService (v1.1.0)
 
