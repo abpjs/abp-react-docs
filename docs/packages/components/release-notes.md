@@ -4,6 +4,110 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### Custom Node Templates
+
+The Tree component now supports custom templates for node rendering and expand/collapse icons:
+
+```tsx
+import { Tree, TreeNodeTemplateContext, ExpandedIconTemplateContext } from '@abpjs/components';
+
+function CustomTree({ nodes }) {
+  // Custom node rendering
+  const customNodeTemplate = (context: TreeNodeTemplateContext) => {
+    const { node, title, isLeaf, isExpanded } = context;
+    return (
+      <div className="custom-node">
+        <span className="node-icon">{isLeaf ? '📄' : '📁'}</span>
+        <span className="node-title">{title}</span>
+        {node.data.badge && <span className="badge">{node.data.badge}</span>}
+      </div>
+    );
+  };
+
+  // Custom expand/collapse icon
+  const expandedIconTemplate = (context: ExpandedIconTemplateContext) => {
+    const { isExpanded } = context;
+    return isExpanded ? <ChevronDown /> : <ChevronRight />;
+  };
+
+  return (
+    <Tree
+      nodes={nodes}
+      customNodeTemplate={customNodeTemplate}
+      expandedIconTemplate={expandedIconTemplate}
+    />
+  );
+}
+```
+
+**TreeNodeTemplateContext Properties:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `node` | `TreeNode` | The tree node instance |
+| `title` | `string` | Resolved node title |
+| `isLeaf` | `boolean` | Whether node has no children |
+| `isExpanded` | `boolean` | Whether node is expanded |
+
+**ExpandedIconTemplateContext Properties:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `isExpanded` | `boolean` | Whether node is expanded |
+
+#### TreeAdapter Update Methods
+
+New methods for updating tree nodes and refreshing from data:
+
+```tsx
+import { TreeAdapter } from '@abpjs/components';
+
+const adapter = new TreeAdapter(initialList);
+
+// Update a specific node's children
+adapter.handleUpdate({
+  key: 'parent-node-id',
+  children: updatedChildNodes,
+});
+
+// Refresh entire tree from updated list
+adapter.updateTreeFromList(newFlatList);
+```
+
+### Changes
+
+#### TreeAdapter Method Signatures
+
+The `handleDrop` and `handleRemove` methods now use destructured parameters for consistency:
+
+```tsx
+// Updated signature
+adapter.handleDrop({ node, dragNode, dropPosition });
+adapter.handleRemove({ node });
+```
+
+### New Exports
+
+**Types:**
+- `TreeNodeTemplateContext` - Context for custom node template rendering
+- `ExpandedIconTemplateContext` - Context for custom expand icon template
+
+**Tree Props:**
+- `customNodeTemplate` - Render prop for custom node content
+- `expandedIconTemplate` - Render prop for custom expand/collapse icons
+
+**TreeAdapter Methods:**
+- `handleUpdate({ key, children })` - Update a node's children
+- `updateTreeFromList(list)` - Refresh tree from updated flat list
+
+---
+
 ## v3.1.0 (Initial Release)
 
 **February 2026**
