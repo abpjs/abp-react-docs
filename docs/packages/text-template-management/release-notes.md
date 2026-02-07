@@ -4,6 +4,128 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### Typed Proxy Services
+
+New strongly-typed REST API proxy services with direct methods instead of namespace-based types.
+
+**TemplateDefinitionService (Proxy)**
+
+```tsx
+import { TemplateDefinitionService } from '@abpjs/text-template-management';
+import { useRestService } from '@abpjs/core';
+
+const restService = useRestService();
+const templateDefService = new TemplateDefinitionService(restService);
+
+// Get a template definition by name
+const template = await templateDefService.get('PasswordResetEmail');
+
+// List template definitions with filtering
+const templates = await templateDefService.getList({
+  filterText: 'email',
+  sorting: 'name asc',
+  skipCount: 0,
+  maxResultCount: 10,
+});
+```
+
+**TemplateContentService (Proxy)**
+
+```tsx
+import { TemplateContentService } from '@abpjs/text-template-management';
+
+const contentService = new TemplateContentService(restService);
+
+// Get template content for a specific culture
+const content = await contentService.get({
+  templateName: 'PasswordResetEmail',
+  cultureName: 'en',
+});
+
+// Update template content
+const updated = await contentService.update({
+  templateName: 'PasswordResetEmail',
+  cultureName: 'en',
+  content: '<h1>Reset your password</h1><p>Click the link below...</p>',
+});
+
+// Restore template to default content
+await contentService.restoreToDefault({
+  templateName: 'PasswordResetEmail',
+  cultureName: 'en',
+});
+```
+
+#### Proxy Models
+
+New standalone DTO types replacing namespace-based types:
+
+```tsx
+import type {
+  // Template definition types
+  TemplateDefinitionDto,
+  GetTemplateDefinitionListInput,
+  // Template content types
+  TextTemplateContentDto,
+  GetTemplateContentInput,
+  UpdateTemplateContentInput,
+  RestoreTemplateContentInput,
+} from '@abpjs/text-template-management';
+```
+
+**TemplateDefinitionDto:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` | `string` | Unique template name |
+| `displayName` | `string` | Display name |
+| `isLayout` | `boolean` | Whether template is a layout |
+| `layout` | `string \| null` | Parent layout name |
+| `isInlineLocalized` | `boolean` | Whether content is inline localized |
+| `defaultCultureName` | `string` | Default culture for template |
+
+**TextTemplateContentDto:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` | `string` | Template name |
+| `cultureName` | `string` | Culture name |
+| `content` | `string` | Template content |
+
+### New Exports
+
+**Proxy Services:**
+- `TemplateDefinitionService` - Typed proxy for template definitions (get, getList)
+- `TemplateContentService` - Typed proxy for template content (get, update, restoreToDefault)
+
+**Proxy Models:**
+- `TemplateDefinitionDto` - Template definition DTO
+- `GetTemplateDefinitionListInput` - List query input (also available in v3.1.0)
+- `TextTemplateContentDto` - Template content DTO
+- `GetTemplateContentInput` - Content query input
+- `UpdateTemplateContentInput` - Content update input
+- `RestoreTemplateContentInput` - Restore to default input
+
+### Deprecations
+
+The following namespace-based types are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `TextTemplateManagement.TemplateDefinitionDto` | `TemplateDefinitionDto` |
+| `TextTemplateManagement.TextTemplateContentDto` | `TextTemplateContentDto` |
+| `TextTemplateManagement.TemplateContentInput` | `GetTemplateContentInput` |
+| `TextTemplateManagement.CreateOrUpdateTemplateContentDto` | `UpdateTemplateContentInput` |
+| `TextTemplateManagement.GetTemplateDefinitionsInput` | `GetTemplateDefinitionListInput` |
+
+---
+
 ## v3.1.0
 
 **February 2026**
