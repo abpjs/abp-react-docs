@@ -1,5 +1,13 @@
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+- Version alignment with @abpjs/core
+
+---
+
 ## v3.0.0
 
 **February 2026**
