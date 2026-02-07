@@ -4,6 +4,31 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### New Features
+
+#### `PropertyDef.isRequired` Field
+
+The `PropertyDef` interface now includes an `isRequired` boolean field, allowing generated code to distinguish between required and optional properties:
+
+```tsx
+import type { PropertyDef } from '@abpjs/schematics';
+
+const property: PropertyDef = {
+  name: 'userName',
+  type: 'System.String',
+  typeSimple: 'string',
+  isRequired: true, // New in v4.0.0
+};
+```
+
+This field is populated from the ABP API definition and is used by the code generation engine to produce accurate TypeScript interfaces with correct optional markers.
+
+---
+
 ## v3.2.0
 
 **February 2026**
