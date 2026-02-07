@@ -4,6 +4,172 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### Email Confirmation Methods
+
+New methods on `AccountProService` for email confirmation flow:
+
+```tsx
+import { useAccountProService } from '@abpjs/account-pro';
+
+function EmailConfirmation() {
+  const accountProService = useAccountProService();
+
+  // Send confirmation token to a new email address
+  const sendToken = async (newEmail: string) => {
+    await accountProService.sendEmailConfirmationToken(newEmail);
+  };
+
+  // Confirm email with the received token
+  const confirmEmail = async (userId: string, token: string, tenantId?: string) => {
+    await accountProService.confirmEmail({ userId, token, tenantId });
+  };
+}
+```
+
+#### My Security Logs
+
+New method on `AccountProService` to retrieve security logs for the current user:
+
+```tsx
+import { useAccountProService } from '@abpjs/account-pro';
+
+function SecurityLogsPage() {
+  const accountProService = useAccountProService();
+
+  const loadSecurityLogs = async () => {
+    const response = await accountProService.getMySecurityLogs({
+      startTime: '2026-01-01T00:00:00Z',
+      endTime: '2026-02-07T23:59:59Z',
+      action: 'LoginSucceeded',
+      skipCount: 0,
+      maxResultCount: 10,
+    });
+
+    // response.items contains security log entries
+    // response.totalCount contains total number of logs
+  };
+}
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `startTime` | `string` | Filter logs from this date (ISO format) |
+| `endTime` | `string` | Filter logs until this date (ISO format) |
+| `applicationName` | `string` | Filter by application name |
+| `identity` | `string` | Filter by identity |
+| `action` | `string` | Filter by action (e.g., `'LoginSucceeded'`, `'LoginFailed'`) |
+| `clientId` | `string` | Filter by client ID |
+| `correlationId` | `string` | Filter by correlation ID |
+| `sorting` | `string` | Sort expression |
+| `skipCount` | `number` | Number of items to skip (pagination) |
+| `maxResultCount` | `number` | Maximum number of items to return |
+
+**Response Item Properties:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `string` | Log entry ID |
+| `applicationName` | `string` | Application name |
+| `identity` | `string` | Identity used |
+| `action` | `string` | Action performed |
+| `userId` | `string` | User ID |
+| `userName` | `string` | User name |
+| `tenantId` | `string` | Tenant ID |
+| `tenantName` | `string` | Tenant name |
+| `clientId` | `string` | Client ID |
+| `correlationId` | `string` | Correlation ID |
+| `clientIpAddress` | `string` | Client IP address |
+| `browserInfo` | `string` | Browser information |
+| `creationTime` | `string` | When the log was created |
+
+#### New Route Names
+
+New route name constants for email confirmation and security logs:
+
+```tsx
+import { eAccountRouteNames } from '@abpjs/account-pro';
+
+// New route names in v3.1.0:
+eAccountRouteNames.EmailConfirmation  // 'AbpAccount::EmailConfirmation'
+eAccountRouteNames.MySecurityLogs     // 'AbpAccount::MySecurityLogs'
+```
+
+#### New Component Keys
+
+New component replacement keys for email confirmation and security logs components:
+
+```tsx
+import { eAccountComponents } from '@abpjs/account-pro';
+
+// New component keys in v3.1.0:
+eAccountComponents.EmailConfirmation  // 'Account.EmailConfirmationComponent'
+eAccountComponents.MySecurityLogs     // 'Account.MySecurityLogs'
+```
+
+### New Types
+
+#### `AccountSettings`
+
+Interface for general account configuration:
+
+```tsx
+interface AccountSettings {
+  isSelfRegistrationEnabled: boolean;
+  enableLocalLogin: boolean;
+  isRememberBrowserEnabled: boolean;
+}
+```
+
+#### `AccountLdapSettings`
+
+Interface for LDAP authentication configuration:
+
+```tsx
+interface AccountLdapSettings {
+  enableLdapLogin: boolean;
+  ldapServerHost: string;
+  ldapServerPort: string;
+  ldapBaseDc: string;
+  ldapUserName: string;
+  ldapPassword: string;
+}
+```
+
+#### `EmailConfirmationInput`
+
+Interface for email confirmation parameters:
+
+```tsx
+interface EmailConfirmationInput {
+  confirmationToken: string;
+  userId: string;
+  tenantId?: string;
+}
+```
+
+### New Exports
+
+- `AccountProService.sendEmailConfirmationToken(newEmail)` - Send email confirmation token
+- `AccountProService.confirmEmail(params)` - Confirm email with token
+- `AccountProService.getMySecurityLogs(params)` - Get current user's security logs
+- `AccountSettings` - Interface for account settings
+- `AccountLdapSettings` - Interface for LDAP settings
+- `EmailConfirmationInput` - Interface for email confirmation input
+- `eAccountRouteNames.EmailConfirmation` - Route name constant
+- `eAccountRouteNames.MySecurityLogs` - Route name constant
+- `eAccountComponents.EmailConfirmation` - Component replacement key
+- `eAccountComponents.MySecurityLogs` - Component replacement key
+
+---
+
 ## v3.0.0
 
 **February 2026**
