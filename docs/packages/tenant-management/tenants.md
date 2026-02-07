@@ -173,35 +173,42 @@ function CreateTenantForm() {
 }
 ```
 
-## Using TenantManagementService
+## Using TenantService
 
-For direct API access:
+For direct API access (v3.2.0+):
 
 ```tsx
-import { TenantManagementService } from '@abpjs/tenant-management';
+import { TenantService } from '@abpjs/tenant-management';
+import { useRestService } from '@abpjs/core';
+
+const restService = useRestService();
+const tenantService = new TenantService(restService);
 
 // Get all tenants
-const result = await TenantManagementService.getTenants({
+const result = await tenantService.getList({
+  filter: '',
   skipCount: 0,
   maxResultCount: 10,
 });
 
 // Get a single tenant
-const tenant = await TenantManagementService.getTenant('tenant-id');
+const tenant = await tenantService.get('tenant-id');
 
 // Create a tenant
-await TenantManagementService.createTenant({
+await tenantService.create({
   name: 'NewTenant',
   adminEmailAddress: 'admin@newtenant.com',
   adminPassword: 'Password123!',
 });
 
+// Update a tenant
+await tenantService.update('tenant-id', { name: 'Updated Name' });
+
 // Delete a tenant
-await TenantManagementService.deleteTenant('tenant-id');
+await tenantService.delete('tenant-id');
 ```
 
 ## Related
 
-- [Multi-tenancy Guide](/docs/guides/multi-tenancy) - Complete multi-tenancy setup
-- [Tenant Box](/docs/packages/account/tenant-box) - Tenant switching UI
-- [Session](/docs/packages/core/session) - Session management
+- [Session](../core/session) - Session management
+- [Release Notes](./release-notes) - Version history

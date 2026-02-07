@@ -4,6 +4,107 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### Removed: `TenantManagementService`
+
+The deprecated `TenantManagementService` has been deleted. Use `TenantService` (proxy service) instead:
+
+```diff
+- import { TenantManagementService } from '@abpjs/tenant-management';
++ import { TenantService } from '@abpjs/tenant-management';
+
+- const service = new TenantManagementService(restService);
+- await service.getAll(params);
+- await service.getById(id);
+- await service.create({ name, adminEmailAddress, adminPassword });
+- await service.update({ id, name });
+- await service.updateDefaultConnectionString({ id, defaultConnectionString });
++ const service = new TenantService(restService);
++ await service.getList({ filter: '', maxResultCount: 10, skipCount: 0 });
++ await service.get(id);
++ await service.create({ name, adminEmailAddress, adminPassword });
++ await service.update(id, { name });
++ await service.updateDefaultConnectionString(id, connectionString);
+```
+
+#### Removed: Legacy `TenantManagement` Namespace Types
+
+The following deprecated types have been removed:
+
+| Removed Type | Replacement |
+|-------------|-------------|
+| `TenantManagement.Response` | `PagedResultDto<TenantDto>` from `@abpjs/core` |
+| `TenantManagement.Item` | `TenantDto` |
+| `TenantManagement.AddRequest` | `TenantCreateDto` |
+| `TenantManagement.UpdateRequest` | `TenantUpdateDto` |
+| `TenantManagement.DefaultConnectionStringRequest` | `TenantService.updateDefaultConnectionString(id, str)` |
+
+#### Changed: `updateTenant` Signature
+
+The `updateTenant` method on the `useTenantManagement` hook now takes `id` as a separate parameter:
+
+```diff
+- await updateTenant({ id: 'tenant-id', name: 'New Name' });
++ await updateTenant('tenant-id', { name: 'New Name' });
+```
+
+#### Changed: `fetchTenants` Parameter Type
+
+The `fetchTenants` method now accepts `Partial<GetTenantsInput>` instead of `ABP.PageQueryParams`:
+
+```diff
+- await fetchTenants({ maxResultCount: 10, skipCount: 0 });
++ await fetchTenants({ filter: 'acme', maxResultCount: 10, skipCount: 0 });
+```
+
+The `GetTenantsInput` includes a `filter` field for searching tenants by name.
+
+#### Changed: `createTenant` Parameter Type
+
+```diff
+- import type { TenantManagement } from '@abpjs/tenant-management';
+- const data: TenantManagement.AddRequest = { name, adminEmailAddress, adminPassword };
++ import type { TenantCreateDto } from '@abpjs/tenant-management';
++ const data: TenantCreateDto = { name, adminEmailAddress, adminPassword };
+```
+
+#### Changed: `TenantManagementStateService`
+
+The state service now uses `TenantService` instead of `TenantManagementService`:
+
+```diff
+- import { TenantManagementStateService, TenantManagementService } from '@abpjs/tenant-management';
++ import { TenantManagementStateService, TenantService } from '@abpjs/tenant-management';
+
+- const service = new TenantManagementService(rest);
++ const service = new TenantService(rest);
+  const stateService = new TenantManagementStateService(service);
+```
+
+Method signature changes:
+- `dispatchGetTenants()` — accepts `Partial<GetTenantsInput>`, returns `PagedResultDto<TenantDto>`
+- `dispatchGetTenantById()` — returns `TenantDto` instead of `TenantManagement.Item`
+- `dispatchCreateTenant()` — accepts `TenantCreateDto`, returns `TenantDto`
+- `dispatchUpdateTenant()` — now takes `(id: string, input: TenantUpdateDto)` instead of `(body: UpdateRequest)`
+- `get()` — returns `TenantDto[]` instead of `ABP.BasicItem[]`
+- `updateFromResponse()` — removed
+
+#### Changed: Component Callback Types
+
+`TenantsComponentInputs` callbacks now use `TenantDto` instead of `TenantManagement.Item`:
+
+```diff
+- onTenantCreated?: (tenant: TenantManagement.Item) => void;
++ onTenantCreated?: (tenant: TenantDto) => void;
+```
+
+---
+
 ## v3.2.0
 
 **February 2026**

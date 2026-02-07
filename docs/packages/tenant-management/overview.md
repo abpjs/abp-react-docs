@@ -43,7 +43,7 @@ npm install @abpjs/core @abpjs/theme-shared
 
 | Service | Description |
 |---------|-------------|
-| `TenantManagementService` | Direct API interaction |
+| `TenantService` | Proxy service for tenant management API (v3.2.0+) |
 | `TenantManagementStateService` | State management service |
 | `getTenantManagementStateService` | Get singleton state service instance |
 
@@ -114,4 +114,5 @@ View on npm: [@abpjs/tenant-management](https://www.npmjs.com/package/@abpjs/ten
 
 ## Documentation
 
-- [Tenants](/docs/packages/tenant-management/tenants) - Tenant management operations
+- [Tenants](./tenants) - Tenant management operations
+- [Release Notes](./release-notes) - Version history
