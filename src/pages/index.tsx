@@ -26,6 +26,7 @@ const freeModules: ModuleItem[] = [
   { name: 'Settings', description: 'Email and identity settings', image: '/img/modules/setting-management.svg', link: '/docs/packages/setting-management/overview' },
   { name: 'Tenants', description: 'Multi-tenant management', image: '/img/modules/tenant-management.svg', link: '/docs/packages/tenant-management/overview' },
   { name: 'Theme', description: 'Toasts, confirmations, theming', image: '/img/modules/theme.svg', link: '/docs/packages/theme-shared/overview' },
+  { name: 'Schematics', description: 'CLI proxy code generation', image: '/img/modules/theme.svg', link: '/docs/packages/schematics/overview' },
 ];
 
 const proModules: ModuleItem[] = [
@@ -36,6 +37,7 @@ const proModules: ModuleItem[] = [
   { name: 'SaaS', description: 'Tenants, editions, connections', image: '/img/modules/saas.svg', link: '/docs/packages/saas/overview' },
   { name: 'Text Templates', description: 'Text template management', image: '/img/modules/text-template-management.svg', link: '/docs/packages/text-template-management/overview' },
   { name: 'Chat', description: 'Real-time messaging', image: '/img/modules/chat.svg', link: '/docs/packages/chat/overview' },
+  { name: 'File Management', description: 'File and directory management', image: '/img/modules/file-management.svg', link: '/docs/packages/file-management/overview' },
 ];
 
 type TechStackItem = {
