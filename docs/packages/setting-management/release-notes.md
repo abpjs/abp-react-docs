@@ -4,6 +4,14 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+- Version alignment with @abpjs/core
+
+---
+
 ## v3.2.0
 
 **February 2026**
