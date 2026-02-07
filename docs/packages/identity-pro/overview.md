@@ -354,42 +354,49 @@ IDENTITY_POLICIES.ROLES_DELETE  // 'AbpIdentity.Roles.Delete'
 
 ## TypeScript Support
 
-The package exports all TypeScript interfaces under the `Identity` namespace:
+Since v4.0.0, prefer using proxy DTOs from `proxy/identity/models` instead of the legacy `Identity` namespace types:
+
+```tsx
+import type {
+  IdentityRoleDto,
+  IdentityRoleCreateDto,
+  IdentityRoleUpdateDto,
+  IdentityUserDto,
+  IdentityUserCreateDto,
+  IdentityUserUpdateDto,
+  ClaimTypeDto,
+} from '@abpjs/identity-pro';
+import { PagedResultDto } from '@abpjs/core';
+
+// Proxy DTOs (recommended)
+const role: IdentityRoleDto = { ... };
+const user: IdentityUserDto = { ... };
+const claim: ClaimTypeDto = { ... };
+```
+
+The legacy `Identity` namespace types are still exported for backward compatibility but are deprecated and will be removed in v5.0:
 
 ```tsx
 import { Identity } from '@abpjs/identity-pro';
 
-// Types
+// Deprecated — use proxy DTOs above instead
 const role: Identity.RoleItem = { ... };
 const user: Identity.UserItem = { ... };
 const claim: Identity.ClaimType = { ... };
-
-// Request types
-const roleRequest: Identity.RoleSaveRequest = { ... };
-const userRequest: Identity.UserSaveRequest = { ... };
-const claimRequest: Identity.ClaimRequest = { ... };
-
-// Response types
-const roleResponse: Identity.RoleResponse = { ... };
-const userResponse: Identity.UserResponse = { ... };
-const claimResponse: Identity.ClaimResponse = { ... };
-
-// Enums
-const valueType = Identity.ClaimValueType.String; // 0
 ```
 
-**Key Types:**
+**Proxy DTOs (recommended):**
 
 | Type | Description |
 |------|-------------|
-| `Identity.RoleItem` | Role entity with id, name, isDefault, isPublic, isStatic |
-| `Identity.RoleSaveRequest` | Request for creating/updating roles |
-| `Identity.UserItem` | User entity with all properties |
-| `Identity.UserSaveRequest` | Request for creating/updating users |
-| `Identity.ClaimType` | Claim type definition (Pro) |
-| `Identity.ClaimTypeName` | Simple claim name for dropdowns (Pro) |
-| `Identity.ClaimRequest` | Claim assignment request (Pro) |
-| `Identity.ClaimValueType` | Enum: String, Int, Boolean, DateTime (Pro) |
+| `IdentityRoleDto` | Role entity (replaces `Identity.RoleItem`) |
+| `IdentityRoleCreateDto` | Create role input (replaces `Identity.RoleSaveRequest`) |
+| `IdentityRoleUpdateDto` | Update role input |
+| `IdentityUserDto` | User entity (replaces `Identity.UserItem`) |
+| `IdentityUserCreateDto` | Create user input (replaces `Identity.UserSaveRequest`) |
+| `IdentityUserUpdateDto` | Update user input |
+| `ClaimTypeDto` | Claim type definition (replaces `Identity.ClaimType`) |
+| `IdentityClaimValueType` | Enum: String, Int, Boolean, DateTime (replaces `Identity.ClaimValueType`) |
 
 ## Dependencies
 
@@ -414,3 +421,4 @@ const valueType = Identity.ClaimValueType.String; // 0
 - [Core Module](../core/overview)
 - [Permission Management](../permission-management/overview)
 - [Account Pro](../account-pro/overview)
+- [Release Notes](./release-notes) - Version history

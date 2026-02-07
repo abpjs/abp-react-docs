@@ -1,5 +1,65 @@
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### Breaking Changes
+
+#### `Identity.State` now uses proxy DTOs
+
+The `Identity.State` interface fields now reference proxy DTOs instead of legacy namespace types:
+
+| Field | Before (v3.x) | After (v4.0.0) |
+|-------|---------------|----------------|
+| `roles` | `Identity.RoleResponse` | `PagedResultDto<IdentityRoleDto>` |
+| `users` | `Identity.UserResponse` | `PagedResultDto<IdentityUserDto>` |
+| `selectedRole` | `Identity.RoleItem` | `IdentityRoleDto` |
+| `selectedUser` | `Identity.UserItem` | `IdentityUserDto` |
+| `selectedUserRoles` | `Identity.RoleItem[]` | `IdentityRoleDto[]` |
+| `claims` | `Identity.ClaimResponse` | `PagedResultDto<ClaimTypeDto>` |
+| `selectedClaim` | `Identity.ClaimType` | `ClaimTypeDto` |
+
+#### `claimTypes` removed from `Identity.State`
+
+The `claimTypes: ClaimTypeName[]` field has been removed from `Identity.State`. Use the `claims` field (which holds `PagedResultDto<ClaimTypeDto>`) instead.
+
+### Deprecations
+
+The following are now formally deprecated and will be removed in v5.0:
+
+- **`IdentityService`** — Use proxy services instead: `IdentityRoleService`, `IdentityUserService`, `IdentityClaimTypeService`
+- **`IdentitySecurityLogService` (legacy)** — Import `IdentitySecurityLogService` from `proxy/identity` instead
+- **All `Identity` namespace types** (`RoleItem`, `UserItem`, `ClaimType`, `ClaimValueType`, etc.) — Use proxy DTOs from `proxy/identity/models` instead. These types are still exported for backward compatibility but will be deleted in v5.0.
+
+### Migration
+
+```tsx
+// Before (v3.x)
+import { Identity } from '@abpjs/identity-pro';
+
+const state: Identity.State = {
+  roles: { items: [], totalCount: 0 },
+  selectedRole: {} as Identity.RoleItem,
+  claimTypes: [], // ❌ removed in v4.0.0
+  // ...
+};
+
+// After (v4.0.0)
+import { Identity } from '@abpjs/identity-pro';
+import { PagedResultDto } from '@abpjs/core';
+import type { IdentityRoleDto, ClaimTypeDto } from '@abpjs/identity-pro';
+
+const state: Identity.State = {
+  roles: new PagedResultDto({ items: [], totalCount: 0 }),
+  selectedRole: {} as IdentityRoleDto,
+  // claimTypes removed — use claims instead
+  // ...
+};
+```
+
+---
+
 ## v3.2.0
 
 **February 2026**
