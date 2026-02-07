@@ -1,5 +1,207 @@
 # Release Notes
 
+## v3.1.0
+
+**February 2026**
+
+### New Features
+
+#### Security Logs Service
+
+New `IdentitySecurityLogService` for querying security logs:
+
+```tsx
+import { IdentitySecurityLogService } from '@abpjs/identity-pro';
+import { RestService } from '@abpjs/core';
+
+const restService = new RestService();
+const securityLogService = new IdentitySecurityLogService(restService);
+
+// Get all security logs (requires AbpIdentity.SecurityLogs permission)
+const logs = await securityLogService.getListByInput({
+  startTime: '2026-01-01T00:00:00Z',
+  endTime: '2026-02-07T23:59:59Z',
+  action: 'LoginSucceeded',
+  skipCount: 0,
+  maxResultCount: 10,
+});
+
+// Get a single security log by ID
+const log = await securityLogService.getById('log-id');
+
+// Get security logs for current user (no special permission required)
+const myLogs = await securityLogService.getMyListByInput({
+  maxResultCount: 10,
+});
+
+// Get a single security log for current user
+const myLog = await securityLogService.getMyById('log-id');
+```
+
+**Query Parameters (`IdentitySecurityLogGetListInput`):**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filter` | `string` | General filter term |
+| `startTime` | `string` | Start date (ISO format) |
+| `endTime` | `string` | End date (ISO format) |
+| `applicationName` | `string` | Filter by application |
+| `identity` | `string` | Filter by identity |
+| `action` | `string` | Filter by action (e.g., `'LoginSucceeded'`) |
+| `userId` | `string` | Filter by user ID |
+| `userName` | `string` | Filter by username |
+| `clientId` | `string` | Filter by client ID |
+| `correlationId` | `string` | Filter by correlation ID |
+| `sorting` | `string` | Sort expression |
+| `skipCount` | `number` | Items to skip |
+| `maxResultCount` | `number` | Maximum items to return |
+
+#### User Lock Functionality
+
+New methods on `IdentityService` for locking users:
+
+```tsx
+import { IdentityService, Identity } from '@abpjs/identity-pro';
+
+const identityService = new IdentityService(restService);
+
+// Lock a user for 1 hour (3600 seconds)
+await identityService.lockUser(userId, 3600);
+
+// Using the UserLockDurationType enum for convenience
+await identityService.lockUser(userId, Identity.UserLockDurationType.Hour);
+await identityService.lockUser(userId, Identity.UserLockDurationType.Day);
+await identityService.lockUser(userId, Identity.UserLockDurationType.Month);
+```
+
+**`Identity.UserLockDurationType` Enum Values:**
+
+| Value | Seconds | Description |
+|-------|---------|-------------|
+| `Second` | 1 | Lock for 1 second |
+| `Minute` | 60 | Lock for 1 minute |
+| `Hour` | 3600 | Lock for 1 hour |
+| `Day` | 86400 | Lock for 1 day |
+| `Month` | 2592000 | Lock for 30 days |
+| `Year` | 31536000 | Lock for 1 year |
+
+#### Get Available Organization Units for Users
+
+New method to get organization units available for user assignment:
+
+```tsx
+const availableUnits = await identityService.getUserAvailableOrganizationUnits();
+// Returns PagedResultDto<OrganizationUnitWithDetailsDto>
+```
+
+#### New Policy Name
+
+New policy name constant for security logs:
+
+```tsx
+import { eIdentityPolicyNames } from '@abpjs/identity-pro';
+
+eIdentityPolicyNames.SecurityLogs  // 'AbpIdentity.SecurityLogs'
+```
+
+#### New Route Name
+
+New route name constant for security logs:
+
+```tsx
+import { eIdentityRouteNames } from '@abpjs/identity-pro';
+
+eIdentityRouteNames.SecurityLogs  // 'AbpIdentity::SecurityLogs'
+```
+
+#### New Component Key
+
+New component replacement key for security logs:
+
+```tsx
+import { eIdentityComponents } from '@abpjs/identity-pro';
+
+eIdentityComponents.SecurityLogs  // 'Identity.SecurityLogs'
+```
+
+#### Security Logs Extension Tokens
+
+New extension tokens for customizing the security logs component:
+
+```tsx
+import {
+  DEFAULT_SECURITY_LOGS_ENTITY_ACTIONS,
+  DEFAULT_SECURITY_LOGS_TOOLBAR_ACTIONS,
+  DEFAULT_SECURITY_LOGS_ENTITY_PROPS,
+} from '@abpjs/identity-pro';
+
+// Default entity props include:
+// - creationTime (date, sortable)
+// - action (string, sortable)
+// - userName (string, sortable)
+// - applicationName (string, sortable)
+// - identity (string)
+// - clientIpAddress (string)
+```
+
+### New Types
+
+#### `IdentitySecurityLogDto`
+
+Security log data structure:
+
+```tsx
+interface IdentitySecurityLogDto {
+  id: string;
+  tenantId?: string | null;
+  applicationName?: string | null;
+  identity?: string | null;
+  action?: string | null;
+  userId?: string | null;
+  userName?: string | null;
+  clientIpAddress?: string | null;
+  clientId?: string | null;
+  correlationId?: string | null;
+  browserInfo?: string | null;
+  creationTime: string;
+  extraProperties?: Record<string, unknown>;
+}
+```
+
+#### `IdentitySecurityLogGetListInput`
+
+Query parameters for security logs.
+
+#### `IdentitySecurityLogResponse`
+
+Paginated response type for security logs.
+
+### New Exports
+
+**Service:**
+- `IdentitySecurityLogService` - Service for security log operations
+- `IdentityService.getUserAvailableOrganizationUnits()` - Get available org units
+- `IdentityService.lockUser(id, lockoutDurationInSeconds)` - Lock a user
+
+**Models:**
+- `IdentitySecurityLogDto` - Security log DTO
+- `IdentitySecurityLogGetListInput` - Query parameters
+- `IdentitySecurityLogResponse` - Paginated response
+- `createIdentitySecurityLogGetListInput()` - Factory function
+- `Identity.UserLockDurationType` - Lock duration enum
+
+**Enums:**
+- `eIdentityPolicyNames.SecurityLogs` - Security logs policy
+- `eIdentityRouteNames.SecurityLogs` - Security logs route name
+- `eIdentityComponents.SecurityLogs` - Security logs component key
+
+**Extensions:**
+- `DEFAULT_SECURITY_LOGS_ENTITY_ACTIONS` - Default entity actions
+- `DEFAULT_SECURITY_LOGS_TOOLBAR_ACTIONS` - Default toolbar actions
+- `DEFAULT_SECURITY_LOGS_ENTITY_PROPS` - Default entity props
+
+---
+
 ## v3.0.0
 
 **February 2026**
