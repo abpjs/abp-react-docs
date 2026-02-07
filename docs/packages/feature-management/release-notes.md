@@ -4,6 +4,158 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### FeaturesService (Proxy Service)
+
+A new proxy service for feature management API calls:
+
+```tsx
+import { FeaturesService } from '@abpjs/feature-management';
+import { useRestService } from '@abpjs/core';
+
+function useFeatures() {
+  const restService = useRestService();
+  const featuresService = new FeaturesService(restService);
+
+  // Get features for a tenant
+  const features = await featuresService.get('T', tenantId);
+
+  // Update features
+  await featuresService.update('T', tenantId, {
+    features: [
+      { name: 'MyFeature', value: 'true' },
+      { name: 'MaxUsers', value: '100' },
+    ],
+  });
+}
+```
+
+#### New Proxy Models
+
+New DTOs that match the ABP backend API structure:
+
+```tsx
+import type {
+  FeatureDto,
+  FeatureGroupDto,
+  FeatureProviderDto,
+  GetFeatureListResultDto,
+  UpdateFeatureDto,
+  UpdateFeaturesDto,
+} from '@abpjs/feature-management';
+
+// Feature list result contains groups
+const result: GetFeatureListResultDto = await featuresService.get('T', tenantId);
+
+result.groups.forEach((group: FeatureGroupDto) => {
+  console.log(group.displayName);
+  group.features.forEach((feature: FeatureDto) => {
+    console.log(feature.name, feature.value);
+  });
+});
+```
+
+#### ValueTypes Enum
+
+New enum for feature value types:
+
+```tsx
+import { ValueTypes } from '@abpjs/feature-management';
+
+function getFeatureEditor(feature: FeatureDto) {
+  switch (feature.valueType.name) {
+    case ValueTypes.ToggleStringValueType:
+      return <ToggleSwitch />;
+    case ValueTypes.FreeTextStringValueType:
+      return <TextInput />;
+    case ValueTypes.SelectionStringValueType:
+      return <SelectDropdown />;
+  }
+}
+```
+
+#### Validation Models
+
+New interfaces for feature value validation:
+
+```tsx
+import type { IStringValueType, IValueValidator } from '@abpjs/feature-management';
+
+// Value validator interface
+interface IValueValidator {
+  name: string;
+  item: object;
+  properties: Record<string, object>;
+}
+
+// String value type with validator
+interface IStringValueType {
+  name: string;
+  item: object;
+  properties: Record<string, object>;
+  validator: IValueValidator;
+}
+```
+
+#### getInputType Utility
+
+Utility function to determine input type for free text features:
+
+```tsx
+import { getInputType, INPUT_TYPES } from '@abpjs/feature-management';
+
+function FeatureInput({ feature }) {
+  const inputType = getInputType(feature);
+  // Returns 'number' for numeric validators, 'text' otherwise
+
+  return <input type={inputType} value={feature.value} />;
+}
+```
+
+### Deprecations
+
+The following legacy models are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `FeatureManagement.State` | `GetFeatureListResultDto` |
+| `FeatureManagement.ValueType` | `IStringValueType` |
+| `FeatureManagement.Feature` | `FeatureDto` |
+| `FeatureManagement.Features` | `UpdateFeaturesDto` |
+| `FeatureManagement.Provider` | `FeatureProviderDto` |
+
+### New Exports
+
+**Services:**
+- `FeaturesService` - Proxy service for feature management API
+
+**Types:**
+- `FeatureDto` - Feature data transfer object
+- `FeatureGroupDto` - Feature group data transfer object
+- `FeatureProviderDto` - Feature provider data transfer object
+- `GetFeatureListResultDto` - Result of getting features
+- `UpdateFeatureDto` - DTO for updating a single feature
+- `UpdateFeaturesDto` - DTO for updating multiple features
+- `IStringValueType` - String value type interface
+- `IValueValidator` - Value validator interface
+- `FreeTextType` - Free text feature type
+
+**Enums:**
+- `ValueTypes` - Feature value types enum
+
+**Constants:**
+- `INPUT_TYPES` - Input type constants for free text features
+
+**Functions:**
+- `getInputType()` - Get input type for free text features
+
+---
+
 ## v3.1.0
 
 **February 2026**
