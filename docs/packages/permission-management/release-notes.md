@@ -4,6 +4,116 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### PermissionsService (Proxy Service)
+
+A new typed proxy service for permission management API calls:
+
+```tsx
+import { PermissionsService } from '@abpjs/permission-management';
+import { useRestService } from '@abpjs/core';
+
+function usePermissions() {
+  const restService = useRestService();
+  const permissionsService = new PermissionsService(restService);
+
+  // Get permissions for a role
+  const rolePermissions = await permissionsService.get('R', roleId);
+
+  // Get permissions for a user
+  const userPermissions = await permissionsService.get('U', userId);
+
+  // Update permissions
+  await permissionsService.update('R', roleId, {
+    permissions: [
+      { name: 'MyApp.Users.Create', isGranted: true },
+      { name: 'MyApp.Users.Delete', isGranted: false },
+    ],
+  });
+}
+```
+
+#### New Proxy Models
+
+Typed DTOs that match the ABP backend API structure:
+
+```tsx
+import type {
+  GetPermissionListResultDto,
+  PermissionGroupDto,
+  PermissionGrantInfoDto,
+  ProviderInfoDto,
+  UpdatePermissionDto,
+  UpdatePermissionsDto,
+} from '@abpjs/permission-management';
+
+// Get permission list result
+const result: GetPermissionListResultDto = await permissionsService.get('R', roleId);
+
+console.log(result.entityDisplayName); // e.g., "Admin Role"
+
+result.groups.forEach((group: PermissionGroupDto) => {
+  console.log(group.displayName);
+  group.permissions.forEach((permission: PermissionGrantInfoDto) => {
+    console.log(permission.name, permission.isGranted);
+    // Check which providers granted this permission
+    permission.grantedProviders.forEach((provider: ProviderInfoDto) => {
+      console.log(`Granted by: ${provider.providerName}`);
+    });
+  });
+});
+```
+
+#### PermissionWithStyle Type
+
+New type for permissions with CSS style property (replaces `PermissionWithMargin`):
+
+```tsx
+import type { PermissionWithStyle } from '@abpjs/permission-management';
+
+function PermissionItem({ permission }: { permission: PermissionWithStyle }) {
+  return (
+    <div style={{ marginLeft: permission.style }}>
+      {permission.displayName}
+    </div>
+  );
+}
+```
+
+### Deprecations
+
+The following legacy types are deprecated and will be removed in v4.0:
+
+| Deprecated | Replacement |
+|------------|-------------|
+| `PermissionManagement.Response` | `GetPermissionListResultDto` |
+| `PermissionManagement.Group` | `PermissionGroupDto` |
+| `PermissionManagement.Permission` | `PermissionGrantInfoDto` |
+| `PermissionManagement.MinimumPermission` | `UpdatePermissionDto` |
+| `PermissionManagement.UpdateRequest` | `UpdatePermissionsDto` |
+| `PermissionWithMargin` | `PermissionWithStyle` |
+
+### New Exports
+
+**Services:**
+- `PermissionsService` - Proxy service for permission management API
+
+**Types:**
+- `GetPermissionListResultDto` - Result of getting permissions
+- `PermissionGroupDto` - Permission group data transfer object
+- `PermissionGrantInfoDto` - Permission grant information
+- `ProviderInfoDto` - Provider information
+- `UpdatePermissionDto` - DTO for updating a single permission
+- `UpdatePermissionsDto` - DTO for updating multiple permissions
+- `PermissionWithStyle` - Permission with CSS style property
+
+---
+
 ## v3.1.0
 
 **February 2026**
