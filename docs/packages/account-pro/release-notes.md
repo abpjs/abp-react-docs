@@ -4,6 +4,186 @@ sidebar_position: 99
 
 # Release Notes
 
+## v3.2.0
+
+**February 2026**
+
+### New Features
+
+#### ProfileService
+
+A new service for managing profile pictures and two-factor authentication:
+
+```tsx
+import { ProfileService } from '@abpjs/account-pro';
+import { useRestService } from '@abpjs/core';
+
+function useProfilePicture() {
+  const restService = useRestService();
+  const profileService = new ProfileService(restService);
+
+  // Get current user's profile picture
+  const picture = await profileService.getProfilePicture();
+  console.log(picture.type, picture.source);
+
+  // Get another user's profile picture
+  const userPicture = await profileService.getProfilePictureByUserId(userId);
+
+  // Set profile picture (Gravatar)
+  await profileService.setProfilePicture({
+    type: ProfilePictureType.Gravatar,
+  });
+
+  // Set profile picture (custom image)
+  await profileService.setProfilePicture({
+    type: ProfilePictureType.Image,
+    fileBytes: base64EncodedImage,
+  });
+
+  // Get 2FA status
+  const is2FAEnabled = await profileService.getTwoFactorEnabled();
+
+  // Enable/disable 2FA
+  await profileService.setTwoFactorEnabled(true);
+}
+```
+
+#### ManageProfileTabsService
+
+A new service for managing profile tabs in the Manage Profile page:
+
+```tsx
+import {
+  ManageProfileTabsService,
+  getManageProfileTabsService,
+} from '@abpjs/account-pro';
+
+// Get singleton instance
+const tabsService = getManageProfileTabsService();
+
+// Add a custom tab
+tabsService.add({
+  name: 'MyCustomTab',
+  component: MyCustomTabComponent,
+  order: 5,
+});
+
+// Get visible tabs
+const visibleTabs = tabsService.visible;
+
+// Patch an existing tab
+tabsService.patch('AbpAccount::ProfilePicture', {
+  order: 10,
+});
+```
+
+#### ProfilePictureType Enum
+
+New enum for profile picture source types:
+
+```tsx
+import { ProfilePictureType } from '@abpjs/account-pro';
+
+// Available values:
+ProfilePictureType.None     // 0 - No profile picture
+ProfilePictureType.Gravatar // 1 - Gravatar service
+ProfilePictureType.Image    // 2 - Custom uploaded image
+```
+
+#### eTwoFactorBehaviour Enum
+
+New enum for two-factor authentication behaviour policies:
+
+```tsx
+import { eTwoFactorBehaviour } from '@abpjs/account-pro';
+
+// Available values:
+eTwoFactorBehaviour.Optional // 0 - Users can choose to enable/disable
+eTwoFactorBehaviour.Disabled // 1 - 2FA is disabled for all users
+eTwoFactorBehaviour.Forced   // 2 - 2FA is required for all users
+```
+
+#### Manage Profile Tab Names
+
+New constants for manage profile tab names:
+
+```tsx
+import { eAccountManageProfileTabNames } from '@abpjs/account-pro';
+
+// Available tab names:
+eAccountManageProfileTabNames.ProfilePicture   // 'AbpAccount::ProfilePicture'
+eAccountManageProfileTabNames.ChangePassword   // 'AbpUi::ChangePassword'
+eAccountManageProfileTabNames.PersonalSettings // 'AbpAccount::PersonalSettings'
+eAccountManageProfileTabNames.TwoFactor        // 'AbpAccount::AccountSettingsTwoFactor'
+```
+
+#### New Component Key
+
+New component replacement key for profile picture:
+
+```tsx
+import { eAccountComponents } from '@abpjs/account-pro';
+
+// New in v3.2.0:
+eAccountComponents.ProfilePicture // 'Account.ProfilePictureComponent'
+```
+
+#### New Model Types
+
+**ProfilePictureInput** - Input for setting a profile picture:
+
+```tsx
+interface ProfilePictureInput {
+  type: ProfilePictureType;
+  fileBytes?: string;  // Base64 encoded, required when type is Image
+}
+```
+
+**ProfilePictureSourceDto** - Profile picture source information:
+
+```tsx
+interface ProfilePictureSourceDto {
+  type: ProfilePictureType;
+  source: string;       // URL (Gravatar, blob, or empty)
+  fileContent?: string; // Base64 encoded file content
+}
+```
+
+**AccountTwoFactorSettingsDto** - Two-factor authentication settings:
+
+```tsx
+interface AccountTwoFactorSettingsDto {
+  isEnabled: boolean;
+  behaviour: eTwoFactorBehaviour;
+}
+```
+
+### New Exports
+
+**Services:**
+- `ProfileService` - Profile picture and 2FA management
+- `ManageProfileTabsService` - Manage profile tabs service
+- `getManageProfileTabsService()` - Get singleton instance
+
+**Enums:**
+- `ProfilePictureType` - Profile picture source types
+- `eTwoFactorBehaviour` - Two-factor behaviour policies
+- `eAccountManageProfileTabNames` - Manage profile tab name constants
+
+**Types:**
+- `ProfilePictureInput` - Input for setting profile picture
+- `ProfilePictureSourceDto` - Profile picture source data
+- `AccountTwoFactorSettingsDto` - 2FA settings data
+- `AccountManageProfileTabName` - Type for tab name values
+
+**Constants:**
+- `ACCOUNT_MANAGE_PROFILE_TAB_PROVIDERS` - Tab provider configuration
+- `ACCOUNT_MANAGE_PROFILE_TAB_ORDERS` - Default tab ordering
+- `ACCOUNT_MANAGE_PROFILE_TAB_NAMES` - Tab name constants
+- `eAccountComponents.ProfilePicture` - Component replacement key
+
+---
+
 ## v3.1.0
 
 **February 2026**
