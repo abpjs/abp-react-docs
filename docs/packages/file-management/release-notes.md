@@ -4,6 +4,24 @@ sidebar_position: 99
 
 # Release Notes
 
+## v4.0.0
+
+**February 2026**
+
+### New
+
+- **`xsrfHeaderName` config option** - New optional `xsrfHeaderName` property on `FileManagementConfigOptions` to customize the XSRF/CSRF header name used for file uploads (default behavior unchanged if not set)
+
+```tsx
+import type { FileManagementConfigOptions } from '@abpjs/file-management';
+
+const options: FileManagementConfigOptions = {
+  xsrfHeaderName: 'X-XSRF-TOKEN', // or 'RequestVerificationToken'
+};
+```
+
+---
+
 ## v3.2.0 (Initial Release)
 
 **February 2026**

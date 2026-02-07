@@ -344,3 +344,4 @@ import type {
 
 - [Core Module](../core/overview)
 - [Theme Shared](../theme-shared/overview)
+- [Release Notes](./release-notes) - Version history
